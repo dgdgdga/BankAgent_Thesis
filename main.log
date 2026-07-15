@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 03:43
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 03:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -108,6 +108,33 @@ Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \backup@length=\skip52
 \ar@cellbox=\box56
 )
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/tabularx.sty
+Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
+\TX@col@width=\dimen174
+\TX@old@table=\dimen175
+\TX@old@col=\dimen176
+\TX@target=\dimen177
+\TX@delta=\dimen178
+\TX@cols=\count287
+\TX@ftn=\toks22
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/ragged2e/ragged2e.sty
+Package: ragged2e 2023/06/22 v3.6 ragged2e Package
+\CenteringLeftskip=\skip53
+\RaggedLeftLeftskip=\skip54
+\RaggedRightLeftskip=\skip55
+\CenteringRightskip=\skip56
+\RaggedLeftRightskip=\skip57
+\RaggedRightRightskip=\skip58
+\CenteringParfillskip=\skip59
+\RaggedLeftParfillskip=\skip60
+\RaggedRightParfillskip=\skip61
+\JustifyingParfillskip=\skip62
+\CenteringParindent=\skip63
+\RaggedLeftParindent=\skip64
+\RaggedRightParindent=\skip65
+\JustifyingParindent=\skip66
+)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
 )
@@ -118,9 +145,9 @@ Package: expl3 2026-01-19 L3 programming layer (loader)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
 File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
-\g__graphics_track_int=\count287
-\g__pdfannot_backend_int=\count288
-\g__pdfannot_backend_link_int=\count289
+\g__graphics_track_int=\count288
+\g__pdfannot_backend_int=\count289
+\g__pdfannot_backend_link_int=\count290
 ))
 Package: xparse 2025-10-09 L3 Experimental document command parser
 )
@@ -129,20 +156,20 @@ Package: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
 (/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
 Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTe
 X
-\l__fontspec_script_int=\count290
-\l__fontspec_language_int=\count291
-\l__fontspec_strnum_int=\count292
-\l__fontspec_tmp_int=\count293
-\l__fontspec_tmpa_int=\count294
-\l__fontspec_tmpb_int=\count295
-\l__fontspec_tmpc_int=\count296
-\l__fontspec_em_int=\count297
-\l__fontspec_emdef_int=\count298
-\l__fontspec_strong_int=\count299
-\l__fontspec_strongdef_int=\count300
-\l__fontspec_tmpa_dim=\dimen174
-\l__fontspec_tmpb_dim=\dimen175
-\l__fontspec_tmpc_dim=\dimen176
+\l__fontspec_script_int=\count291
+\l__fontspec_language_int=\count292
+\l__fontspec_strnum_int=\count293
+\l__fontspec_tmp_int=\count294
+\l__fontspec_tmpa_int=\count295
+\l__fontspec_tmpb_int=\count296
+\l__fontspec_tmpc_int=\count297
+\l__fontspec_em_int=\count298
+\l__fontspec_emdef_int=\count299
+\l__fontspec_strong_int=\count300
+\l__fontspec_strongdef_int=\count301
+\l__fontspec_tmpa_dim=\dimen179
+\l__fontspec_tmpb_dim=\dimen180
+\l__fontspec_tmpc_dim=\dimen181
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
@@ -172,25 +199,29 @@ Package: hyphenat 2009/09/02 v2.3c hyphenation utilities
 \langwohyphens=\language91
 LaTeX Info: Redefining \_ on input line 43.
 )
+(/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count302
+)
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -233,64 +264,64 @@ Package fontspec Info:
 
 \symlegacymaths=\mathgroup4
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 42.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 42.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 42.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 42.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 42.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 42.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 42.
-LaTeX Font Info:    Redeclaring math accent \check on input line 42.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 42.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 42.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \colon on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 42.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 42.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 42.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 51.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 51.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 51.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 51.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 51.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 51.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 51.
+LaTeX Font Info:    Redeclaring math accent \check on input line 51.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 51.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 51.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \colon on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 51.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 51.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 51.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 42.
+(Font)              `operators' in the math version `normal' on input line 51.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/TimesNewRoman(0)/m/n on input line 4
-2.
+(Font)                  OT1/cmr/m/n --> TU/TimesNewRoman(0)/m/n on input line 5
+1.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 42.
+(Font)              `operators' in the math version `bold' on input line 51.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/m/n on input line 
-42.
+51.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/m/n on 
-input line 42.
+input line 51.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/cmr/m/it --> TU/TimesNewRoman(0)/m/it on input line
- 42.
+ 51.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/b/n on input line 
-42.
+51.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 42.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 51.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 42.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 51.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/b/n on 
-input line 42.
+input line 51.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> TU/TimesNewRoman(0)/b/it on input lin
-e 42.
+e 51.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 42.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 51.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 42.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 51.
 ) (./chapters/front_toc.tex [1
 
 ] [2]) (./chapters/abstract.tex [3])
@@ -344,838 +375,316 @@ d_- card, phone, risk_- level
  []
 
 [36] [37] [38] [39] [40] [41]) (./chapters/chapter5bis_copilot.tex
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 19.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 19.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 19.
-
-Underfull \hbox (badness 10000) in paragraph at lines 23--23
-[]|\TU/TimesNewRoman(0)/m/n/12 Execute domain-specific
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 23--23
-\TU/TimesNewRoman(0)/m/n/12 tasks (SQL, retrieval,
- []
-
-
-Underfull \hbox (badness 5431) in paragraph at lines 23--24
-[]|\TU/TimesNewRoman(0)/m/n/12 Classify intent and dis-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 24--24
-[]|\TU/TimesNewRoman(0)/m/n/12 Already-routed request
- []
-
-
-Underfull \hbox (badness 3439) in paragraph at lines 27--27
-[]|\TU/TimesNewRoman(0)/m/n/12 Page-specific UI (tables,
- []
-
-[42]
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
-[]|\TU/TimesNewRoman(0)/m/n/12 Pattern blocklist
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
-[]|\TU/TimesNewRoman(0)/m/n/12 Jailbreak attempts,
- []
-
-
-Underfull \hbox (badness 2293) in paragraph at lines 60--60
-\TU/TimesNewRoman(0)/m/n/12 non-banking topics,
- []
-
-
-Underfull \hbox (badness 2005) in paragraph at lines 61--61
-[]|\TU/TimesNewRoman(0)/m/n/12 Keyword greeting
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 61--61
-\TU/TimesNewRoman(0)/m/n/12 you do”, simple
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 62--62
-\TU/TimesNewRoman(0)/m/n/12 (temperature=0.1,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 62--62
-[]|\TU/TimesNewRoman(0)/m/n/12 CODE, TOOL,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 62--62
-\TU/TimesNewRoman(0)/m/n/12 RAG, CHAT,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 62--62
-\TU/TimesNewRoman(0)/m/n/12 CLARIFY, SET-
- []
-
-
-Underfull \hbox (badness 3168) in paragraph at lines 63--63
-[]|\TU/TimesNewRoman(0)/m/n/12 Keyword fallback
+ [42]
+Overfull \hbox (47.99997pt too wide) in alignment at lines 67--67
+[][][][] 
  []
 
 [43] [44] [45]
-Underfull \hbox (badness 7397) in paragraph at lines 128--129
-[]\TU/TimesNewRoman(0)/b/n/12 Browser Custom Events\TU/TimesNewRoman(0)/m/n/12 
-: The widget dispatches \TU/lmtt/m/n/12 CustomEvent \TU/TimesNewRoman(0)/m/n/12
- objects
+Overfull \hbox (18.43506pt too wide) in paragraph at lines 145--146
+[]\TU/TimesNewRoman(0)/m/n/10.95 The Copilot unified all AI provider configurat
+ion under the user-service’s \TU/lmtt/m/n/10.95 SystemConfigController\TU/Times
+NewRoman(0)/m/n/10.95 .
  []
 
-
-Underfull \hbox (badness 4441) in paragraph at lines 128--129
-\TU/TimesNewRoman(0)/m/n/12 on the \TU/lmtt/m/n/12 window \TU/TimesNewRoman(0)/
-m/n/12 object — \TU/lmtt/m/n/12 copilot-tool-result \TU/TimesNewRoman(0)/m/n/12
- for Tool Agent results,
+[46]) (./chapters/chapter6.tex
+Underfull \hbox (badness 5374) in paragraph at lines 40--40
+[]|\TU/TimesNewRoman(0)/m/n/10.95 Agent error, timeout, or 
  []
 
-[46]
-Underfull \hbox (badness 10000) in paragraph at lines 142--143
-[]\TU/TimesNewRoman(0)/m/n/12 The Copilot unified all AI provider configuration
- under the user-service’s
+[47]
+Overfull \hbox (11.94124pt too wide) in paragraph at lines 85--85
+\TU/lmtt/m/n/10.95 naturalLanguage: 
  []
 
-[47] [48]) (./chapters/chapter6.tex
-Underfull \hbox (badness 10000) in paragraph at lines 34--34
-[]|\TU/TimesNewRoman(0)/m/n/12 Record created,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 35--35
-[]|\TU/TimesNewRoman(0)/m/n/12 Worker thread
- []
-
-
-Underfull \hbox (badness 4353) in paragraph at lines 35--35
-\TU/TimesNewRoman(0)/m/n/12 calling downstream
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 36--36
-[]|\TU/TimesNewRoman(0)/m/n/12 Agent returned a
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
-[]|\TU/TimesNewRoman(0)/m/n/12 Execution failed
- []
-
-
-Underfull \hbox (badness 2181) in paragraph at lines 37--37
-\TU/TimesNewRoman(0)/m/n/12 after all retries, or
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--38
-[]|\TU/TimesNewRoman(0)/m/n/12 Agent error, timeout, or
- []
-
-[49]
-Underfull \hbox (badness 3989) in paragraph at lines 46--47
-[]\TU/TimesNewRoman(0)/m/n/12 Tasks enter the system through two channels. The 
-primary channel is \TU/lmtt/m/n/12 POST
- []
-
-[50]
-Underfull \hbox (badness 10000) in paragraph at lines 77--77
-[]|\TU/TimesNewRoman(0)/b/n/12 Target Ser-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 79--79
-[]|\TU/TimesNewRoman(0)/m/n/12 code-agent
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--80
-[]|\TU/TimesNewRoman(0)/m/n/12 tool-agent
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--80
-[]|\TU/lmtt/m/n/12 POST
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--81
-[]|\TU/lmtt/m/n/12 {toolType: "AI",
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--81
-\TU/lmtt/m/n/12 naturalLanguage:
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-[]|\TU/TimesNewRoman(0)/m/n/12 rag-agent
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--82
-[]|\TU/lmtt/m/n/12 {question: input,
- []
-
-[51] [52]
-Underfull \hbox (badness 10000) in paragraph at lines 119--119
-[]|\TU/lmtt/m/n/12 POST
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 120--120
-[]|\TU/lmtt/m/n/12 GET
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 121--121
-[]|\TU/lmtt/m/n/12 GET
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 122--122
-[]|\TU/lmtt/m/n/12 GET
- []
-
-
-Overfull \hbox (1.16174pt too wide) in paragraph at lines 122--122
-\TU/lmtt/m/n/12 /task/list/all| 
- []
-
-[53]
+[48] [49]
 File: figures/fig10_docker_topology.png Graphic file (type bmp)
 <figures/fig10_docker_topology.png>
- [54]) (./chapters/chapter7.tex [55] [56] [57]) (./chapters/chapter8.tex
-[58] [59]) (./chapters/references.tex [60] [61]) (./chapters/appendix_a.tex
-Underfull \hbox (badness 10000) in paragraph at lines 26--26
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 26--26
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 27--27
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 29--29
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 47--47
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 47--47
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--48
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 49--49
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
- []
-
-
+ [50] [51]) (./chapters/chapter7.tex [52] [53])
+(./chapters/chapter8.tex [54]) (./chapters/references.tex [55])
+(./chapters/appendix_a.tex
 Underfull \hbox (badness 10000) in paragraph at lines 50--50
-[]|\TU/TimesNewRoman(0)/m/n/12 DATETIME, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 51--51
-[]|\TU/TimesNewRoman(0)/m/n/12 DATETIME, NOT
- []
-
-[62]
-Underfull \hbox (badness 10000) in paragraph at lines 68--68
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 68--68
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+[]|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 69--69
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 69--69
-\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
+\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 70--70
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--72
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+Underfull \hbox (badness 3302) in paragraph at lines 72--72
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(20), DE-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 75--75
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 78--78
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[63]
-Underfull \hbox (badness 10000) in paragraph at lines 93--93
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 93--93
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+[56]
+Underfull \hbox (badness 10000) in paragraph at lines 94--94
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 94--94
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 94--94
-\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 95--95
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
+\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 100--100
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
- []
-
-[64]
-Underfull \hbox (badness 10000) in paragraph at lines 112--112
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 112--112
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 113--113
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 113--113
-\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
+\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 114--114
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 116--116
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(10),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 116--117
-[]|\TU/TimesNewRoman(0)/m/n/12 HTTP method
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 117--117
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, DE-
+Underfull \hbox (badness 3302) in paragraph at lines 116--116
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(10), DE-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 121--121
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[65]
-Underfull \hbox (badness 10000) in paragraph at lines 139--139
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 140--140
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-[66]
-Underfull \hbox (badness 10000) in paragraph at lines 152--152
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 153--153
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 166--166
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 166--166
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
+[57]
 Underfull \hbox (badness 10000) in paragraph at lines 167--167
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
+[58]
 Underfull \hbox (badness 10000) in paragraph at lines 187--187
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 190--190
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 191--191
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(20),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 193--193
-[]|\TU/TimesNewRoman(0)/m/n/12 minio_- object_-
- []
-
-[67]
-Underfull \hbox (badness 10000) in paragraph at lines 207--207
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 207--207
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 208--208
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 209--209
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 191--191
+\TU/TimesNewRoman(0)/m/n/10.95 DEFAULT ‘MARK-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 210--210
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(150),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(150),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 212--212
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
- []
-
-
-Underfull \hbox (badness 5105) in paragraph at lines 213--214
-[]|\TU/TimesNewRoman(0)/m/n/12 1=Unread, 2=Read/Pending, 3=Approved,
+Underfull \hbox (badness 3302) in paragraph at lines 212--212
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50), DE-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 220--220
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[68]
-Underfull \hbox (badness 10000) in paragraph at lines 232--232
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 232--232
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+[59]
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 233--233
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
-\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
+\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 234--234
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(500),
- []
-
-[69]
-Underfull \hbox (badness 10000) in paragraph at lines 248--248
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 248--248
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 249--249
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(500),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 250--250
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 250--250
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 251--251
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
-Underfull \hbox (badness 6125) in paragraph at lines 255--255
-[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
- []
-
-[70]
-Underfull \hbox (badness 10000) in paragraph at lines 273--273
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 273--273
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
+[60]
 Underfull \hbox (badness 10000) in paragraph at lines 274--274
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(120),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(120),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 278--278
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 278--278
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 278--278
-\TU/TimesNewRoman(0)/m/n/12 DEFAULT ‘DE-
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 279--279
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 280--280
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 280--280
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
- []
-
-
-Underfull \hbox (badness 6125) in paragraph at lines 281--281
-[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
- []
-
-
-Underfull \hbox (badness 6125) in paragraph at lines 282--282
-[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
- []
-
-[71]
-Underfull \hbox (badness 10000) in paragraph at lines 295--295
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 295--295
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 296--296
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 298--298
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(200),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(200),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 299--299
-[]|\TU/TimesNewRoman(0)/m/n/12 original_- file_-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 299--299
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(255),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(255),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 303--303
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 303--303
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 308--308
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 309--309
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 309--309
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 309--309
-\TU/TimesNewRoman(0)/m/n/12 DEFAULT ‘UP-
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 310--310
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 310--310
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
- []
-
-
-Underfull \hbox (badness 6125) in paragraph at lines 311--311
-[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 312--312
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[72]
-Overfull \vbox (196.34766pt too high) has occurred while \output is active []
-
-
-[73]
-Underfull \hbox (badness 10000) in paragraph at lines 328--328
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 328--328
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 329--329
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
+[61]
 Underfull \hbox (badness 10000) in paragraph at lines 331--331
-[]|\TU/TimesNewRoman(0)/m/n/12 MEDIUMTEXT,
+[]|\TU/TimesNewRoman(0)/m/n/10.95 MEDIUMTEXT,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 333--333
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(128),
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(128),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 333--333
-\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
+\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 334--334
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 339--339
-[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 350--350
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 350--350
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 351--351
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
- []
-
-
+[62]
 Underfull \hbox (badness 10000) in paragraph at lines 352--352
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 355--355
-[]|\TU/TimesNewRoman(0)/m/n/12 retrieved_- doc_-
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 359--359
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 359--359
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
- []
-
-[74]
-Underfull \hbox (badness 10000) in paragraph at lines 372--372
-[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 372--372
-\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 374--374
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+Underfull \hbox (badness 4013) in paragraph at lines 374--375
+[]|\TU/TimesNewRoman(0)/m/n/10.95 REBUILD_- ALL / INDEX_- DOCUMENT /
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 375--375
-[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+ []
+
+[63] [64]) (./chapters/appendix_b.tex [65]
+Overfull \hbox (20.0033pt too wide) in paragraph at lines 80--81
+\TU/TimesNewRoman(0)/m/n/10.95 GET /api/user/notification/unread-count → Intege
+r count (status=0); POST /api/user/notification/mark-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 375--375
-\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
- []
-
-[75] [76]) (./chapters/appendix_b.tex
-Overfull \hbox (8.85526pt too wide) in paragraph at lines 44--45
-\TU/TimesNewRoman(0)/m/n/12 PUT /api/admin/user/status → {userId, status} → Ena
-ble/disable; PUT /api/admin/user/dept
- []
-
-[77]
-Underfull \hbox (badness 10000) in paragraph at lines 80--81
-\TU/TimesNewRoman(0)/m/n/12 GET /api/user/notification/unread-count → Integer c
-ount (status=0); POST
- []
-
-[78]
-Overfull \hbox (3.25876pt too wide) in paragraph at lines 120--121
-\TU/TimesNewRoman(0)/m/n/12 GET /api/code/metadata → Cached schema {tables: {}}
-; POST /api/code/metadata/refresh
+Underfull \hbox (badness 2608) in paragraph at lines 88--89
+\TU/TimesNewRoman(0)/m/n/10.95 POST /api/tool/execute → {toolType, parameters?,
+ naturalLanguage} → AI-routed result
  []
 
 
-Overfull \hbox (19.70346pt too wide) in paragraph at lines 126--127
-\TU/TimesNewRoman(0)/m/n/12 Routes: /api/user/**→user-service:8081; /api/tool/*
-*→tool-agent:8083; /api/code/**→code-
+Underfull \hbox (badness 3386) in paragraph at lines 96--97
+\TU/TimesNewRoman(0)/m/n/10.95 GET /api/tool/schedule/user/{userId} → (startDat
+e?, endDate?) → [Schedule[]]; POST
  []
 
-[79]) (./chapters/appendix_c.tex [80]
-Underfull \hbox (badness 4366) in paragraph at lines 31--32
-\TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/resour
-ces, /app/admin/my-dept).
+[66]) (./chapters/appendix_c.tex [67]) (./chapters/contributions.tex [68]
+[69] [70] [71]
+Underfull \hbox (badness 10000) in paragraph at lines 187--188
+\TU/lmtt/m/n/10.95 \bDELETE\b\TU/TimesNewRoman(0)/m/n/10.95 , \TU/lmtt/m/n/10.9
+5 \bINSERT\b\TU/TimesNewRoman(0)/m/n/10.95 , \TU/lmtt/m/n/10.95 \bUPDATE\b\TU/T
+imesNewRoman(0)/m/n/10.95 , \TU/lmtt/m/n/10.95 \bALTER\b\TU/TimesNewRoman(0)/m/
+n/10.95 , \TU/lmtt/m/n/10.95 \bTRUNCATE\b\TU/TimesNewRoman(0)/m/n/10.95 , \TU/l
+mtt/m/n/10.95 \bCREATE\b\TU/TimesNewRoman(0)/m/n/10.95 ,
  []
 
-[81]) (./chapters/contributions.tex [82] [83] [84] [85] [86] [87] [88] [89]
-[90] [91] (./main.aux)
+[72] [73] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) ) 
 Here is how much of TeX's memory you used:
- 4494 strings out of 468168
- 125390 string characters out of 5432816
- 575074 words of memory out of 5000000
- 33119 multiletter control sequences out of 15000+600000
- 630665 words of font info for 75 fonts, out of 8000000 for 9000
+ 4982 strings out of 468168
+ 132994 string characters out of 5432816
+ 591761 words of memory out of 5000000
+ 33593 multiletter control sequences out of 15000+600000
+ 630700 words of font info for 79 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 78i,11n,96p,1253b,253s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,11n,96p,1253b,340s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (96 pages).
+Output written on main.pdf (78 pages).

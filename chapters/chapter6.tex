@@ -85,7 +85,8 @@ Every piece of work in the platform is modeled as a task record with a four-stat
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}p{2.5cm}p{3.5cm}p{6cm}@{}}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{State} & \textbf{Meaning} & \textbf{Transition Trigger} \\
 \midrule
@@ -94,7 +95,7 @@ RUNNING & Worker thread picked up the task, calling downstream agent & Executor 
 SUCCESS & Agent returned a valid result & Downstream agent responds with code 200 \\
 FAIL & Execution failed after all retries, or queue was full & Agent error, timeout, or \texttt{RejectedExecutionException} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 The state machine is linear by design --- no complex branching or rollback. If a task fails, the retry mechanism re-executes from INIT state; it does not attempt to resume from the failure point. This keeps the implementation simple and predictable, which is appropriate for the current single-instance deployment.
@@ -130,7 +131,8 @@ Once a worker thread picks up a task, the \texttt{executeTaskOnce()} method rout
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}p{2.2cm}p{2.5cm}p{3.5cm}p{3.8cm}@{}}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.30\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{taskType} & \textbf{Target Service} & \textbf{Endpoint} & \textbf{Request Body} \\
 \midrule
@@ -138,7 +140,7 @@ CODE & code-agent (8084) & \texttt{POST /code/query} & \texttt{\{question: input
 TOOL / AI & tool-agent (8083) & \texttt{POST /tool/execute} & \texttt{\{toolType: "AI", naturalLanguage: input\}} \\
 RAG & rag-agent (8085) & \texttt{POST /rag/query} & \texttt{\{question: input, topK: 5\}} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Name}, \texttt{X-User-Roles}) are forwarded so that each agent can apply its own authorization logic. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
@@ -170,7 +172,8 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}p{3cm}p{2.5cm}p{6.5cm}@{}}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}p{0.20\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{Endpoint} & \textbf{Auth} & \textbf{Description} \\
 \midrule
@@ -179,7 +182,7 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \texttt{GET /task/list} & Headers & List tasks for the authenticated user (ordered by creation time descending) \\
 \texttt{GET /task/list/all} & Admin only & List all tasks in the platform \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subhead{6.3 WebSocket Real-Time Communication}

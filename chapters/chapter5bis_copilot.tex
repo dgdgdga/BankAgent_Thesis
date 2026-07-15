@@ -16,7 +16,8 @@ Table 28 summarizes the Copilot's position relative to the three agents.
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}p{2.8cm}p{4.5cm}p{4.5cm}@{}}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{0.42\textwidth}>{\RaggedRight\arraybackslash}p{0.34\textwidth}}
 \toprule
 & \textbf{Three Domain Agents} & \textbf{Copilot} \\
 \midrule
@@ -26,7 +27,7 @@ Output & Domain result (SQL rows, document excerpts, room lists) & Dispatch deci
 Scope & One agent = one capability & Cross-agent, cross-page \\
 User interaction & Page-specific UI (tables, maps, panels) & Floating chat widget, always accessible \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subhead{5.4.2 Architecture Overview}
@@ -53,7 +54,8 @@ The Python Flask \texttt{/route} endpoint is the Copilot's brain. It implements 
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}p{1.5cm}p{3.2cm}p{3.5cm}p{3.8cm}@{}}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.26\textwidth}>{\RaggedRight\arraybackslash}p{0.38\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}}
 \toprule
 \textbf{Tier} & \textbf{Mechanism} & \textbf{What It Catches} & \textbf{Cost} \\
 \midrule
@@ -62,7 +64,7 @@ Tier 2 & Keyword greeting match & ``Hello'', ``What can you do'', simple greetin
 Tier 3a & LLM classification (temperature=0.1, max\_tokens=10) & CODE, TOOL, RAG, CHAT, CLARIFY, SETTINGS & $\sim$10 tokens per query \\
 Tier 3b & Keyword fallback (LLM unavailable) & Same six categories, lower accuracy & Zero \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 Tier 1 acts as a pre-screening safety net. Before any LLM call is made, the user's input is checked against a hardcoded list of approximately 40 blocked patterns. These cover jailbreak prompts (e.g., ``ignore previous instructions''), role-play attempts (``pretend you are a hacker''), code injection, and entirely off-topic requests (jokes, recipes, gaming). Blocked queries are caught instantly and receive a polite refusal without consuming any API tokens.
@@ -94,7 +96,8 @@ After the intent is classified, the frontend widget takes over with type-specifi
 
 \begin{table}[H]
 \centering
-\begin{tabular}{@{}p{2.2cm}p{4.5cm}p{5.3cm}@{}}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.16\textwidth}>{\RaggedRight\arraybackslash}p{0.40\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{Intent} & \textbf{Widget Action} & \textbf{User Sees} \\
 \midrule
@@ -105,7 +108,7 @@ CODE & Fire custom event, navigate to /app/code & The Code Agent page with the q
 TOOL & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & Animated processing bar with rotating status messages, then a result card (room list, conflict report, or route map) \\
 RAG & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & A citation card with document titles, similarity scores, and security badges \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 The Copilot widget itself is a floating component: a 52px circular icon button fixed to the bottom-right corner of every page. When clicked, it expands into a 440$\times$620px chat panel with a morphing animation. This design means the user never leaves their current page to ask a question --- the Copilot comes to them.
