@@ -154,7 +154,7 @@ I replaced the initial QQ SMTP implementation (originally contributed by Xia Xin
 
 1.6 Copilot backend \& AI provider unification
 
-I built the backend for the global Copilot assistant, which generalized the AI chat panel originally confined to Lin Chuanbin's Tool Agent page into a cross-page, multi-Agent intelligent dispatcher. I unified all AI provider configurations across the platform into a single application.yml block, making them consistent across services and environment-aware.
+I built the backend for the global Copilot assistant, which generalized the AI chat panel originally confined to Lin Chuanbin's Tool Agent page into a cross-page, multi-Agent intelligent dispatcher that sits above all three agents as a unified natural language entry point. The Copilot's Python Flask intent classifier implements a three-tier classification pipeline --- security blocklist, keyword greeting match, and LLM-based six-category classification (CODE, TOOL, RAG, CHAT, CLARIFY, SETTINGS) --- complemented by multi-turn clarification, cross-page result delivery via browser custom events, and WebSocket-based progress streaming for long-running agent calls. I unified all AI provider configurations across the platform into a single admin-managed configuration center with AES-256 encryption, eliminating the fragmentation that existed when each agent managed its own LLM settings independently.
 
 1.7 Document management \& MinIO storage
 
