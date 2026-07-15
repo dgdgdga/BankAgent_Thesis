@@ -224,17 +224,17 @@ I built the platform's initial Spring Security layer with stateless JWT tokens (
 1.2 Email Verification Integration
 Building on the existing team codebase, I integrated the QQ Mail SMTP service to deliver verification codes during registration. I stored codes in Redis with a 5-minute TTL, enforced a 60-second per-email send rate limit to prevent abuse, and wired the code verification step directly into the registration flow, completing the end-to-end sign-up process. This part has been upgraded into Resend HTTP API by Yao Jiacheng.
 
-\textbf{2. Frontend & Internationalization}
+\textbf{2. Frontend \& Internationalization}
 
 2.1 Multi-Language i18n Support
 I adapted all business and UI components to support three languages (Simplified Chinese, Traditional Chinese, and English) with dynamic switching through Vue3 and Element Plus i18n. This required systematically reorganizing component-level text, validation messages, and document metadata into structured locale files, ensuring the entire frontend remained maintainable and language-agnostic. Also, I designed a initial version of Code Agent's frontend, which has been upgraded into a better version by Yao Jiacheng.
 
-\textbf{3. Documentation & Visualization Standardization}
+\textbf{3. Documentation \& Visualization Standardization}
 
 3.1 System Diagrams Redesign
 I designed the first version of all figures, and after team discussion, I redrew the original dense, small-font diagrams into clean, wide-format vector graphics with a unified visual style. Every diagram maintained readability and visual hierarchy, ensuring clear communication of complex architectural concepts. A total of 12 figures were created and refined.
 
-3.2 Final Report & Table Standardization
+3.2 Final Report \& Table Standardization
 
 I was responsible for synchronizing the final report with the latest codebase. I converted all seven data tables into the three-line table format (1.5 pt top and bottom rules, a 0.75 pt rule below the header, no vertical or interior horizontal lines) and suggested moving long pseudocode blocks to standalone tables—both to maintain formatting consistency and to communicate algorithms more clearly to readers.
 
@@ -250,7 +250,7 @@ I designed and implemented the Code Agent module — the natural-language-to-SQL
 
 I built the code-agent microservice (port 8084) from scratch as a standalone Spring Boot 3.2 service.
 
-Designed the service with a clean separation of concerns: CodeAgentController (REST layer, 6 endpoints), CodeGenerationService (interface with pluggable implementations), SqlValidationService (five-layer whitelist engine), SqlExecutionService (JdbcTemplate-based safe execution), MetadataCacheService (information_schema → Redis), and MetadataCacheManager (lifecycle management).
+Designed the service with a clean separation of concerns: CodeAgentController (REST layer, 6 endpoints), CodeGenerationService (interface with pluggable implementations), SqlValidationService (five-layer whitelist engine), SqlExecutionService (JdbcTemplate-based safe execution), MetadataCacheService (information\_schema → Redis), and MetadataCacheManager (lifecycle management).
 
 Implemented the OnnxCodeGenerationService as an HTTP proxy to the Python LLM inference server (port 8090), using java.net.http.HttpClient with 10-second connect timeout and 60-second response timeout. The contract is POST {question} → returns {sql, method} JSON.
 
@@ -262,9 +262,9 @@ I designed and implemented a defense-in-depth SQL validation pipeline (SqlValida
 
 Layer 1 — Operation Type: Enforces SELECT-only. Any non-SELECT statement is rejected before further processing, preventing write operations at the earliest stage.
 
-Layer 2 — Forbidden Keywords: Scans SQL with word-boundary regular expressions (\bDROP\b, \bDELETE\b, \bINSERT\b, \bUPDATE\b, \bALTER\b, \bTRUNCATE\b, \bCREATE\b, \bEXEC\b, \bUNION\b, \bINTO\b, \bLOAD_FILE\b, \bOUTFILE\b, \bDUMPFILE\b). The \b boundary prevents false positives — for example, customer_no is not flagged for containing the substring IN.
+Layer 2 — Forbidden Keywords: Scans SQL with word-boundary regular expressions (\texttt{\textbackslash bDROP\textbackslash b}, \texttt{\textbackslash bDELETE\textbackslash b}, \texttt{\textbackslash bINSERT\textbackslash b}, \texttt{\textbackslash bUPDATE\textbackslash b}, \texttt{\textbackslash bALTER\textbackslash b}, \texttt{\textbackslash bTRUNCATE\textbackslash b}, \texttt{\textbackslash bCREATE\textbackslash b}, \texttt{\textbackslash bEXEC\textbackslash b}, \texttt{\textbackslash bUNION\textbackslash b}, \texttt{\textbackslash bINTO\textbackslash b}, \texttt{\textbackslash bLOAD\_FILE\textbackslash b}, \texttt{\textbackslash bOUTFILE\textbackslash b}, \texttt{\textbackslash bDUMPFILE\textbackslash b}). The \texttt{\textbackslash b} boundary prevents false positives — for example, \texttt{customer\_no} is not flagged for containing the substring IN.
 
-Layer 3 — Table Whitelist: Extracts all tables referenced in FROM and JOIN clauses via regex and validates each against the cached information_schema table list. Unknown tables are rejected with the allowed set shown in the error message.
+Layer 3 — Table Whitelist: Extracts all tables referenced in FROM and JOIN clauses via regex and validates each against the cached information\_schema table list. Unknown tables are rejected with the allowed set shown in the error message.
 
 Layer 4 — Column Whitelist: For non-SELECT * queries, extracts every column from the SELECT clause and validates each against the actual column definitions of the referenced tables — supporting JOIN queries by merging all referenced tables' column sets. Aggregate functions and expressions are intelligently skipped.
 
@@ -272,11 +272,11 @@ Layer 5 — Complexity Limits: Caps queries at a maximum of 3 joined tables and 
 
 All layer parameters are configurable through code-agent.whitelist.* in application.yml.
 
-\textbf{3. Metadata Caching & Execution Infrastructure}
+\textbf{3. Metadata Caching \& Execution Infrastructure}
 
 I built the metadata caching layer and safe SQL execution service:
 
-Implemented MetadataCacheService that queries MySQL information_schema (using JDBC directly, not MyBatis) to extract table names, column names, data types, and comments — caching them in Redis as a JSON Hash map keyed by table name with a 1-hour TTL. When Redis is unavailable, the service falls back to direct MySQL queries, ensuring zero-downtime operation.
+Implemented MetadataCacheService that queries MySQL information\_schema (using JDBC directly, not MyBatis) to extract table names, column names, data types, and comments — caching them in Redis as a JSON Hash map keyed by table name with a 1-hour TTL. When Redis is unavailable, the service falls back to direct MySQL queries, ensuring zero-downtime operation.
 
 Built MetadataCacheManager with an @EventListener(ApplicationReadyEvent.class) for startup cache warm-up and a @Scheduled(fixedRate = 30 * 60 * 1000) for periodic refresh every 30 minutes.
 
@@ -296,7 +296,7 @@ POST /code/execute accepts a reviewed (and potentially human-edited) SQL string,
 
 GET /code/metadata returns the currently cached table metadata from Redis or MySQL fallback.
 
-POST /code/metadata/refresh forces an immediate refresh of the metadata cache from information_schema.
+POST /code/metadata/refresh forces an immediate refresh of the metadata cache from information\_schema.
 
 GET /code/health returns the service status and active inference method for operational monitoring.
 
@@ -308,10 +308,10 @@ Fine-tuned two T5 variants on our banking-domain dataset, deploying them via ONN
 
 Through systematic comparison, I found that the fine-tuned T5 models consistently underperformed the LLM API approach — even with careful training, the smaller models struggled with schema grounding, complex JOIN logic, and edge cases that a general-purpose LLM handled naturally when given well-structured metadata in the prompt.
 
-This led to the key architectural decision: rather than investing further in local model optimization, I adopted the LLM API + rich metadata prompt strategy, where the cached information_schema context (table names, column definitions, data types, example values) is injected into every generation request. This approach proved both more accurate and more maintainable, as schema changes require no model retraining — only a metadata cache refresh.
+This led to the key architectural decision: rather than investing further in local model optimization, I adopted the LLM API + rich metadata prompt strategy, where the cached information\_schema context (table names, column definitions, data types, example values) is injected into every generation request. This approach proved both more accurate and more maintainable, as schema changes require no model retraining — only a metadata cache refresh.
 
-\textbf{6. Test Dataset & Banking Domain}
+\textbf{6. Test Dataset \& Banking Domain}
 
-I authored the banking_data.sql test dataset with three relational tables — bank_customer (5 rows, risk levels LOW/MEDIUM/HIGH), bank_account (7 rows, account types SAVINGS/CHECKING/FIXED), and bank_transaction (10 rows, transaction types DEPOSIT/WITHDRAW/TRANSFER) — covering diverse NL2SQL scenarios from simple lookups to multi-table JOIN aggregations, and providing a realistic testbed for the generation, validation, and execution pipeline.
+I authored the banking\_data.sql test dataset with three relational tables — bank\_customer (5 rows, risk levels LOW/MEDIUM/HIGH), bank\_account (7 rows, account types SAVINGS/CHECKING/FIXED), and bank\_transaction (10 rows, transaction types DEPOSIT/WITHDRAW/TRANSFER) — covering diverse NL2SQL scenarios from simple lookups to multi-table JOIN aggregations, and providing a realistic testbed for the generation, validation, and execution pipeline.
 
 \end{document}
