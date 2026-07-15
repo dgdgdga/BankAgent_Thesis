@@ -937,7 +937,7 @@ A synchronization mechanism ensures that the document library remains in sync wi
 
 \subhead{5.3.13 Docker Deployment Configuration}
 
-Docker Compose is extended with new services: rag-agent (Spring Boot on port 8085), Milvus Standalone, etcd (Milvus metadata coordination), MinIO (Milvus object storage) as well as optionally rag-worker (local embedding model server). New environment variables include: RAG\_SERVICE\_URI, MILVUS\_HOST, MILVUS\_PORT, RAG\_EMBEDDING\_PROVIDER, RAG\_EMBEDDING\_MODEL, RAG\_EMBEDDING\_DIM, RAG\_LLM\_API\_KEY, RAG\_LLM\_BASE\_URL, RAG\_LLM\_MODEL, RAG\_MILVUS\_COLLECTION, RAG\_MILVUS\_INDEX\_TYPE, and RAG\_TOP\_K. The services include dependency ordering so that Milvus and its dependencies start before rag-agent. The goal is a single docker compose up --build -d command that brings the complete platform online.
+Docker Compose is extended with new services: rag-agent (Spring Boot on port 8085), Milvus Standalone, etcd (Milvus metadata coordination), MinIO (Milvus object storage) as well as optionally rag-worker (local embedding model server). New environment variables include: \texttt{RAG\_SERVICE\_URI}, \texttt{MILVUS\_HOST}, \texttt{MILVUS\_PORT}, \texttt{RAG\_EMBEDDING\_PROVIDER}, \texttt{RAG\_EMBEDDING\_MODEL}, \texttt{RAG\_EMBEDDING\_DIM}, \texttt{RAG\_LLM\_API\_KEY}, \texttt{RAG\_LLM\_BASE\_URL}, \texttt{RAG\_LLM\_MODEL}, \texttt{RAG\_MILVUS\_COLLECTION}, \texttt{RAG\_MILVUS\_INDEX\_TYPE}, and \texttt{RAG\_TOP\_K}. The services include dependency ordering so that Milvus and its dependencies start before rag-agent. The goal is a single \texttt{docker compose up --build -d} command that brings the complete platform online.
 
 \subhead{5.3.14 Technical Challenges and Testing Strategy}
 

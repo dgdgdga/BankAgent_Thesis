@@ -42,6 +42,17 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
 
+% Allow line breaks within \texttt{} and at underscore positions
+% to prevent overfull hboxes from long identifiers
+\usepackage{hyphenat}
+\emergencystretch=2em
+\tolerance=800
+\hbadness=2000
+
+% Make \_ a legal line-break point
+\let\oldus\_
+\def\_{\oldus\penalty0\hskip 0pt plus 2pt}
+
 % Sub-heading: uniform spacing above and below
 \newcommand{\subhead}[1]{%
   \vspace{10pt}%
