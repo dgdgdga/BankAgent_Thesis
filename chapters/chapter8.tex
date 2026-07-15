@@ -1,0 +1,21 @@
+% CHAPTER 8: CONCLUSION AND FUTURE WORK
+% ======================================================================
+{\fontsize{18}{22}\selectfont\textbf{8 Conclusion and Future Work}}\par
+
+\vspace{3mm}
+
+\subhead{8.1 Summary of Achievements}
+
+This project presents a multi-agent AI platform for banking digital transformation. It addresses issues such as code generation accuracy, domain knowledge reliability, tool invocation robustness, and the data sovereignty demands unique to the banking industry. Through the collaborative work of three specialized agents, a five-layer defense architecture, and an on-premise Docker Compose deployment model, the platform provides banking personnel with three core AI capabilities within a unified framework: intelligent database querying, policy knowledge Q\&A, and business tool automation.
+
+The Code agent implements a natural-language-to-SQL pipeline backed by a Python LLM inference server, combined with a five-layer SQL whitelist validation mechanism enforcing operation-type restrictions, keyword blacklisting, table/column whitelisting, and query complexity limits. The RAG agent combines Milvus vector retrieval with vLLM generation, adding document security-level filtering at three stages (pre-retrieval, in-query, and post-retrieval) to ensure policy-compliant knowledge access. The Tool agent implements a dual-path design (programmatic REST endpoints and AI intent routing through the DeepSeek LLM) with mock fallback support, providing meeting room management, Redis-based schedule conflict detection, and Amap-integrated route planning.
+
+The system integration layer provides JWT-based authentication with dual-mode login (password and email verification code), three-tier RBAC with department-level data isolation, HITL document access using a notification-based approval system, WebSocket real-time task progress streaming, and containerized deployment via Docker Compose.
+
+\subhead{8.2 Future Work}
+
+Several directions for future work have been determined. The implementation of the RAG agent should be completed by deploying the RAG agent microservice (port 8085) with Gateway routing, creating supporting database tables (chunks, vectors, and query logs), completing the workflow from document indexing through semantic retrieval to LLM answer generation with citations, integrating with the frontend RAG workbench page, and connecting to the Copilot and task-service orchestration pipeline. The task service (currently scaffolded) should be fully implemented as the centralized orchestration layer. Three directions for model optimization include local ONNX Runtime inference for the Code Agent, embedding model evaluation for Chinese financial texts, and LLM hallucination reduction through prompt engineering and citation verification. DevOps enhancements should include Prometheus metrics, Grafana dashboards, distributed tracing, Kubernetes orchestration for multi-node scaling, and automated CI/CD pipelines. RBAC extensibility should allow adopting institutions to extend the three-tier role model with custom fine-grained permissions. The platform should be extended to support additional enterprise tools (email, HR systems, document management systems) through a pluggable tool registration mechanism, and to support additional database systems beyond MySQL.
+
+\newpage
+
+% ======================================================================

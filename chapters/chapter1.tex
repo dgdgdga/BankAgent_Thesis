@@ -1,0 +1,56 @@
+% CHAPTER 1: INTRODUCTION
+% ======================================================================
+\setstretch{1.5}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+{\fontsize{18}{22}\selectfont\textbf{1 Introduction}}\par
+
+\vspace{3mm}
+
+\subhead{1.1 Background and Motivation}
+
+LLMs are built on transformer architectures. They are trained on large sets of text and have pushed artificial intelligence forward. These systems can understand almost every language, create runnable code from a text prompt, and give detailed answers about many field. This is why engineers see them as a key piece of enterprise digital change.
+
+But using LLMs in business banking brings problems that go beyond just linking up the tech. First, SQL that is made by the model for database queries is not always reliable. The code often has mistakes in structure or meaning, especially when the database has a complex layout. Second, AI models have limited knowledge of bank-specific rules. The rules change often, and model weights learned during training cannot reflect updates in policies. Third, bank workers must integrate AI into their daily work, such as room booking, schedule checking, and route planning. However, present AI models are not always good at calling the right tool or reading the right input.
+
+The most serious problem comes from the common industry practice. Many firms rely on outside LLM APIs, like those from big cloud providers. This brings up data safety issues and legal control problems. The Hong Kong Monetary Authority (HKMA) has strict rules about handling customer information. The rules suggest that institutions must keep control over data access and processing. Therefore, sending internal queries or customer data to an outside API for AI reasoning is not safe in terms of compliance. It is against the principle of data sovereignty.
+
+The current work is driven by several linked problems. These are technical precision, keeping domain knowledge correct, stable tool calling, and data control. So, a single multi-agent AI system is clearly needed. This system must work on-site and take a defense-in-depth approach. It must combine secure code generation, local knowledge retrieval, and enterprise tool calling.
+
+\subhead{1.2 Problem Statement}
+
+The present work are facing four major challenges.
+
+Code generation accuracy. Database queries are used in everyday bank work. For example, they are used to get customer data and to file reports required by rules. Natural-language interfaces can make data access much easier. But LLM-written SQL is not always safe. It must be run through careful checks. The model may add syntax faults, wrong column references, or even harmful operations. The system needs to check multiple levels before executing any SQL statement.
+
+Knowledge retrieval.  Answers to procedural and policy questions must be verifiable. They must be backed by citations. This is important for bank employees. Finance is a field where rules must be followed and there is zero tolerance for errors. RAG methods are used to fix LLM issues with old or made-up information. But bank documents have security levels. The system must filter retrieval results to match the user's clearance level. Documents must not leak through answers.
+
+Enterprise Tool Integration. Daily bank work uses many tools,  including room booking, calendar syncing, and route planning. An AI system must correctly understand user requests. It must find the right intent, extract the right parameters, and run the matching tool. The system should also use large language model routing to pick the best handler for each request.
+
+Data Sovereignty And Access Control. Beyond the risks from outside APIs, banking settings need strict access levels. Different departments handle documents with different security clearances. The rule of least privilege must be enforced at every layer. Small permission models are often too simple for an organization that has many departments and levels of leadership.
+
+\subhead{1.3 Project Objectives}
+
+This work presents a multi-agent AI framework, built on an on-premise infrastructure and designed for banking operations, to address the challenges described above. The specific objectives are as follows.
+
+Code Agent. The Code Agent is a component that turns natural language into SQL. It connects to a Python-based LLM inference server to generate queries. A five-tier whitelist filtering mechanism makes sure that only safe, allowed SQL operations reach the database. The agent uses metadata caching to give the LLM up-to-date schema context.
+
+RAG. RAG combines Milvus-based vector retrieval with vLLM-based inference. It gives accurate answers. These answers are backed by references. They are for banking policy and procedural questions. Organizational documents are cleaned by security level and department. Only content the user is allowed to see enters the retrieval and generation pipeline.
+
+Tool Agent. Tool Agent is a module that calls business tools. It supports conference-room inquiry and reservation. It also detects conflicts. For conflict detection, it uses Redis sorted sets. The key fields include user ID and timestamp ranges. In addition, it does route planning. It calls the Amap API. The module extracts the address and plans the route on a map. There is a unified natural language interface. DeepSeek intent recognition is used. It decides whether to call the meeting, schedule, or routing module.
+
+System Integration. It builds an end-to-end platform. The platform includes authentication secured by JWT. It has a three-level RBAC model. The roles are Administrator, Department Admin, and End-User. There is a notification system with multi-type support. The platform also includes document management with tiered security. A task center orchestrates agent workflows. WebSocket progress streaming is used. Docker Compose handles containerized deployment.
+
+\subhead{1.4 Scope and Limitations}
+
+This project covers the design, implementation, and evaluation of the multi-agent platform described above. The intended users are banking personnel. The platform provides three main functions. It generates and checks SQL queries. It does knowledge retrieval with citations. It calls business tools. The deployment model is local. It uses Docker Compose for container management. The security model includes JWT authentication and RBAC.
+
+But there are still several limits. First, the Code Agent supports only MySQL SQL and relational table structures. It does not work with other database systems or NoSQL interfaces. Second, the RAG Agent needs a pretrained embedding model. We provide a mock mode for development, but the real accuracy depends on the model you choose. Third, the Tool Agent only supports three business tools at present. Its scope is defined by the current set of enterprise APIs. Fourth, the platform is built for a single deployment and does not yet support Kubernetes or multi-node scaling.
+
+\subhead{1.5 Report Organization}
+
+The rest of this report is arranged like this. Chapter 2 looks at past work on LLM use in business settings, systems with many agents, turning text into SQL, RAG methods, language models with added tools, and on-site use and data safety. Chapter 3 explains what banks need, functional and non-functional requirements, and user case studies. Chapter 4 shows the five-layer system design, the frontend and backend layouts, data layer construction, and the reasons for choosing each technology. Chapter 5 explains in detail how the three main agents are built. Chapter 6 covers the process of putting the system parts together, including user management, task planning, live communication, and deploying with containers. Chapter 7 talks about the project's difficulties, how this work compares to other solutions, and where it falls short. Chapter 8 sums up the work that was finished and suggests what should be looked at next along with future work.
+
+\newpage
+
+% ======================================================================

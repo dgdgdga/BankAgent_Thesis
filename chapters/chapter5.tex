@@ -1,0 +1,248 @@
+% CHAPTER 5: CORE AGENT IMPLEMENTATION
+% ======================================================================
+{\fontsize{18}{22}\selectfont\textbf{5 Core Agent Implementation}}\par
+
+\vspace{3mm}
+
+This chapter covers the three agent modules that form the platform's intelligence layer---tool agent, code agent, and RAG agent. Each section discusses internal architecture, key algorithms, and data flow design. Pseudocode tables and sequence diagrams are included to illustrate the operational logic of each agent.
+
+\subhead{5.1 Tool Agent Implementation}
+
+This agent runs within a separate tool-agent service (Spring Boot, port 8083), providing three capabilities: meeting room management, schedule conflict detection, and route planning. Technically, business logic is divided into REST endpoints and specialized service classes; the AI intent module provides a unified entry point for natural language input.
+
+\subhead{5.1.1 Architecture and AI Intent Routing}
+
+The tool agent employs a dual-path design at the interaction layer: one side retains programmatic calls, while the other open a natural language entry point.
+
+Programmatic calls use a separate REST endpoint, where the frontend or third-party system directly passes type parameters, making the logic straightforward. Natural language interactions are uniformly sent to the /tool/execute endpoint. The DeepSeek LLM (Starfire API, accessed via the iFlytek MaaS platform) identifies the user's intent and extracts parameters from the natural language message. The request is then routed to the corresponding handler.
+
+We separate the natural language entry point from the programmatic entry point, rather than using AI routing for everything, primarily for cost considerations. DeepSeek's token consumption and response latency are much higher than a direct REST call (roughly 500--800ms versus 5--10ms for a local call). In cases where the frontend already knows exactly what operation is to be performed (button clicks), calling the AI again would be both unnecessarily slow and a waste of tokens---adding extra cost for no benefit.
+
+We ultimately adopted the iFlytek MaaS (Model as a Service) platform, which provide an interface compatible with the OpenAI Chat Completions format. Therefore, the underlying HTTP client can directly use the standard OpenAI library call pattern without modifying the request body structure.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig05_tool_agent_sequence.png}
+\caption{Figure 5: Tool Agent Task Sequence --- DeepSeek AI Intent Routing to Specialized Handlers}
+\end{figure}
+
+Table 5-6 shows the AI intent routing pipeline where DeepSeek classifies user input into three intent types and dispatches to the corresponding handler,  with a mock fallback on API failure.
+
+\vspace{3mm}
+\noindent\textbf{Table 5: Pseudocode --- handleAiIntent() AI Intent Classification and Routing}
+
+\vspace{3mm}
+\noindent\textbf{Table 6: Pseudocode --- DeepSeekService.chat() LLM API Call with Fallback}
+
+The DeepSeek API configuration in application.yml uses environment variables with development defaults: AI\_DEEPSEEK\_API\_KEY, AI\_DEEPSEEK\_BASE\_URL (defaulting to https://maas-api.cn-huabei-1.xf-yun.com/v1), AI\_DEEPSEEK\_MODEL (defaulting to deepseek-v3), AI\_DEEPSEEK\_TIMEOUT (180s), and AI\_DEEPSEEK\_MAX\_TOKENS (2000).
+
+\subhead{5.1.2 Meeting Room Management}
+
+For meeting room management, due to varying user permissions, we designed two sets of interfaces base on user permissions and functions:
+
+The first set is for regular users. Regular users has a simple request: ``Check if there are any available rooms for this time slot.'' Therefore, our ToolController only includes a single GET request: /tool/meeting-rooms. Parameters include startTime, endTime, and capacity. The backend performs a three-phase availability check, as shown in the pseudocode in Table 7.
+
+The second set, the management side, uses a completely different logic (although the system administrator and department administrators maintain consistency). Because the Admin class needs to maintain meeting room resources, we provide a complete set of CRUD interfaces through MeetingRoomAdminController. In terms of security, it verifies the X-User-Roles header---this is simple but effective, because the header is injected by the gateway layer, not the client, and therefore cannot be forged.
+
+\vspace{3mm}
+\noindent\textbf{Table 7: Pseudocode --- queryRoomsWithStatus() Three-Phase Room Availability Algorithm}
+
+\vspace{3mm}
+\noindent\textbf{Table 8: Pseudocode --- bookRoom() Atomic Conflict Check-and-Insert}
+
+The MeetingRoom entity (@TableName(``meeting\_room'')) maps to the database table with fields: id (Long, @TableId auto-increment), roomName (String), building (String, e.g., ``Building A''), floor (String, e.g., ``3F''), capacity (Integer), hasProjector/hasWhiteboard/hasVideoConf (Boolean), status (Integer, 0=available, 1=maintenance), and createTime (LocalDateTime).
+
+Table 9 lists the Tool Agent REST API endpoints implemented in ToolController.
+
+\vspace{3mm}
+\noindent\textbf{Table 9: Tool Agent REST API Endpoints}
+
+\subhead{5.1.3 Schedule Conflict Detection}
+
+Schedule conflict detection uses a dual-layer architecture: MySQL is the persistent store for all schedule data, while Redis serves as a fast query cache for temporal overlap detection. The ScheduleService handles CRUD operations on meeting\_schedule records. Each schedule has a booker (the user who created it), optional room\_id (0 for personal schedules that don't need a room), start\_time/end\_time, and an attendees field stored as a comma-separated list. Each user's schedules are indexed in Redis as a sorted set, where scores represent epoch timestamps and members encode event identifiers plus time ranges---this structure allows O(log N) insertion and O(log N + M) range queries, where N is the number of schedules for that user and M is the number of results in the time window.
+
+Figure 6 shows the schedule conflict detection algorithm.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig06_schedule_conflict.png}
+\caption{Figure 6: Schedule Conflict Detection --- Redis Sorted Set-Based Temporal Overlap Algorithm}
+\end{figure}
+
+Each user's schedules are stored in a Redis sorted set at key tool:schedule:\{userId\}. Schedule entries are encoded as members with the format ``\{eventId\}|\{startEpoch\}|\{endEpoch\}'', where startEpoch and endEpoch are Unix timestamps. For conflict detection queries, ZRANGEBYSCORE retrieves all schedule entries whose startEpoch is within the specified query window. For each retrieved schedule, the algorithm checks if the stored endEpoch overlaps with the query range to filter out partial overlaps.
+
+Table 10--12 shows the schedule management subsystem including Redis sorted-set operations for temporal conflict detection, attendee-based conflict checking,  and the MySQL-Redis dual-write consistency protocol.
+
+\vspace{3mm}
+\noindent\textbf{Table 10: Pseudocode --- Redis Sorted Set Schedule Operations (add / remove / checkConflicts)}
+
+\vspace{3mm}
+\noindent\textbf{Table 11: Pseudocode --- POST /tool/check-conflict Attendee-Based Conflict Workflow}
+
+\vspace{3mm}
+\noindent\textbf{Table 12: Pseudocode --- Schedule Dual-Write Pattern (MySQL + Redis Consistency)}
+
+\subhead{5.1.4 Route Planning}
+
+The route planning feature integrates the Amap Open API through the AmapService class, which provides geocoding, route calculation, and map data for visualization. The GET /tool/route endpoint accepts origin, destination, and optional waypoint parameters, returning a route response containing path coordinates, turn-by-turn instructions, total distance, and estimated duration. geocoding (converting addresses to coordinates) is implemented through Amap's geocoding API, with detailed request parameters and LLM-based route description translation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig07_route_planning.png}
+\caption{Figure 7: Route Planning Map Visualization --- Interactive Map with Route Polyline and Navigation Steps}
+\end{figure}
+
+Table 13: Route Planning Three-Stage Geocoding and Navigation Pipeline
+
+Table 14 shows the route geocoding pipeline with a three-level fallback strategy and LLM-based translation of navigation instructions.
+
+\vspace{3mm}
+\noindent\textbf{Table 14: Pseudocode --- geocodeWithFallback() Multi-Level Address Resolution}
+
+On the frontend, the MapContainer.vue component loads the Amap JS API v2.0 SDK through script injection with the API key  and security code. The component creates a map instance with zoom level 12, centered on the starting coordinate. An indigo polyline renders the route path. Green and red custom marker icons indicate the start and end points, respectively. Turning instructions are displayed in a scrollable list below the map, with each instruction showing the road name, distance, and a directional icon.
+
+\subhead{5.2 Code Agent Implementation}
+
+The Code Agent lets users generate executable SQL queries from natural language descriptions, connecting business users' domain expertise with the SQL knowledge needed for direct database interaction.
+
+\subhead{5.2.1 Architecture Overview}
+
+Table 15 shows the four-stage pipeline of Code Agent.
+
+\vspace{3mm}
+\noindent\textbf{Table 15: Code Agent Four-Stage Natural Language to SQL Pipeline}
+
+The CodeAgentController exposes six endpoints: POST /code/query (one-shot generate and execute, returns FullResult with SQL, columns, rows, elapsedMs), POST /code/generate (preview only, generates SQL without execution), POST /code/execute (execute only, runs previously generated SQL), GET /code/metadata (returns cached schema metadata), POST /code/metadata/refresh (manually triggers schema refresh), and GET /code/health (returns service status and LLM connectivity).
+
+Figure 8 shows the Code Agent use case diagram. Business analysts interact with the system by submitting natural language queries through the three-step frontend interface. The system processes requests by encoding database schema information, sending structured prompts to the Python LLM inference server, receiving generated SQL, running it through the five-layer validation pipeline, executing only validated queries via JdbcTemplate against MySQL, and returning results with the generated SQL and execution metadata.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig08_code_agent_usecase.png}
+\caption{Figure 8: Code Agent Use Case Diagram --- Natural Language to Safe SQL Execution}
+\end{figure}
+
+The use case covers schema-aware query generation, five-layer security validation, JdbcTemplate-based execution, and result presentation with export capabilities.
+
+\subhead{5.2.2 Python LLM Inference Server Integration}
+
+Table 16 shows the SQL generation HTTP proxy that forwards natural language questions to the Python LLM inference server and parses the returned SQL.
+
+\vspace{3mm}
+\noindent\textbf{Table 16: Pseudocode --- OnnxCodeGenerationService HTTP Proxy to Python Inference Server}
+
+\subhead{5.2.3 Five-Layer SQL Whitelist Validation}
+
+The SqlValidationService uses a defense-in-depth validation pipeline with five sequential layers, each of which can reject SQL that violates its security rule. The validation is configurable through CodeAgentProperties in application.yml.
+
+Figure 9 shows the pipeline from natural language input to safe SQL execution. The five validation layers run in sequence.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig09_sql_validation.png}
+\caption{Figure 9: SQL Generation and Five-Layer Validation Pipeline}
+\end{figure}
+
+Table 17--21 shows the five-layer SQL whitelist validation pipeline: operation type restriction, forbidden keyword blacklist, table name whitelist, column  name whitelist, and query complexity limits.
+
+\vspace{3mm}
+\noindent\textbf{Table 17: Pseudocode --- validateOperation() SQL Operation Type Check (Layer 1)}
+
+\vspace{3mm}
+\noindent\textbf{Table 18: Pseudocode --- validateForbiddenKeywords() Keyword Blacklist Scan (Layer 2)}
+
+\vspace{3mm}
+\noindent\textbf{Table 19: Pseudocode --- validateTableNames() Table Whitelist Verification (Layer 3)}
+
+\vspace{3mm}
+\noindent\textbf{Table 20: Pseudocode --- validateColumnNames() Column Whitelist Verification (Layer 4)}
+
+\vspace{3mm}
+\noindent\textbf{Table 21: Pseudocode --- validateComplexity() Query Complexity Limits (Layer 5)}
+
+Table 22 summarizes the five validation layers with their default configurations.
+
+\vspace{3mm}
+\noindent\textbf{Table 22: SQL Whitelist Validation Rules (Five-Layer Defense)}
+
+\subhead{5.2.4 Metadata Caching and Execution}
+
+Table 23--25 shows the schema metadata cache loading from information\_schema to Redis, the cache lifecycle management with scheduled refresh, and thedefense-in-depth SQL execution flow.
+
+\vspace{3mm}
+\noindent\textbf{Table 23: Pseudocode --- refreshAllMetadata() Schema Metadata Cache Loading}
+
+\vspace{3mm}
+\noindent\textbf{Table 24: Pseudocode --- MetadataCacheManager Cache Lifecycle Management}
+
+\vspace{3mm}
+\noindent\textbf{Table 25: Pseudocode --- SqlExecutionService Defense-in-Depth SQL Execution}
+
+The test dataset provides three core tables for evaluation and demonstration: bank\_customer (5 rows with customer\_no, name, id\_card, phone, risk\_level LOW/MEDIUM/HIGH, status), bank\_account (5 rows with account\_no, customer\_no FK, account\_type, balance, currency HKD/USD, open\_date, status), and bank\_transaction (5 rows with transaction\_no, account\_no FK, type DEPOSIT/WITHDRAW/TRANSFER, amount, transaction\_date, description). The test data is designed to cover common banking query patterns including customer summaries, balance aggregations, transaction histories, and multi-table joins.
+
+\subhead{5.3 RAG Agent Implementation}
+
+\subhead{5.3.1 RAG-agent Microservice Architecture}
+
+The RAG agent microservice runs on port 8085 and is integrated into Spring Cloud Gateway via the new /api/rag/** route. The Gateway's JwtAuthGlobalFilter validates the JWT token and forwards the X-User-Id, X-Username, X-User-Dept-Id, and X-User-Security-Level headers to the rag-agent service, enabling permission-aware document retrieval.
+
+\subhead{5.3.2 Data Structure Design}
+
+The existing sys\_document table remains the document master table, storing title, content, dept\_id, and security\_level. Three additional tables support the RAG pipeline. rag\_document\_chunk stores chunk-level records with document\_id FK, chunk\_index, content, content\_hash, and char\_count. rag\_milvus\_vector records the mapping between chunks and their vector IDs in Milvus, enabling chunk-level lifecycle management. rag\_query\_log records user queries, retrieved chunks, generated answers, latency metrics, and feedback for monitoring and evaluation.
+
+\subhead{5.3.3 Milvus Vector Database Integration}
+
+Milvus is used as the vector database. Docker Compose is extended with Milvus Standalone and its dependencies (etcd for metadata coordination, MinIO for object storage). On startup, rag-agent initializes a Milvus collection with dimension matching the embedding model (default 4096), IP metric type, and configurable index type (default HNSW). The Milvus collection schema is configured with fields: id (primary key, auto-generated), doc\_id, chunk\_id, dept\_id, security\_level, and embedding (FloatVector).
+
+\subhead{5.3.4 Document Chunking Strategy}
+
+Documents are processed with a structure-aware chunking strategy. Documents are first split by Markdown headings and paragraph boundaries to preserve document hierarchy. When a paragraph exceeds the target chunk size (default 500 characters), it is split into overlapping chunks with a configurable overlap of 100 characters. Each chunk inherits the metadata of the source document: document ID, department ID, and security level.
+
+\subhead{5.3.5 Embedding Generation}
+
+Both document chunks and user questions need to be embedded into a shared vector space. The EmbeddingService interface defines embed(text) and embedBatch(texts) methods, and its implementation can support callable external API embedding or local ONNX embedding model. The module is designed to be replaceable---users can plug in different embedding models by changing a single service configuration.
+
+\subhead{5.3.6 Permission Security Filtering}
+
+Permission filtering ensures that the retrieved answers will never disclose the content of document beyond the user's authorized scope. The platform's applies the existing access control model at multiple levels. First, in the pre-retrieval phase, the system computes the set of document IDs the user is allowed to access based on their department membership and security clearance. Second, during vector retrieval, Milvus receives an expression filter restricting the search scope. Third, after retrieval, the results are re-verified against the user's permissions to prevent edge cases where Milvus filter expressions may not fully enforce the access policy.
+
+\subhead{5.3.7 Semantic Retrieval Flow}
+
+The retrieval flow first encodes the user's question with the same embedding model as the document indexing. Milvus performs an ANN (Approximate Nearest Neighbor) search within the allowedDocumentIds scope. The top-K most similar chunks are returned with their similarity scores and metadata. The similarity scores are computed as inner product (IP) between the query vector and document vectors.
+
+\subhead{5.3.8 LLM Answer Generation with Citations}
+
+The LLM (configured through RAG\_LLM\_API\_KEY, RAG\_LLM\_BASE\_URL, RAG\_LLM\_MODEL) is invoked by rag-agent to generate responses. The topK retrieved chunks are assembled into a structured prompt including the question, the context chunks with source metadata, and instructions for generating a concise answer with citations. The LLM response includes answer text and a list of referenced sources. The frontend renders citations with clickable document references showing document title, chunk snippet, similarity score, and security level badge.
+
+\subhead{5.3.9 RAG API Endpoints}
+
+The RAG agent maps the RESTful API endpoints, and all endpoints are protected by Gateway-level JWT authentication. The POST /rag/query is the core Q\&A endpoint, accepting \{question, topK\} and returning \{answer, sources[], latency\}. POST /rag/index/rebuild triggers a full re-indexing with a new Milvus collection. POST /rag/index/document/\{id\} indexes a single document with chunk-clean-rebuild logic. DELETE /rag/index/document/\{id\} deletes all chunks and vectors belonging to a document. GET /rag/health returns the agent's status, Milvus connectivity, and embedding model info.
+
+\subhead{5.3.10 Task Service Integration}
+
+The RAG capability has been integrated into the task-service, replacing the placeholder response (``RAG Agent is currently offline'') with actual rag-agent calls. When a RAG-type task is submitted, the task-service will call the RAG agent's POST /rag/query endpoint and push the execution progress through WebSocket: 20\% (checking permissions and computing document scope), 40\% (performing vector retrieval), 70\% (generating answer with LLM), and 100\% (complete). The RAG response will be saved in task\_record.output, enabling the Task Center and Copilot to use the same RAG capability through the existing orchestration framework.
+
+\subhead{5.3.11 Frontend RAG Workbench}
+
+The current /app/rag page includes: a question input area with loading states; an answer display section; a citation panel listing each referenced document with title, chunk snippet, similarity score, security level badge, and clickable document link; and a permission filter indicator showing the count of blocked documents with expandable details. The Copilot intent routing is updated to redirect RAG intents to /app/rag?query=xxx, in order that users can enter policy or document questions through the Copilot and arrive at the RAG Q\&A flow, and their questions have been pre-filled.
+
+\subhead{5.3.12 Document-RAG Index Synchronization}
+
+A synchronization mechanism ensures that the document library remains in sync with the RAG index. The initial version provides an admin-accessible ``Rebuild Index'' button on the RAG workbench. This button could be triggered via POST /rag/index/rebuild for manual full knowledge base reconstruction. The incremental synchronization includes: document creation triggers single-document indexing through POST /rag/index/document/\{id\}; document updates re-process only the affected document; document deletion removes all chunk records and corresponding vectors. The content hash comparison feature enables change detection: only re-processing the chunks whose content\_hash differs from the stored value avoids unnecessary embedding costs.
+
+\subhead{5.3.13 Docker Deployment Configuration}
+
+Docker Compose is extended with new services: rag-agent (Spring Boot on port 8085), Milvus Standalone, etcd (Milvus metadata coordination), MinIO (Milvus object storage) as well as optionally rag-worker (local embedding model server). New environment variables include: RAG\_SERVICE\_URI, MILVUS\_HOST, MILVUS\_PORT, RAG\_EMBEDDING\_PROVIDER, RAG\_EMBEDDING\_MODEL, RAG\_EMBEDDING\_DIM, RAG\_LLM\_API\_KEY, RAG\_LLM\_BASE\_URL, RAG\_LLM\_MODEL, RAG\_MILVUS\_COLLECTION, RAG\_MILVUS\_INDEX\_TYPE, and RAG\_TOP\_K. The services include dependency ordering so that Milvus and its dependencies start before rag-agent. The goal is a single docker compose up --build -d command that brings the complete platform online.
+
+\subhead{5.3.14 Technical Challenges and Testing Strategy}
+
+(1) Permission security: RAG retrieval must not leak document content through answers. Defense in depth with pre-retrieval filtering, in-query Milvus predicates, and post-retrieval re-verification prevents single-point filter failures.
+(2) MySQL-Milvus consistency: document updates, deletions, and re-indexing require coordinated cleanup of old chunks and vectors; content\_hash-based change detection reduces unnecessary re-processing.
+(3) Embedding quality: retrieval accuracy depends on embedding model quality for Chinese financial texts.
+(4) LLM hallucination: citations and source verification mitigate factual errors.
+(5) Performance: ANN search latency, embedding batch throughput, and LLM response time must meet service targets under concurrent load.
+Testing covers: admin access to high-clearance documents; standard users restricted to same-department and clearance-allowed documents; low-clearance users blocked from confidential documents; RAG\_APPLY approval enabling temporary access; index refresh after document updates; graceful error handling when Milvus or LLM is unavailable; and frontend display with accessibility verification.
+
+\newpage
+
+% ======================================================================

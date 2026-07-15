@@ -1,0 +1,31 @@
+\documentclass[12pt,a4paper]{article}
+
+% === Minimal packages ===
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\geometry{left=30mm,right=30mm,top=25mm,bottom=25mm}
+\usepackage{setspace}
+\setstretch{1.5}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+% Sub-heading: uniform spacing above and below
+\newcommand{\subhead}[1]{%
+  \vspace{10pt}%
+  {\fontsize{14}{17}\selectfont\textbf{#1}}%
+  \vspace{6pt}\par%
+}
+
+% Sub-sub-heading
+\newcommand{\subsubhead}[1]{%
+  \vspace{8pt}%
+  {\fontsize{13}{16}\selectfont\textbf{#1}}%
+  \vspace{4pt}\par%
+}
+
+\begin{document}

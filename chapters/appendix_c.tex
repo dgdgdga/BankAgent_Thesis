@@ -1,0 +1,38 @@
+% APPENDIX C: USER MANUAL
+% ======================================================================
+\newpage
+\begin{center}
+{\fontsize{16}{19}\selectfont\textbf{Appendix C: User Manual (Summary)}}
+\end{center}
+
+\vspace{3mm}
+
+\noindent\textbf{Access and Login.} Navigate to http://167.172.82.161 and log in with your assigned credentials. Default test accounts: - admin / 123456 (System Administrator, full access, clearance Level 3) - credit\_mgr / 123456 (Credit Department Manager, clearance Level 2) - credit\_staff / 123456 (Credit Department Staff, clearance Level 1) - compliance\_mgr / 123456 (Compliance Department Manager, clearance Level 2) - compliance\_staff / 123456 (Compliance Staff, clearance Level 1). New users can register via the Register page with an email-format username and a 6-digit email verification code.
+
+\vspace{2mm}
+\noindent\textbf{Main Dashboard.} The dashboard displays a welcome message with your username, a pending approval alert banner (for ROLE\_ADMIN and ROLE\_DEPT\_ADMIN, showing the count of pending HITL requests with a ``Review'' button), and a statistics overview with four cards: total users, online users (WebSocket connections), today's agent tasks processed, and pending approval requests.
+
+\vspace{2mm}
+\noindent\textbf{Tool Agent (/app/tool).} The left panel has three tabs: Meeting (room search with date and capacity filters, and booking), Schedule (conflict detection by attendee with a visual timeline grid), and Route (origin/destination input with map rendering via Amap, showing a route polyline and step-by-step guidance). The right panel is the AI Assistant Copilot, a global chat panel.
+
+\vspace{2mm}
+\noindent\textbf{Code Agent (/app/code).} A three-step workflow: (1) enter a natural language query or select a quick template, (2) review the generated SQL in a code editor with model information, and (3) execute and view results in a data table with pagination. The result table shows columns, row count, the generated SQL, and execution time. A security rejection message is displayed if the SQL fails any validation layer.
+
+\vspace{2mm}
+\noindent\textbf{Documents (/app/dept-docs).} Two tabs: System Manuals (global documents) and Department Assets (clearance-controlled). Click a document to open a Zen Reader with markdown rendering and an auto-generated table of contents. Documents beyond your clearance level show ``Access Restricted'' with an ``Apply for Access'' button that submits a RAG\_APPLY notification.
+
+\vspace{2mm}
+\noindent\textbf{Messages (/app/notification).} A three-column layout: left sidebar with filters (All, Unread, Pending Approvals, Sent), middle message list, and right detail panel. Type-specific renderers handle RAG\_APPLY approvals (with approve/deny buttons), SQL\_AUDIT records (with SQL code blocks), and BUG\_REPORT feedback.
+
+\vspace{2mm}
+\noindent\textbf{Register (/register).} New users can create an account with an email-format username and a 6-digit email verification code. The registration form requires the user to enter their email address, request a verification code (sent to their inbox, valid for 5 minutes), set a password, and confirm the code. Server-side rate limiting enforces a 60-second cooldown between code requests and a maximum of 5 code requests per email address per day.
+
+\vspace{2mm}
+\noindent\textbf{Administration (/app/admin/users, /app/admin/resources, /app/admin/my-dept).} User Management provides a searchable table of all users with filters for department, clearance level, and role. Admins can assign roles, toggle account status, set clearance levels, and manage department membership. Resource Management lets admins manage meeting rooms and view all schedules. My Department (for ROLE\_DEPT\_ADMIN) shows members within their own department with the ability to view and manage membership.
+
+\vspace{2mm}
+\noindent\textbf{Settings (/app/settings).} Two configuration dialogs: Profile (update your display name through PUT /user/profile) and Security (change your password with current password verification, a new password must be at least 3 characters via PUT /user/password).
+
+\newpage
+
+% ======================================================================

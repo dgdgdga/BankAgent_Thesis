@@ -1,0 +1,160 @@
+% DECLARATION OF INDIVIDUAL CONTRIBUTIONS
+% ======================================================================
+\newpage
+\begin{center}
+{\fontsize{16}{19}\selectfont\textbf{Declaration of Individual Contributions}}
+\end{center}
+
+\vspace{3mm}
+
+In accordance with the University of Hong Kong's guidelines for group project reports, this section details the specific contributions of each team member.
+
+\vspace{4mm}
+
+\noindent\textbf{Lin Chuanbin:}
+
+\vspace{2mm}
+
+I built three core modules for the Agent Platform project: the Tool Agent microservice, the User Service microservice, and the complete frontend UI, delivering over 30 core files.
+
+For the Tool Agent, I developed a Spring Boot service using DeepSeek's LLM for intent recognition, routing requests to meeting booking, schedule conflict detection, or route planning. I added a mock-detect fallback. I connected to the Amap API for geocoding and visualization. I implemented a Redis zset-based schedule conflict detection model.
+
+For the User Service, I built a Spring Boot and Spring Security microservice with JWT authentication (HMAC-SHA256), BCrypt password encoding, and stateless session management. I defined standardized RESTful APIs that return Result\textless T\textgreater responses, including /user/login, /user/register, and /user/me.
+
+On the frontend, I developed the UI with Vue3 Composition API, TypeScript, Vite, Element Plus, and Pinia: a login page, a main layout with collapsible sidebar, and a tool-calling page with three tabs (Meeting, Schedule, and Route) that connects to the backend APIs.
+
+Some of the code I wrote, particularly the frontend components, was early-stage work that other team members later refined and extended.
+
+\vspace{4mm}
+
+\noindent\textbf{Yao Jiacheng:}
+
+\vspace{2mm}
+
+I served as the backend architecture lead and, over the course of the project, took on full-stack development, system integration, security, and DevOps. Much of my work involved extending the initial implementations contributed by other members into production-grade features.
+
+\textbf{1. Backend}
+
+1.1 RBAC authentication \& authorization
+
+Building on the initial user-service skeleton (basic JWT login with a single admin/user role) created by Lin Chuanbin, I extended the platform's security model into a multi-layer permission architecture:
+
+- Designed five RBAC tables supporting three role types (admin, department admin, regular user) with fine-grained permissions pre-seeded in the database.
+- Replaced the original single-role JWT filter with a custom JwtAuthenticationFilter that extracts roles and permissions from JWT claims and registers them in Spring Security, enabling declarative @PreAuthorize checks.
+- Built admin and department-admin controllers covering user CRUD, role assignment, department assignment, clearance level management, and account lifecycle operations.
+- Introduced multi-level department trees with automatic department-scoped data isolation in all data-access controllers.
+- Implemented three-tier document clearance enforcement with department scoping, clearance level comparison, and HITL override via approved access requests.
+
+1.2 API gateway, session management \& unified response format
+
+I built the platform's unified API gateway layer and standardized the cross-service response format:
+
+- Built a custom Spring Cloud Gateway global filter with route rules covering all microservices and WebSocket endpoints.
+- Implemented single-session enforcement via Redis (new logins invalidate old sessions), sliding-window TTL renewal with polling endpoint exemption, and dynamic admin-configurable session timeout.
+- Propagated user identity through HTTP headers so downstream services operate without holding JWT\_SECRET.
+- Defined the Result\textless T\textgreater generic wrapper standard, deployed identical DTOs across all four microservices, and wrote the frontend Axios interceptor with automatic unwrapping.
+
+1.3 Notification \& HITL approval system
+
+I independently designed and implemented the platform's notification and approval subsystem:
+
+- Designed the notification table with threaded messaging support (parent\_id/thread\_id) and a five-state state machine spanning unread, read, pending, approved, and rejected statuses.
+- Built the notification controller with endpoints for sending, filtered listing, read marking, approve/deny with audit trail, and threaded conversation view.
+
+1.4 Task center orchestration
+
+I designed and implemented the task center, a centralized orchestration layer that tracks and manages all Agent workflows across the platform. When a user submits a request through any Agent, the task center persists it as a task record, queues it for asynchronous execution, and pushes real-time progress updates to the frontend.
+
+- Built the task-service microservice with an async execution pipeline.
+- Implemented routing by task type to the corresponding Agent, with progress pushed in three stages to the frontend.
+- Designed fault-tolerance mechanisms including connection timeout, read timeout, up to 3 automatic retries, and graceful queue overflow rejection to prevent system overload.
+
+1.5 Email verification system
+
+I replaced the initial QQ SMTP implementation (originally contributed by Xia Xin) with a production-grade solution after identifying reliability and security limitations:
+
+- Migrated from QQ SMTP to the Resend HTTP API with a redesigned HTML email template.
+- Hardened security with brute-force protection against verification code guessing and a three-tier rate limiting system (per-email cooldown, per-IP hourly cap, per-email daily cap).
+
+1.6 Copilot backend \& AI provider unification
+
+I built the backend for the global Copilot assistant, which generalized the AI chat panel originally confined to Lin Chuanbin's Tool Agent page into a cross-page, multi-Agent intelligent dispatcher. I unified all AI provider configurations across the platform into a single application.yml block, making them consistent across services and environment-aware.
+
+1.7 Document management \& MinIO storage
+
+I worked with Huang Siyuan to build the document storage and management backend, which serves both the document library and her RAG Agent:
+
+- Built a MinIO storage service with auto bucket creation, admin-configurable upload size limits, and support for PDF, DOCX, PPT, and Markdown files.
+- Extended the document table with file metadata and parse status columns to support RAG document parsing.
+- Implemented document access request approval routing to department managers with fallback to system admin.
+
+\textbf{2. Frontend}
+
+2.1 Layout, navigation \& multi-tab system
+
+I rebuilt the frontend shell from the initial scaffold created by Lin Chuanbin into a production-grade application framework:
+
+- Rebuilt the main layout with a collapsible sidebar, multi-tab top bar, responsive mobile layout with off-screen drawer, and role-based dynamic menu visibility.
+- Built a browser-style multi-tab system that preserves page state when users switch between tabs --- form inputs, filters, and scroll positions remain intact --- preventing task interruption, a common issue in enterprise workflows.
+- Implemented a five-layer global navigation guard covering silent refresh recovery, authentication redirect, bounce-back, single-role check, and multi-role check.
+
+2.2 UI design system
+
+I established a minimalist visual design language across the entire platform, replacing the default Element Plus styling inherited from the initial scaffold:
+
+- Globally replaced the default blue theme with a grayscale color system, removing accent strips and unifying border-radius, sizing, and spacing.
+- Redesigned notifications with macOS-style frosted glass and custom cubic-bezier slide-in animation.
+
+2.3 Tool Agent UI rebuild
+
+I redesigned all three Tool Agent interfaces originally built by Lin Chuanbin, splitting the monolithic ~600-line file into independent sub-components and removing the fixed AI chat panel in favor of an inline interaction model:
+
+- Meeting Agent: rebuilt search as a horizontal inline bar with a responsive card grid, SVG icons, equipment tags, and a booking dialog.
+- Schedule Agent: unified two separate forms into a single filter panel and replaced manual user ID input with a filterable multi-select dropdown.
+- Route Agent: redesigned the map from conditional rendering (hidden when no results) to a persistent full-width display. Added a floating control panel and clickable route segments that show detailed navigation steps.
+
+\textbf{3. DevOps}
+
+I set up the full deployment pipeline for the platform, bringing all three Agent services --- Zhang Zhaoming's Code Agent, Huang Siyuan's RAG Agent, and Lin Chuanbin's initial Tool Agent --- onto a single DigitalOcean Droplet:
+
+- Wrote the docker-compose.yml that starts all 9 services with proper startup order, health checks, and data persistence.
+- Created Dockerfiles for each Spring Boot service.
+- Deployed a DigitalOcean Droplet. To keep the Maven build from running out of memory on a small instance, I compiled the JARs locally and copied them over.
+- Set up Nginx as the only public-facing entry point, handling SPA routing, API/WebSocket proxying, and static file caching.
+- Registered the domain bankagent.online through Namecheap and configured Let's Encrypt for HTTPS access.
+
+\vspace{4mm}
+
+\noindent\textbf{Huang Siyuan:}
+
+\vspace{2mm}
+
+I was responsible for building the RAG Agent into a complete enterprise document Q\&A subsystem. I created a standalone rag-agent microservice on port 8085, integrated it with the Spring Cloud Gateway via the new /api/rag/** route, designed three new database tables (rag\_document\_chunk, rag\_milvus\_vector, rag\_query\_log) and integrated Milvus as the vector database with HNSW/IVF\_FLAT index for approximate nearest neighbor retrieval. I implemented document chunking with structure-aware splitting and configurable overlap, embedding via external API and local ONNX models, and permission-enforced knowledge retrieval through pre-retrieval scope computation and post-retrieval re-verification. I defined five REST API endpoints (POST /rag/query, POST /rag/index/rebuild, POST /rag/index/document/\{id\}, DELETE /rag/index/document/\{id\}, GET /rag/health) protected by Gateway-level JWT validation. I also built the frontend RAG workbench page with a split-pane layout: left-side question input with example prompts, right-side answer panel with cited source documents, and a bottom toolbar with permission filter indicators and index management controls.
+
+\vspace{4mm}
+
+\noindent\textbf{Xia Xin:}
+
+\vspace{2mm}
+
+I built the platform's early-stage authentication and permission system with Spring Security, using stateless JWT tokens (HMAC-SHA256) and BCrypt password encoding to separate admin and regular user access. I configured the security filter chain to open only the login and registration endpoints while requiring authentication for all other routes, and defined standardized Result\textless T\textgreater response wrappers and DTOs.
+
+For internationalization, I adapted all business and UI components to support three languages (Simplified Chinese, Traditional Chinese, and English) with dynamic switching through Vue3 and Element Plus i18n. This required reorganizing component-level text, validation messages, and document metadata into locale files.
+
+Building on the existing team codebase, I integrated QQ Mail's SMTP service to deliver verification codes, storing them in Redis with a 5-minute TTL and a 60-second send rate limit, and wired the code verification into the registration flow.
+
+I was responsible for the final report. I redrew all twelve system diagrams, standardized and expanded the technical tables, and synchronized the report with the latest codebase.
+
+Figure redesign. I designed the first version of all figures, and after team discussion, I redrew the original dense, small-font figures into clean, wide-format vector graphics with a unified visual style. Every diagram maintained readability and visual hierarchy, ensuring clear communication of complex architectural concepts. A total of 12 figures were created and refined.
+
+Table standardization. I converted all seven data tables into the three-line table format (1.5 pt top and bottom rules, a 0.75 pt rule below the header, no vertical or interior horizontal lines). I also suggested moving long pseudocode blocks to standalone tables---both to maintain formatting consistency and to communicate algorithms more clearly to readers.
+
+\vspace{4mm}
+
+\noindent\textbf{Zhang Zhaoming:}
+
+\vspace{2mm}
+
+I independently designed and implemented the code-agent module, a Text-to-SQL system built on Spring Boot 3.2 and Java 17. The service converts natural language questions into secure, executable SQL through a four-stage pipeline: (1) schema metadata caching via information\_schema \textrightarrow{} Redis, (2) prompt construction with schema injection and natural language question forwarding to the Python LLM inference server, (3) five-layer SQL whitelist validation (operation type \textrightarrow{} forbidden keywords \textrightarrow{} table whitelist \textrightarrow{} column whitelist \textrightarrow{} complexity limits), and (4) defense-in-depth SQL execution through JdbcTemplate. The OnnxCodeGenerationService (enabled via the code-agent.onnx.enabled=true feature flag) is the single CodeGenerationService implementation, using RestTemplate as an HTTP proxy to the Python server. The SqlValidationService implements all five validation layers with configurable rules. Six REST API endpoints expose generation, preview-only, and execute-only modes. The entire service is containerized with a multi-stage Docker build targeting OpenJDK 17-slim.
+
+\end{document}

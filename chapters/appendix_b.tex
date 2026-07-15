@@ -1,0 +1,132 @@
+% APPENDIX B: API DOCUMENTATION
+% ======================================================================
+\newpage
+\begin{center}
+{\fontsize{16}{19}\selectfont\textbf{Appendix B: API Documentation (Selected Endpoints)}}
+\end{center}
+
+\vspace{3mm}
+
+\noindent POST /api/user/login \textrightarrow{} \{username, password, code?\} \textrightarrow{} \{token, username, roles[], permissions[], realName\} (JWT signed, 24h expiry; code field optional for verification code login mode)
+
+\noindent POST /api/user/send-code \textrightarrow{} \{email\} \textrightarrow{} Sends 6-digit code via Resend (5min TTL, 60s cooldown, daily cap 5)
+
+\noindent POST /api/user/register \textrightarrow{} \{username, password, code\} \textrightarrow{} \{token, username, roles[], permissions[]\}
+
+\noindent GET /api/user/me \textrightarrow{} \{id, username, realName, roles[], permissions[], deptId, securityLevel\}
+
+\noindent PUT /api/user/profile \textrightarrow{} \{realName\} \textrightarrow{} Update display name
+
+\noindent PUT /api/user/password \textrightarrow{} \{oldPassword, newPassword\} \textrightarrow{} Change password
+
+\vspace{2mm}
+\noindent\textbf{User Service (Port 8081) --- Authentication:}
+
+\vspace{1mm}
+\noindent POST /api/user/login \textrightarrow{} Authenticate and receive JWT token
+
+\noindent POST /api/user/register \textrightarrow{} Register new account
+
+\noindent POST /api/user/send-code \textrightarrow{} Send email verification code
+
+\noindent GET /api/user/me \textrightarrow{} Get current user profile
+
+\noindent PUT /api/user/profile \textrightarrow{} Update display name
+
+\noindent PUT /api/user/password \textrightarrow{} Change password
+
+\vspace{2mm}
+\noindent\textbf{Admin (ROLE\_ADMIN only):}
+
+\vspace{1mm}
+\noindent GET /api/admin/users \textrightarrow{} [UserResponse[]]; POST /api/admin/user/role \textrightarrow{} \{userId, roleId\} \textrightarrow{} Clears old, assigns new
+
+\noindent PUT /api/admin/user/status \textrightarrow{} \{userId, status\} \textrightarrow{} Enable/disable; PUT /api/admin/user/dept \textrightarrow{} \{userId, deptId\}
+
+\noindent PUT /api/admin/user/security-level \textrightarrow{} \{userId, securityLevel\} \textrightarrow{} Set clearance (1-3)
+
+\noindent GET /api/admin/roles \textrightarrow{} Role[]; GET /api/admin/permissions \textrightarrow{} Permission[]
+
+\vspace{2mm}
+\noindent\textbf{Dept Admin (ROLE\_DEPT\_ADMIN/ROLE\_ADMIN):}
+
+\vspace{1mm}
+\noindent GET /api/user/dept-admin/members \textrightarrow{} (deptId? for ADMIN) \textrightarrow{} [UserResponse[]]
+
+\noindent GET /api/user/dept-admin/candidates \textrightarrow{} Users with null dept\_id
+
+\noindent POST /api/user/dept-admin/add-members \textrightarrow{} \{userIds[], deptId?\} \textrightarrow{} Batch assign department
+
+\vspace{2mm}
+\noindent\textbf{Documents:}
+
+\vspace{1mm}
+\noindent GET /api/user/document/list \textrightarrow{} Clearance-filtered [DocumentResponse[]] (accessible boolean, content or ``Access Restricted'')
+
+\noindent POST /api/user/document/create \textrightarrow{} \{title, content, deptId, securityLevel\} \textrightarrow{} ADMIN/DEPT\_ADMIN only
+
+\noindent PUT /api/user/document/update \textrightarrow{} \{id, title, content, securityLevel\} \textrightarrow{} ADMIN/DEPT\_ADMIN (own dept)
+
+\noindent DELETE /api/user/document/delete/\{id\} \textrightarrow{} ADMIN only
+
+\noindent GET /api/user/document/\{id\} \textrightarrow{} Document detail (with clearance check)
+
+\vspace{2mm}
+\noindent\textbf{Notifications:}
+
+\vspace{1mm}
+\noindent GET /api/user/notification/list \textrightarrow{} (status?, notifyType?) \textrightarrow{} [NotificationResponse[]] enriched with sender/receiver names
+
+\noindent GET /api/user/notification/unread-count \textrightarrow{} Integer count (status=0); POST /api/user/notification/mark-read/\{id\}
+
+\noindent POST /api/user/notification/approve/\{id\} \textrightarrow{} replyMessage? \textrightarrow{} Approve HITL request; POST /api/user/notification/deny/\{id\} \textrightarrow{} replyMessage? \textrightarrow{} Deny
+
+\vspace{2mm}
+\noindent\textbf{Tool Agent (Port 8083):}
+
+\vspace{1mm}
+\noindent POST /api/tool/execute \textrightarrow{} \{toolType, parameters?, naturalLanguage\} \textrightarrow{} AI-routed result (DeepSeek intent classification)
+
+\noindent GET /api/tool/meeting-rooms \textrightarrow{} (startTime?, endTime?, capacity?) \textrightarrow{} [Room[]] with availability status
+
+\noindent POST /api/tool/book-room \textrightarrow{} \{roomId, startTime, endTime, title, attendees\} \textrightarrow{} Booking confirmation
+
+\noindent POST /api/tool/check-conflict \textrightarrow{} \{attendees[], startTime, endTime\} \textrightarrow{} \{hasConflict, conflictUser, message\}
+
+\noindent GET /api/tool/schedule/user/\{userId\} \textrightarrow{} (startDate?, endDate?) \textrightarrow{} [Schedule[]]; POST /api/tool/schedule \textrightarrow{} Create personal schedule
+
+\noindent PUT /api/tool/schedule/\{id\} \textrightarrow{} Update; DELETE /api/tool/schedule/\{id\} \textrightarrow{} Delete
+
+\noindent GET /api/tool/route \textrightarrow{} (origin, destination, waypoints?) \textrightarrow{} \{coordinates[], steps[], distance, duration\}
+
+\vspace{2mm}
+\noindent\textbf{Admin (ROLE\_ADMIN):}
+
+\vspace{1mm}
+\noindent CRUD /api/tool/admin/meeting-rooms \textrightarrow{} X-User-Roles header checked; validations: roomName req, floor req, capacity>0
+
+\noindent CRUD /api/tool/admin/schedules \textrightarrow{} X-User-Roles header checked; validations: booker req, startTime<endTime
+
+\vspace{2mm}
+\noindent\textbf{Code Agent (Port 8084):}
+
+\vspace{1mm}
+\noindent POST /api/code/query \textrightarrow{} \{question, database?\} \textrightarrow{} FullResult \{success, sql, columns[], rows[], rowCount, elapsedMs, inferenceMethod\}
+
+\noindent POST /api/code/generate \textrightarrow{} \{question\} \textrightarrow{} \{success, sql, inferenceMethod\}
+
+\noindent POST /api/code/execute \textrightarrow{} \{sql\} \textrightarrow{} \{success, columns[], rows[], rowCount, elapsedMs\}
+
+\noindent GET /api/code/metadata \textrightarrow{} Cached schema \{tables: \{\}\}; POST /api/code/metadata/refresh \textrightarrow{} Force refresh; GET /api/code/health \textrightarrow{} Status
+
+\vspace{2mm}
+\noindent\textbf{Gateway (Port 8080):}
+
+\vspace{1mm}
+\noindent Routes: /api/user/**\textrightarrow{}user-service:8081; /api/tool/**\textrightarrow{}tool-agent:8083; /api/code/**\textrightarrow{}code-agent:8084; /ws/**\textrightarrow{}tool-agent:8083/tool/ws
+
+\noindent JwtAuthGlobalFilter (order=-100): Validates JWT on all non-whitelist paths; extracts claims \textrightarrow{} X-User-* headers; rate limiting: 100 req/s per IP (burst 200)
+
+\newpage
+
+% ======================================================================

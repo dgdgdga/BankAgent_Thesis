@@ -1,0 +1,382 @@
+% APPENDIX A: DATABASE SCHEMA
+% ======================================================================
+\begin{center}
+{\fontsize{16}{19}\selectfont\textbf{Appendix A: Database Schema}}
+\end{center}
+
+\vspace{3mm}
+
+This appendix documents the complete database schema for the agent\_platform database. All tables use InnoDB engine, utf8mb4 character set with utf8mb4\_unicode\_ci collation. The schema comprises 14 tables across six functional domains.
+
+\vspace{4mm}
+
+% Common column format: Column (2.8cm) | Type (3.5cm) | Description (rest)
+\newcommand{\schematableheader}{
+\toprule
+\textbf{Column} & \textbf{Type} & \textbf{Description} \\
+\midrule
+}
+
+% --- Table A1 ---
+\noindent\textbf{Table A1: meeting\_room --- Meeting room resources}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id          & BIGINT, PK, AUTO\_INCREMENT & Unique room identifier \\
+room\_name  & VARCHAR(50), NOT NULL      & Room display name (e.g., ``Room 301'') \\
+building    & VARCHAR(100)               & Building name (e.g., ``Building A'') \\
+floor       & VARCHAR(20), NOT NULL      & Floor identifier (e.g., ``3F'') \\
+capacity    & INT, NOT NULL              & Maximum occupancy \\
+facilities  & VARCHAR(200)               & Equipment list (Projector, Whiteboard, etc.) \\
+status      & INT, DEFAULT 1             & 1=available, 0=maintenance \\
+create\_time & DATETIME                  & Record creation timestamp \\
+update\_time & DATETIME                  & Auto-updated on modification \\
+deleted     & INT, DEFAULT 0             & Logical delete flag \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A2 ---
+\noindent\textbf{Table A2: meeting\_schedule --- Booking and schedule records}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id          & BIGINT, PK, AUTO\_INCREMENT & Unique booking identifier \\
+room\_id    & BIGINT, NOT NULL           & FK to meeting\_room.id (0 = personal schedule) \\
+booker      & VARCHAR(50), NOT NULL      & Username of schedule owner \\
+start\_time & DATETIME, NOT NULL         & Schedule start time \\
+end\_time   & DATETIME, NOT NULL         & Schedule end time \\
+topic       & VARCHAR(200)               & Optional event description \\
+status      & INT, DEFAULT 1             & 1=active, 0=cancelled \\
+create\_time & DATETIME                  & Record creation timestamp \\
+update\_time & DATETIME                  & Auto-updated on modification \\
+deleted     & INT, DEFAULT 0             & Logical delete flag \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A3 ---
+\noindent\textbf{Table A3: sys\_user --- User accounts}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id              & BIGINT, PK, AUTO\_INCREMENT     & Unique user identifier \\
+username        & VARCHAR(50), UNIQUE, NOT NULL   & Login username (email format) \\
+password        & VARCHAR(100), NOT NULL          & BCrypt-hashed password \\
+real\_name      & VARCHAR(50)                     & Display name \\
+role            & VARCHAR(20), DEFAULT `user'     & Legacy role description field \\
+status          & INT, DEFAULT 1                  & 1=enabled, 0=disabled \\
+dept\_id        & BIGINT                          & FK to sys\_department \\
+clearance\_level & TINYINT, NOT NULL, DEFAULT 1   & 1=Public, 2=Internal, 3=Confidential \\
+create\_time     & DATETIME                       & Record creation timestamp \\
+update\_time     & DATETIME                       & Auto-updated on modification \\
+deleted         & TINYINT, NOT NULL, DEFAULT 0    & Logical delete (0=normal, 1=deleted) \\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}
+\noindent\textit{Seed accounts (all passwords: 123456):} admin (ROLE\_ADMIN, clearance L3); credit\_mgr (ROLE\_DEPT\_ADMIN, L2, dept\_id=1); credit\_staff (ROLE\_USER, L1, dept\_id=1); compliance\_mgr (ROLE\_DEPT\_ADMIN, L2, dept\_id=2); compliance\_staff (ROLE\_USER, L1, dept\_id=2).
+
+\vspace{4mm}
+
+% --- Table A4 ---
+\noindent\textbf{Table A4: sys\_role --- System roles}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id          & BIGINT, PK, AUTO\_INCREMENT  & Unique role identifier \\
+role\_code  & VARCHAR(50), UNIQUE, NOT NULL & Role code (ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, ROLE\_USER) \\
+role\_name  & VARCHAR(50), NOT NULL        & Human-readable role name \\
+description & VARCHAR(250)                 & Role description \\
+status      & INT, DEFAULT 1               & 1=enabled, 0=disabled \\
+create\_time & DATETIME                    & Record creation timestamp \\
+update\_time & DATETIME                    & Auto-updated on modification \\
+deleted     & TINYINT, NOT NULL, DEFAULT 0 & Logical delete flag \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A5 ---
+\noindent\textbf{Table A5: sys\_permission --- Granular permissions}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id            & BIGINT, PK, AUTO\_INCREMENT   & Unique permission identifier \\
+perm\_code    & VARCHAR(100), UNIQUE, NOT NULL & Permission code (e.g., ``user:view'') \\
+perm\_name    & VARCHAR(100), NOT NULL         & Human-readable permission name \\
+resource\_path & VARCHAR(200)                  & API endpoint path \\
+method        & VARCHAR(10), DEFAULT `*'      & HTTP method (GET/POST/PUT/DELETE/*) \\
+type          & TINYINT, DEFAULT 1            & 1=menu, 2=API/button \\
+parent\_id    & BIGINT, DEFAULT 0              & Parent permission ID (hierarchical) \\
+create\_time   & DATETIME                      & Record creation timestamp \\
+update\_time   & DATETIME                      & Auto-updated on modification \\
+deleted       & TINYINT, NOT NULL, DEFAULT 0   & Logical delete flag \\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}
+\noindent\textit{Seed (6):} user:view, user:role, user:status, role:view, task:submit, task:query.
+
+\vspace{4mm}
+
+% --- Table A6 ---
+\noindent\textbf{Table A6: sys\_user\_role \& sys\_role\_permission --- Association tables}
+\vspace{2mm}
+
+\noindent\textit{sys\_user\_role}
+\vspace{1mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+user\_id & BIGINT, NOT NULL & FK to sys\_user.id \\
+role\_id & BIGINT, NOT NULL & FK to sys\_role.id \\
+\multicolumn{2}{@{}l}{\textbf{PRIMARY KEY}} & (user\_id, role\_id) \\
+\bottomrule
+\end{tabular}
+
+\vspace{3mm}
+
+\noindent\textit{sys\_role\_permission}
+\vspace{1mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+role\_id & BIGINT, NOT NULL & FK to sys\_role.id \\
+perm\_id & BIGINT, NOT NULL & FK to sys\_permission.id \\
+\multicolumn{2}{@{}l}{\textbf{PRIMARY KEY}} & (role\_id, perm\_id) \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A7 ---
+\noindent\textbf{Table A7: sys\_department --- Organizational structure}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id          & BIGINT, PK, AUTO\_INCREMENT  & Unique department identifier \\
+dept\_name  & VARCHAR(100), NOT NULL       & Department name \\
+description & VARCHAR(250)                 & Department description \\
+parent\_id  & BIGINT, DEFAULT 0            & Parent department ID (hierarchical) \\
+status      & INT, DEFAULT 1               & 1=enabled, 0=disabled \\
+create\_time & DATETIME                    & Record creation timestamp \\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}
+\noindent\textit{Seed (6):} Credit Department, Compliance Department, Asset Management Department, Retail Banking Department, Investment Banking Department, Risk Control Department.
+
+\vspace{4mm}
+
+% --- Table A8 ---
+\noindent\textbf{Table A8: sys\_document --- Knowledge base documents}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id              & BIGINT, PK, AUTO\_INCREMENT      & Unique document identifier \\
+title           & VARCHAR(100), NOT NULL           & Document title \\
+content         & TEXT, NOT NULL                   & Document body (Markdown) \\
+dept\_id        & BIGINT                           & FK to sys\_department (NULL = global) \\
+security\_level & TINYINT, NOT NULL, DEFAULT 1     & 1=Public, 2=Internal, 3=Confidential \\
+file\_type      & VARCHAR(20), DEFAULT `MARKDOWN'  & MARKDOWN / PDF / DOCX / PPT \\
+file\_size      & BIGINT                           & Original file size in bytes \\
+minio\_object\_key & VARCHAR(500)                  & MinIO object key for uploaded files \\
+parse\_status   & VARCHAR(20)                     & PENDING / DONE / FAILED \\
+create\_time     & DATETIME                       & Record creation timestamp \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A9 ---
+\noindent\textbf{Table A9: sys\_notification --- Multi-type notification system}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id          & BIGINT, PK, AUTO\_INCREMENT   & Unique notification identifier \\
+sender\_id  & BIGINT, NOT NULL              & FK to sys\_user.id \\
+receiver\_id & BIGINT, NOT NULL             & FK to sys\_user.id \\
+title       & VARCHAR(150), NOT NULL        & Notification title \\
+content     & TEXT, NOT NULL                & Notification body \\
+notify\_type & VARCHAR(50), DEFAULT `CHAT'  & CHAT / RAG\_APPLY / SQL\_AUDIT / BUG\_REPORT \\
+status      & INT, DEFAULT 1                & 1=Unread, 2=Read/Pending, 3=Approved, 4=Rejected \\
+payload     & TEXT                          & JSON payload for structured metadata \\
+opinion     & TEXT                          & Approval review comments \\
+parent\_id  & BIGINT                        & Parent notification ID (threading) \\
+thread\_id  & BIGINT                        & Root conversation thread ID \\
+create\_time & DATETIME                     & Record creation timestamp \\
+update\_time & DATETIME                     & Auto-updated on modification \\
+deleted     & TINYINT, NOT NULL, DEFAULT 0  & Logical delete flag \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A10 ---
+\noindent\textbf{Table A10: sys\_config --- System configuration}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id          & BIGINT, PK, AUTO\_INCREMENT  & Unique config entry identifier \\
+param\_key  & VARCHAR(100), UNIQUE, NOT NULL & Configuration key \\
+param\_value & VARCHAR(500), NOT NULL     & Configuration value \\
+description & VARCHAR(250)                & Human-readable description \\
+update\_time & DATETIME                   & Auto-updated on modification \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A11 ---
+\noindent\textbf{Table A11: task\_record --- Agent task lifecycle tracking}
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id            & BIGINT, PK, AUTO\_INCREMENT        & Unique task identifier (starts at 1000) \\
+task\_type    & VARCHAR(20), NOT NULL              & Task type: CODE / RAG / TOOL \\
+status        & VARCHAR(20), NOT NULL, DEFAULT `INIT' & INIT / RUNNING / SUCCESS / FAIL \\
+user\_id      & BIGINT, NOT NULL                   & FK to sys\_user.id \\
+input         & TEXT, NOT NULL                     & User's natural language prompt \\
+output        & TEXT                               & AI agent output result \\
+error\_msg    & TEXT                               & Error details on failure \\
+attempt\_count & INT, NOT NULL, DEFAULT 0          & Retry count \\
+elapsed\_time & INT, DEFAULT 0                     & Execution time in milliseconds \\
+created\_at   & DATETIME                           & Record creation timestamp \\
+updated\_at   & DATETIME                           & Auto-updated on modification \\
+\bottomrule
+\end{tabular}
+
+\vspace{4mm}
+
+% --- Table A12: RAG tables ---
+\noindent\textbf{Table A12: RAG knowledge base tables}
+\vspace{2mm}
+
+\noindent\textit{rag\_knowledge\_base}
+\vspace{1mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id             & BIGINT, PK, AUTO\_INCREMENT             & Unique KB identifier \\
+name           & VARCHAR(120), NOT NULL                  & Knowledge base display name \\
+description    & VARCHAR(500)                            & Knowledge base description \\
+owner\_username & VARCHAR(100)                           & Creator or owner username \\
+dept\_id       & BIGINT                                  & Department scope (NULL = platform-wide) \\
+visibility     & VARCHAR(30), NOT NULL, DEFAULT `DEPARTMENT' & PRIVATE / DEPARTMENT / GLOBAL \\
+security\_level & TINYINT, NOT NULL, DEFAULT 1           & Default security level for documents \\
+status         & VARCHAR(30), NOT NULL, DEFAULT `ACTIVE' & ACTIVE / ARCHIVED / DELETED \\
+document\_count & INT, NOT NULL, DEFAULT 0               & Number of documents in this KB \\
+chunk\_count   & INT, NOT NULL, DEFAULT 0                & Total chunk count \\
+create\_time   & DATETIME                                & Record creation timestamp \\
+update\_time   & DATETIME                                & Auto-updated on modification \\
+\bottomrule
+\end{tabular}
+
+\vspace{3mm}
+
+\noindent\textit{rag\_source\_document}
+\vspace{1mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id                 & BIGINT, PK, AUTO\_INCREMENT           & Unique source document identifier \\
+kb\_id             & BIGINT, NOT NULL                     & FK to rag\_knowledge\_base.id \\
+sys\_document\_id  & BIGINT                               & Linked sys\_document.id \\
+title              & VARCHAR(200), NOT NULL               & Display title \\
+original\_file\_name & VARCHAR(255), NOT NULL             & Uploaded file name \\
+file\_type         & VARCHAR(32)                          & File extension (pdf, docx, pptx, txt) \\
+mime\_type         & VARCHAR(120)                         & Browser-reported MIME type \\
+file\_size         & BIGINT                               & File size in bytes \\
+storage\_provider  & VARCHAR(30), NOT NULL, DEFAULT `minio' & Storage backend \\
+storage\_bucket    & VARCHAR(120)                         & MinIO bucket name \\
+storage\_object\_key & VARCHAR(500)                       & MinIO object key \\
+content\_hash      & VARCHAR(64)                          & SHA-256 hash of original file bytes \\
+parsed\_text       & LONGTEXT                             & Parsed text cache for chunking \\
+status             & VARCHAR(30), NOT NULL, DEFAULT `ACTIVE' & ACTIVE / DELETED \\
+parser\_status     & VARCHAR(30), NOT NULL, DEFAULT `UPLOADED' & UPLOADED / PARSED / PARSE\_PENDING / PARSE\_FAIL \\
+index\_status      & VARCHAR(30), NOT NULL, DEFAULT `PENDING' & PENDING / INDEXED / INDEX\_FAIL \\
+chunk\_count       & INT, NOT NULL, DEFAULT 0             & Number of chunks generated \\
+security\_level    & TINYINT, NOT NULL, DEFAULT 1         & Inherited from document \\
+dept\_id           & BIGINT                               & Inherited from document \\
+uploaded\_by       & VARCHAR(100)                         & Uploading user \\
+error\_message     & VARCHAR(1000)                        & Error details on parse/index failure \\
+create\_time       & DATETIME                             & Record creation timestamp \\
+update\_time       & DATETIME                             & Auto-updated on modification \\
+\bottomrule
+\end{tabular}
+
+\vspace{3mm}
+
+\noindent\textit{rag\_document\_chunk}
+\vspace{1mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id             & BIGINT, PK, AUTO\_INCREMENT    & Unique chunk identifier \\
+document\_id   & BIGINT, NOT NULL              & FK to sys\_document.id \\
+chunk\_index   & INT, NOT NULL                 & Sequential chunk order \\
+chunk\_text    & MEDIUMTEXT, NOT NULL          & Chunk body for retrieval and citation \\
+token\_count   & INT, DEFAULT 0                & Estimated token count \\
+vector\_id     & VARCHAR(128), UNIQUE, NOT NULL & Corresponding vector PK in Milvus \\
+security\_level & TINYINT, NOT NULL, DEFAULT 1 & Copied from source document \\
+dept\_id       & BIGINT                        & Copied from source document \\
+content\_hash  & VARCHAR(64)                   & SHA-256 hash of chunk content \\
+create\_time   & DATETIME                      & Record creation timestamp \\
+update\_time   & DATETIME                      & Auto-updated on modification \\
+deleted        & TINYINT, NOT NULL, DEFAULT 0  & Logical delete flag \\
+\bottomrule
+\end{tabular}
+
+\vspace{3mm}
+
+\noindent\textit{rag\_query\_log}
+\vspace{1mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id               & BIGINT, PK, AUTO\_INCREMENT       & Unique log entry identifier \\
+user\_id         & BIGINT, NOT NULL                  & FK to sys\_user.id \\
+username         & VARCHAR(100), NOT NULL            & Username at query time \\
+question         & TEXT, NOT NULL                    & User's natural language question \\
+answer           & MEDIUMTEXT                        & Generated LLM answer \\
+retrieved\_doc\_ids & VARCHAR(500)                   & Comma-separated retrieved document IDs \\
+blocked\_doc\_ids & VARCHAR(500)                     & Documents blocked by permission filter \\
+top\_k           & INT, DEFAULT 5                    & Number of chunks retrieved \\
+latency\_ms      & INT, DEFAULT 0                    & Query response time in milliseconds \\
+status           & VARCHAR(30), NOT NULL, DEFAULT `INIT' & INIT / SUCCESS / FAIL \\
+error\_msg       & TEXT                              & Error details on failure \\
+create\_time     & DATETIME                          & Record creation timestamp \\
+\bottomrule
+\end{tabular}
+
+\vspace{3mm}
+
+\noindent\textit{rag\_index\_task}
+\vspace{1mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\schematableheader
+id          & BIGINT, PK, AUTO\_INCREMENT         & Unique task identifier \\
+document\_id & BIGINT                             & Target document (NULL = full rebuild) \\
+task\_type  & VARCHAR(30), NOT NULL               & REBUILD\_ALL / INDEX\_DOCUMENT / DELETE\_DOCUMENT \\
+status      & VARCHAR(30), NOT NULL, DEFAULT `INIT' & INIT / RUNNING / SUCCESS / FAIL \\
+message     & TEXT                                & Status message or error details \\
+create\_time & DATETIME                           & Record creation timestamp \\
+update\_time & DATETIME                           & Auto-updated on modification \\
+\bottomrule
+\end{tabular}
+
+\newpage

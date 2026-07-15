@@ -1,0 +1,71 @@
+% CHAPTER 3: REQUIREMENTS ANALYSIS
+% ======================================================================
+{\fontsize{18}{22}\selectfont\textbf{3 Requirements Analysis}}\par
+
+\vspace{3mm}
+
+\subhead{3.1 Banking Industry Context}
+
+System Requirements come from how banks work. Banks and financial firms handle complex information settings. These settings have four main features. First, they have large relational data stores. These hold customer data, accounts, and dealings. They are mostly stored in MySQL. Second, they have many policy documents. They are written in everyday language. Examples are anti-money laundering (AML) rules. Third, everyday work involves using many business tools. These tools are for tasks like booking meeting rooms, checking schedules, planning routes, and managing resources. Fourth, security is strict. A layered model is needed. This model must work at the department level and also care about document clearance.
+
+A study of stakeholders finds five main user groups. Business analysts need to query databases without deep SQL knowledge. Compliance officers need to quickly find relevant regulatory clauses with verifiable citations. IT operations staff need systems they can deploy and maintain on-premises. Department managers need oversight and approval capabilities. System administrators need full control over user management.
+
+\subhead{3.2 Functional Requirements}
+
+The platform's functional requirements are arranged by microservice. They show the features that were built. These features are checked against the codebase.
+
+FR1 -- User Authentication and RBAC. The system supports registration. Usernames must be in email format. It uses BCrypt to hash passwords. It uses JWT for authentication without server-side sessions. It offers dual-mode login: password, and email verification code. Unsafe login attempts are rate-limited at the IP and username level. Three roles are supported: ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, and ROLE\_USER. They determine available API endpoints and UI menus. The backend uses a JWT verification filter that extracts user identity from the token. It then puts these into the security context. Downstream services then check this context.
+
+FR2 -- Department Management. FA department structure with different levels is supported. It has six units: Credit, Compliance, Asset Management, Retail Banking, Investment Banking, and Risk Control. Department admins can manage members inside their department. They can view members and find candidates who are not yet assigned to any department. But they are not allowed to view or modify members from other departments unless they hold ROLE\_ADMIN role.
+
+FR3 -- Document Management with Security Clearance. Organizational documents are stored in the sys\_document table. The table has fields for title, markdown content, a department link, and a security level field. There are three clearance levels: Level 1 (general), Level 2 (confidential), and Level 3 (strictly confidential). Document visibility is controlled by a multi-factor rule: clearance level, department membership, and a HITL override mechanism. Users who try to access a restricted document see ``Access Restricted'' instead of the content.
+
+FR4 -- Notification System. The notification subsystem handles multiple types. They are stored in the sys\_notification table. One type is CHAT. This is for general messaging. Its status flow is: 0 means unread, 1 means read. Another is RAG\_APPLY. These are document access requests. Their status flow is: 0 means unread, 1 means read, 2 means pending review, 3 means approved, 4 means rejected. The third type is SQL\_AUDIT. This is for SQL execution records. The fourth type is BUG\_REPORT. This is for user feedback. The API includes endpoints for listing, unread count, marking as read, and approving or denying with a reply message.
+
+FR5 -- Code Agent. Natural-language queries are accepted through three endpoints. POST /code/query does generation and execution. POST /code/generate gives a preview only. POST /code/execute runs execution only. The code agent sends the NL question to a Python LLM service. This service runs an LLM model to make SQL queries. The returned SQL is then checked. A five-layer whitelist filter checks: (1) SQL operation type should be only SELECT; (2) no forbidden keywords like DROP or DELETE; (3) table names are in a pre-defined whitelist; (4) column names are in a pre-defined whitelist; and (5) query complexity metrics are not exceeded. If any layer fails, the SQL is rejected and the frontend receives a rejection message with information about the breached rule layer.
+
+FR6 -- RAG. RAG accepts natural-language policy questions. It searches a Milvus database for text pieces with a similar meaning. It generates responses with source citations. It respects document security levels. It does not return information from documents that the user is not allowed to see. Permission enforcement is implemented at multiple levels: pre-retrieval scope computation, in-query Milvus filtering, and post-retrieval re-verification.
+
+FR7 -- Tool Agent. There is a single AI execution endpoint. It is POST /tool/execute. It accepts ToolRequest objects. These objects contain a toolType field, a parameters map, and a natural language field. Intent classification is done by DeepSeek. It determines whether the user wants a meeting room, a schedule, or a route. Then the request is sent to the handler that matches the classification. The tool agent also has programmatic REST endpoints. These are for each tool type. They provide compatibility for automated systems.
+
+FR8 -- Admin Resource Management. Users with the ROLE\_ADMIN role can use two controllers. One is the MeetingRoomAdminController. It handles CRUD at /tool/admin/meeting-rooms. The other is the MeetingScheduleAdminController. It handles CRUD at /tool/admin/schedules. Admin-specific endpoints are protected. The X-User-Roles header is checked.
+
+\subhead{3.3 Non-Functional Requirements}
+
+NFR1 -- Data Sovereignty. All core data tasks run inside our own Docker setup. These tasks include AI model runs,  finding documents and database work. They all happen in a Docker environment on our own network. This makes sure that customer data and internal papers do not go outside. The on-premise deployment model is agreed by the industry and complies with the HKMA regulation. It keeps the data safe inside the bank's buildings. The only outside calls that are allowed are for clearly needed extra services (for example, Amap API for maps). The data amount sent out is also kept to a minimum.
+
+NFR2 -- Performance. The system should meet these latency targets: (a) Code Agent SQL generation $\leq$3 s; (b) Tool Agent meeting-room and schedule queries $\leq$500 ms; (c) route-planning responses $\leq$2 s (limited by Amap API latency); (d) user authentication JWT validation $\leq$50 ms per request at the gateway. These targets cover normal working conditions with up to 50 users using the system at the same time.
+
+NFR3 -- Security. All API traffic must be encrypted with HTTPS/TLS (and WSS for WebSocket connections). User passwords are hashed with BCrypt (strength factor 10). JWT tokens have configurable expiry (default 24 h). The gateway layer enforces IP-level rate limiting. A single-session enforcement mechanism ensures new logins invalidate old sessions. Unsafe login attempts are rate-limited at three tiers: 60-seconds per email cooldown, 10 verification attempts per IP per hour, 5 emails per address per day.
+
+NFR4 -- Reliability and Availability.The platform is designed to be up 99.5\% of the time during business hours. The system can keep working at a reduced level when some services fail. When the DeepSeek API is not available, a mock-detect fallback returns placeholder data. This lets the front end continue to function. MySQL data should be backed up regularly using the built-in dump tools. Docker health checks on each container help with auto-recovery after a crash.
+
+NFR5 -- Maintainability. The architecture follows microservice principles. It keeps different responsibilities separate. Each service provides RESTful APIs. These are documented in Appendix B. A Result\textless T\textgreater generic wrapper gives the same way to show success and error responses across all services. Frontend uses Axios interceptors for unified response opening. Containerization means the developer environment matches the production environment. Environment-specific settings can be changed independently through the application.yml files of each service.
+
+NFR6 -- Deployability. The system is deployed with one Docker Compose command. The MySQL container starts on its own, using a pre-configured initialization script that creates all tables and loads seed data. This process has no manual SQL steps. Redis cache starts with default settings. Java services build JARs with Maven. The Python service uses requirements.txt and FastAPI. All container versions are fixed in the Compose file. This keeps the deployment deterministic and predictable. You do not need a GPU. All services run on CPU-based Droplets.
+
+\subhead{3.4 Use Case Analysis}
+
+Use case analysis was done. It captured how users interact with the multi-agent platform. Detailed use case diagrams were made for each agent module. This was done during the design phase. Figure 1 shows the use case diagram for the Tool Agent module.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig01_tool_agent_usecase.png}
+\caption{Figure 1: Tool Agent Use Case Diagram --- Meeting Room, Schedule Conflict, and Route Planning}
+\end{figure}
+
+There are three agent modules. Their use cases are as following.
+
+UC1 -- Generate SQL from Natural Language (Code Agent). A business analyst types a natural language request. An example is: ``Show me all customers who opened accounts in Q1 2026 with balances exceeding HKD 500,000.'' The agent encodes the database schema and the query. Then the LLM service generates SQL. The SQL goes through a five-layer whitelist filter. It runs against the database. Finally, the frontend shows a results table. The columns include a risk-level indicator and row count. The SQL and execution time are also shown.
+
+UC2 -- Policy Compliance Query (RAG Agent). A compliance officer asks a question. For example: ``What are the latest KYC requirements for corporate account opening?'' The system encodes the query. It retrieves the top-K matching chunks from Milvus. It applies permission filtering. It creates a prompt. Then it sends it to the LLM. The LLM generates a response. It includes source citations and similarity scores. The frontend shows the answer. It shows citations with clickable document reference links. The officer can verify the source text.
+
+UC3 -- Meeting Room Booking (Tool Agent). An administrative staff member types a request into the AI Assistant panel. The request is: ``Book a meeting room on the 3rd floor for 10 people tomorrow morning at 10 AM.'' The DeepSeek API classifies the intent as meeting. Then it extracts the parameters (floor = 3F, capacity = 10, time = tomorrow 10:00--11:00). Next, it sends the request to the booking endpoint. The system checks for conflicts. It uses Redis sorted sets for fast overlap detection. It writes the booking to the database. Finally, the frontend shows a booking confirmation. It includes the room name, building, floor, time, and equipment list. It also gives a quick link to add the event to your personal schedule.
+
+UC4 -- Schedule Conflict Detection (Tool Agent). A user enters a request: ``Check if Zhang and Li are free next Tuesday 2--4 PM.'' The AI identifies the user's intent and then extracts the attendees' names and the time range (start and end). The system queries Redis sorted-set indexes for both users. It runs ZRANGEBYSCORE with the time window for each attendee. The result is a list of any overlapped meetings. It is shown on a visual timeline grid. Colliding events are highlighted in red. Free slots are shown in green.
+
+UC5 -- Document Access Escalation (User Center). A Credit Department staff member has clearance Level 1. They try to access a Level-3 confidential risk evaluation document. The method SysDocumentService.canAccess() compares clearance levels. It sees L1 $<$ L3 and returns JSON showing accessible = false with the message ``Access Restricted.'' The user clicks the ``Apply for Access'' button. A RAG\_APPLY notification is created. The department manager and system administrator receive it. The manager reviews and approves. Then they grant temporary access. The user can now view the document.
+
+\newpage
+
+% ======================================================================

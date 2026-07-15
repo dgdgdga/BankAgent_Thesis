@@ -1,0 +1,45 @@
+% CHAPTER 6: SYSTEM INTEGRATION AND DEPLOYMENT
+% ======================================================================
+{\fontsize{18}{22}\selectfont\textbf{6 System Integration and Deployment}}\par
+
+\vspace{3mm}
+
+\subhead{6.1 User Center and RBAC}
+
+The user center (user service, port 8081) integrates identity management, access control, department-level data isolation, as well as cross-cutting notification and document services. Table 26 shows the dual-mode login and JWT session management flow.
+
+\vspace{3mm}
+\noindent\textbf{Table 26: Pseudocode --- Dual-Mode Login and JWT Session Management}
+
+Access Control. Three roles (ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, ROLE\_USER) and six granular permissions are used to control access to all protected endpoints. The six departments (Credit Department, Compliance Department, Asset Management Department, Retail Banking Department, Investment Banking Department, and Risk Control Department) provide organizational data scoping. A custom JwtAuthenticationFilter extracts permissions from JWT claims and registers them in Spring Security's SecurityContextHolder. The @PreAuthorize annotation on each controller method can be declared with hasAuthority checks, while the abstraction level's department admin controllers additionally verify that the requested resource's dept\_id matches the accessing user's dept\_id, enabling cross-cutting department-level data isolation.
+
+\subhead{6.2 Task Center and Orchestration}
+
+The task center sends requests to the agent, tracks the execution progress and returns the results. The orchestration function is distributed between the gateway (static routing) and each agent service (autonomous execution).When a user submits a task through the Copilot or an agent page, the task is persisted, queued for asynchronous execution, and progress is pushed through WebSocket. A retry queue with exponential backoff provides fault tolerance, while a fixed-size thread pool (configurable, default 10 threads) limits concurrency.
+
+\subhead{6.3 WebSocket Real-Time Communication}
+
+Long-running AI tasks need progress streaming beyond HTTP request-response. The platform uses WebSocket connections to push task progress from backend to frontend.
+
+Figure 10 shows the WebSocket task progress architecture, illustrating how long-running AI task progress is pushed from the backend TaskProgressWebSocketHandler to the frontend in real time via WebSocket connections proxied through the Spring Cloud Gateway.
+
+Table 27 shows the WebSocket-based task progress streaming mechanism with step-by-step JSON push and frontend rendering.
+
+\vspace{3mm}
+\noindent\textbf{Table 27: Pseudocode --- TaskProgressWebSocketHandler Real-Time Progress Streaming}
+
+\subhead{6.4 Containerized Deployment}
+
+Figure 11 shows the Docker Compose service topology, illustrating how each service (Gateway, four backend microservices, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal Docker network, with only the Gateway port exposed externally.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig11_docker_topology.png}
+\caption{Figure 11: Docker Compose Service Topology}
+\end{figure}
+
+The platform is deployed through Docker Compose. Each service (Gateway, four backend services, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal bridge network. Only the Gateway (port 8080) is exposed. The frontend Nginx (port 80) serves static Vue 3 SPA files and proxies API and WebSocket requests to the Gateway. MySQL initialization is handled via a mounted SQL dump file. The Python inference server for the Code Agent runs in a separate container with FastAPI.
+
+\newpage
+
+% ======================================================================
