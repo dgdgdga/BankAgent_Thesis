@@ -18,7 +18,9 @@ This appendix documents the complete database schema for the agent\_platform dat
 }
 
 % --- Table A1 ---
-\noindent\textbf{Table A1: meeting\_room --- Meeting room resources}
+\begin{center}
+\textbf{Table A1: meeting\_room --- Meeting room resources}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -39,7 +41,9 @@ deleted     & INT, DEFAULT 0             & Logical delete flag \\
 \vspace{4mm}
 
 % --- Table A2 ---
-\noindent\textbf{Table A2: meeting\_schedule --- Booking and schedule records}
+\begin{center}
+\textbf{Table A2: meeting\_schedule --- Booking and schedule records}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -60,7 +64,9 @@ deleted     & INT, DEFAULT 0             & Logical delete flag \\
 \vspace{4mm}
 
 % --- Table A3 ---
-\noindent\textbf{Table A3: sys\_user --- User accounts}
+\begin{center}
+\textbf{Table A3: sys\_user --- User accounts}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -85,7 +91,9 @@ deleted         & TINYINT, NOT NULL, DEFAULT 0    & Logical delete (0=normal, 1=
 \vspace{4mm}
 
 % --- Table A4 ---
-\noindent\textbf{Table A4: sys\_role --- System roles}
+\begin{center}
+\textbf{Table A4: sys\_role --- System roles}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -104,7 +112,9 @@ deleted     & TINYINT, NOT NULL, DEFAULT 0 & Logical delete flag \\
 \vspace{4mm}
 
 % --- Table A5 ---
-\noindent\textbf{Table A5: sys\_permission --- Granular permissions}
+\begin{center}
+\textbf{Table A5: sys\_permission --- Granular permissions}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -128,7 +138,9 @@ deleted       & TINYINT, NOT NULL, DEFAULT 0   & Logical delete flag \\
 \vspace{4mm}
 
 % --- Table A6 ---
-\noindent\textbf{Table A6: sys\_user\_role \& sys\_role\_permission --- Association tables}
+\begin{center}
+\textbf{Table A6: sys\_user\_role \& sys\_role\_permission --- Association tables}
+\end{center}
 \vspace{2mm}
 
 \noindent\textit{sys\_user\_role}
@@ -158,7 +170,9 @@ perm\_id & BIGINT, NOT NULL & FK to sys\_permission.id \\
 \vspace{4mm}
 
 % --- Table A7 ---
-\noindent\textbf{Table A7: sys\_department --- Organizational structure}
+\begin{center}
+\textbf{Table A7: sys\_department --- Organizational structure}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -178,7 +192,9 @@ create\_time & DATETIME                    & Record creation timestamp \\
 \vspace{4mm}
 
 % --- Table A8 ---
-\noindent\textbf{Table A8: sys\_document --- Knowledge base documents}
+\begin{center}
+\textbf{Table A8: sys\_document --- Knowledge base documents}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -199,7 +215,9 @@ create\_time     & DATETIME                       & Record creation timestamp \\
 \vspace{4mm}
 
 % --- Table A9 ---
-\noindent\textbf{Table A9: sys\_notification --- Multi-type notification system}
+\begin{center}
+\textbf{Table A9: sys\_notification --- Multi-type notification system}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -224,7 +242,9 @@ deleted     & TINYINT, NOT NULL, DEFAULT 0  & Logical delete flag \\
 \vspace{4mm}
 
 % --- Table A10 ---
-\noindent\textbf{Table A10: sys\_config --- System configuration}
+\begin{center}
+\textbf{Table A10: sys\_config --- System configuration}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -240,7 +260,9 @@ update\_time & DATETIME                   & Auto-updated on modification \\
 \vspace{4mm}
 
 % --- Table A11 ---
-\noindent\textbf{Table A11: task\_record --- Agent task lifecycle tracking}
+\begin{center}
+\textbf{Table A11: task\_record --- Agent task lifecycle tracking}
+\end{center}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -262,7 +284,9 @@ updated\_at   & DATETIME                           & Auto-updated on modificatio
 \vspace{4mm}
 
 % --- Table A12: RAG tables ---
-\noindent\textbf{Table A12: RAG knowledge base tables}
+\begin{center}
+\textbf{Table A12: RAG knowledge base tables}
+\end{center}
 \vspace{2mm}
 
 \noindent\textit{rag\_knowledge\_base}

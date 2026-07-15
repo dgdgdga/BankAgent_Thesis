@@ -18,6 +18,8 @@ Multi agent systems (MAS) originated from research focus on distributed artifici
 
 Wu et al. (2023) proposed AutoGen [4]. This platform allows different LLM-driven agents to communicate, and work together to solve complex questions. AutoGen has a dynamic conversation machanism, which can allocate each agent a role, so that subtasks can be transferred and peer review can be used to optimize outputs. But this frame is unpredictable and its output may not be reliable, which is unbearable in commercial scenarios. On the opposite, Hong et al. (2024)[5] proposed MetaGPT. This frame embeds Standard Operating Procedures (SOPs) into a multi-agent collaboration system, drawing inspiration from the working mode of factory assembly lines. Virtual roles such as product managers, system architects, development engineers, and testers are set up, and agents collaborate through the transfer of standardized intermediate results.
 
+These frameworks show promising results in research settings. However, there's still a gap between flexible, role-based multi-agent systems and production systems in banking environments. For process standardization, systems must present deterministic behaviors and tight security controls.
+
 \subhead{2.3 Code Generation and Text-to-SQL}
 
 Converting natural language questions into executable SQL statements has been a major challenge in the field of natural language processing for over 20 years. The early solution adopted a rule-based approach, relying on manually constructed grammar rules and domain specific knowledge systems. This type of method is effective in narrow domain scenarios, but it is difficult to adapt to diverse database structures.
@@ -46,6 +48,7 @@ In the banking sector, the Hong Kong Monetary Authority (HKMA) requires the impl
 
 On-premises deployment faces a significant computational cost challenge in LLM inference, which Kwon et al. (2023) [7] addressed with the PagedAttention mechanism and the vLLM framework. This solution, inspired by operating system virtual memory management, employs specific memory management strategies to effectively alleviate GPU memory bottlenecks.
 
+Karras et al. (2024) [6] provided a comprehensive review of LLM applications in cybersecurity contexts in the big data era. Their analysis synthesized findings from over 100 research papers covering vulnerability detection, incident response, threat intelligence, and secure code generation. Basically, they found that while LLMs show promise in automating many cybersecurity tasks---such as identifying vulnerabilities in source code and generating security patches---current models still struggle with problems like contextual understanding and high false-positive rates in real-world enterprise settings. For this project, these findings reinforce how important it is to adopt a defense-in-depth security architecture instead of relying on LLM reasoning alone.
 \newpage
 
 % ======================================================================

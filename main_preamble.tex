@@ -6,6 +6,34 @@
 \usepackage{geometry}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{needspace}
+\usepackage[hyphens]{url}
+\usepackage{caption}
+
+\captionsetup[figure]{
+  font=bf,
+  justification=centering,
+  singlelinecheck=false
+}
+
+\urlstyle{same}
+\setlength{\emergencystretch}{2em}
+\tolerance=1000
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  breaklines=true,
+  frame=tb,
+  tabsize=2,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  aboveskip=6pt,
+  belowskip=6pt,
+  xleftmargin=12pt,
+  framexleftmargin=8pt,
+}
 \geometry{left=30mm,right=30mm,top=25mm,bottom=25mm}
 \usepackage{setspace}
 \setstretch{1.5}

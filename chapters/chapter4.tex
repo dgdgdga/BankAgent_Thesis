@@ -13,7 +13,7 @@ The five-layer structure described above is shown in the diagram below.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig02_five_layer_arch.png}
-\caption{Figure 2: Five-Layer Logical System Architecture --- Web, Gateway, Business Service, AI Service, and Data Layers}
+\caption{Five-Layer Logical System Architecture --- Web, Gateway, Business Service, AI Service, and Data Layers}
 \end{figure}
 
 The five layers, from top to bottom, are as follows:
@@ -33,7 +33,7 @@ The request lifecycle shown in Figure 3 varies significantly depending on the in
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig03_data_flow.png}
-\caption{Figure 3: Data Flow Architecture --- End-to-End Request Processing Across System Layers}
+\caption{Data Flow Architecture --- End-to-End Request Processing Across System Layers}
 \end{figure}
 
 In the Tool agent section, the natural language query (POST /tool/execute) processing path introduces an additional semantic layer. Requests don't directly reach the business logic; instead, they are first sent to DeepSeek for intent ``translation''---the model needs to understand whether the user wants to book a meeting room, check a schedule, or plan a route. Only after the intent is clear is the request routed to the corresponding domain module. Meanwhile, the code generation path (POST /code/query) follows a completely different pipeline. The service layer delegates the task to the backend Python inference server. After the SQL is returned, it undergoes a five-layer security check before the Jdbc Template is finally allowed to execute into the database. This link is significantly longer and more likely to become a bottleneck.
@@ -55,7 +55,30 @@ Map rendering is handled by the MapContainer.vue component. This component dynam
 Table 1 summarizes the frontend technology stack.
 
 \vspace{3mm}
-\noindent\textbf{Table 1: Frontend Technology Stack Specifications}
+
+\needspace{15\baselineskip}
+\begin{center}
+\textbf{Table 1: Frontend Technology Stack Specifications}
+\end{center}
+
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\toprule
+\textbf{Component} & \textbf{Technology} & \textbf{Utility \& Responsibility} \\
+\midrule
+View Layer       & Vue 3 + TypeScript            & Composition API with strict type safety \\
+State Management & Pinia                         & userStore (JWT persistence), taskStore (task lifecycle) \\
+UI Components    & Element-Plus                  & Enterprise forms, tables, dialogs, navigation elements \\
+Visualization    & ECharts 5                     & Rendering of data charts and SQL execution result analytics \\
+Build Tool       & Vite 4                        & Sub-second HMR during development, Rollup-based production bundling \\
+HTTP Client      & Axios + Interceptors          & JWT auto-attach, 401 auto-logout, unified error handling \\
+Real-Time        & WebSocket Client              & Singleton with auto-reconnect (3 attempts, 2s delay) \\
+Inter\-nation\-al\-ization & Vue I18n            & zh-CN, zh-TW, en locales with Element Plus sync \\
+Map Visualization & Amap JS API v2.0             & Dynamic SDK loading, route polyline, custom markers \\
+\bottomrule
+\end{tabular}
+
 
 \subhead{4.3 Backend Microservice Architecture}
 
@@ -74,7 +97,34 @@ Task Service (port 8082). Currently scaffolded with a basic POM configuration an
 Table 2 summarizes the backend services.
 
 \vspace{3mm}
-\noindent\textbf{Table 2: Backend Service Ecosystem and Technical Orchestration}
+
+\needspace{19\baselineskip}
+\begin{center}
+\textbf{Table 2: Backend Service Ecosystem and Technical Orchestration}
+\end{center}
+
+\vspace{2mm}
+
+\begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
+\toprule
+\textbf{Component} & \textbf{Technology} & \textbf{Utility \& Responsibility} \\
+\midrule
+Gateway Layer        & Spring Cloud Gateway 3.1.9  & Dynamic routing, JWT validation, IP rate limiting, WebSocket proxy \\
+Business Logic       & Spring Boot 3.x + MyBatis-Plus & Service orchestration, type-safe CRUD, logical deletion (@TableLogic) \\
+Security Framework   & Spring Security 6.x + JWT   & Stateless authentication, RBAC with @PreAuthorize, BCrypt password hashing \\
+Caching Layer        & Spring Data Redis           & Session caching, rate limit counters, metadata cache \\
+AI Integration (Tool) & DeepSeek API (HTTPS)       & Intent routing (MEETING/SCHEDULE/ROUTE), parameter extraction, route translation \\
+Inference Engine     & Python FastAPI (port 8090)  & LLM-based SQL generation from natural language questions via /infer endpoint \\
+RAG Agent            & Spring Boot 3.x (port 8085) & Document Q\&A, vector retrieval, source citation, access workflow \\
+Embedding Worker     & Python FastAPI (rag-worker) & bge-m3 embedding generation, Markdown chunking \\
+Document Parsing     & Apache Tika                 & Multi-format document parsing for RAG ingestion pipeline \\
+Vector Retrieval     & Milvus Java SDK 2.3+        & Semantic ANN search for RAG document retrieval \\
+Object Storage       & MinIO                       & Document file storage (PDF/DOCX/PPT), Milvus backend \\
+Email Service        & Resend API                  & Email verification code delivery, three-tier rate limiting \\
+Map Services         & Amap API (HTTPS)            & Geocoding (multi-level fallback), direction calculation, polyline coordinate parsing \\
+\bottomrule
+\end{tabular}
+
 
 Data security is paramount in banking systems. Therefore, our platform's security design does not rely on a single line of defense, but rather incorporates defense in depth across all layers. Each layer is independently verified before a request can pass through, which make it significantly harder for a single component failure to lead to a data breach or security incident.
 
@@ -83,7 +133,7 @@ Figure 4 shows the complete user authentication flow in three stages, including 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig04_jwt_auth_flow.png}
-\caption{Figure 4: JWT Authentication and Email Verification Flow}
+\caption{JWT Authentication and Email Verification Flow}
 \end{figure}
 
 The login process begins with an email verification code. After the user submits their email address on the front end, the request reaches the user service section. The service first checks the 60-seconds sending cooldown (Redis key rate:email:send: \{email\}), then queries the hourly and daily sending limits. After all rate limits are passed, it calls the Resend HTTP API using WebClient. The recipient email address is injected into the HTML template at the \{email\} placeholder, and the generated 6-digit random verification code is stored in Redis with a 5-minute TTL. The front-end receives a success response and the sample email is displayed in an Alert.
@@ -97,7 +147,37 @@ The CAPTCHA itself is also heavily reinforced: the 6-digit random number only la
 We adopted RBAC for our permission design, but only implemented a coarse-grained division of roles into three tiers---this ``coarseness'' was intentional. Different banks have vastly different organizational structures and reporting relationships; fine-tuning the details ourselves would inevitably not match a real deployment scenario. So, we chose to provide a clear foundational role framework and leave the detailed permission customization to the bank's own IT administrators.
 
 \vspace{3mm}
-\noindent\textbf{Table 3: Pseudocode --- listDocumentsForUser() Multi-Factor Document Access Rule}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 3: Pseudocode --- listDocumentsForUser() Multi-Factor Document Access Rule}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION listDocumentsForUser(userId, userDeptId, userClearance)
+    documents = queryAllDocuments()
+    result = []
+    FOR EACH doc IN documents:
+        // Multi-factor access rule: a document is visible if...
+        IF doc.dept_id IS NULL THEN
+            // Global document - accessible to all users
+            doc.accessible = TRUE
+        ELSE IF doc.dept_id = userDeptId
+                 AND doc.security_level <= userClearance THEN
+            // Same department with sufficient clearance
+            doc.accessible = TRUE
+        ELSE
+            // Access denied - user may submit escalation request
+            doc.accessible = FALSE
+            doc.escalationType = "RAG_APPLY"
+            // Manager can approve (Pending -> Approved) or deny (Pending -> Denied)
+        END IF
+        result.add(doc)
+    END FOR
+    RETURN result
+END FUNCTION
+\end{lstlisting}
+
 
 The unified exit point for external communication is the REST API, all using HTTPS, with the TLS version locked at 1.3. WebSocket is forcibly upgraded to WSS in the production environment; this switch is handled in the code by checking the protocol in the Nginx X-Forwarded-Proto header, with the backend redirecting HTTP traffic to HTTPS.
 
@@ -122,7 +202,25 @@ Going forward, we plan to add a security post-filter to the RAG retrieval pipeli
 Table 4 summarizes the data storage strategy.
 
 \vspace{3mm}
-\noindent\textbf{Table 4: Multi-Modal Data Storage Strategy and Layered Access Patterns}
+
+\needspace{10\baselineskip}
+\begin{center}
+\textbf{Table 4: Multi-Modal Data Storage Strategy and Layered Access Patterns}
+\end{center}
+
+\vspace{2mm}
+
+\begin{tabular}{@{}p{2.5cm}p{2.5cm}p{5.5cm}p{\dimexpr\textwidth-10.5cm-6\tabcolsep\relax}@{}}
+\toprule
+\textbf{Category} & \textbf{Engine} & \textbf{Primary Data Types} & \textbf{Access Pattern} \\
+\midrule
+Operational Layer & MySQL 8.0   & Users, roles, departments, documents, meeting rooms, schedules, notifications & Transactional, ACID-compliant read/write \\
+Caching Layer     & Redis 5.0+  & Session tokens, rate limit counters, metadata cache (hash), schedule conflicts (sorted sets) & High-concurrency, sub-millisecond reads \\
+Object Storage    & MinIO       & PDF, DOCX, PPT files; Milvus backend objects & Document upload/download, RAG source document storage \\
+Vector Layer      & Milvus 2.3+ & Document chunk embeddings (bge-small-zh), source metadata & Semantic approximate nearest neighbor search \\
+\bottomrule
+\end{tabular}
+
 
 \subhead{4.6 Technology Stack Rationale}
 

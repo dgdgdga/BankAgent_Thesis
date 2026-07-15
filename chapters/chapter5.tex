@@ -23,16 +23,96 @@ We ultimately adopted the iFlytek MaaS (Model as a Service) platform, which prov
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig05_tool_agent_sequence.png}
-\caption{Figure 5: Tool Agent Task Sequence --- DeepSeek AI Intent Routing to Specialized Handlers}
+\caption{Tool Agent Task Sequence --- DeepSeek AI Intent Routing to Specialized Handlers}
 \end{figure}
 
 Table 5-6 shows the AI intent routing pipeline where DeepSeek classifies user input into three intent types and dispatches to the corresponding handler,  with a mock fallback on API failure.
 
 \vspace{3mm}
-\noindent\textbf{Table 5: Pseudocode --- handleAiIntent() AI Intent Classification and Routing}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 5: Pseudocode --- handleAiIntent() AI Intent Classification and Routing}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION handleAiIntent(userInput: String): HandlerResult
+    systemPrompt = PromptBuilder.create()
+        .defineIntent("ROUTE_PLAN",
+            params = ["from", "to", "mode"],
+            description = "Route planning request")
+        .defineIntent("MEETING_QUERY",
+            params = ["date", "capacity", "equipment"],
+            description = "Meeting room search")
+        .defineIntent("SCHEDULE_CHECK",
+            params = ["timeRange", "attendees"],
+            description = "Schedule conflict detection")
+        .build()
+    response = deepSeekService.chat(
+        system  = systemPrompt,
+        user    = userInput,
+        format  = "json_object",
+        temp    = 0.3,
+        maxTok  = 2048
+    )
+    intent = response.intentType
+    params = response.parameters
+    SWITCH intent:
+        CASE "ROUTE_PLAN":
+            RETURN routeHandler.handle(params.from, params.to, params.mode)
+        CASE "MEETING_QUERY":
+            RETURN meetingHandler.handle(params.date,
+                       params.capacity, params.equipment)
+        CASE "SCHEDULE_CHECK":
+            RETURN scheduleHandler.handle(params.timeRange,
+                       params.attendees)
+        DEFAULT:
+            THROW UnknownIntentException(intent)
+    END SWITCH
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 6: Pseudocode --- DeepSeekService.chat() LLM API Call with Fallback}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 6: Pseudocode --- DeepSeekService.chat() LLM API Call with Fallback}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION chat(system, user, format, temperature, maxTokens): DeepSeekResponse
+    requestBody = {
+        model:             config.deepseek.model,
+        messages: [
+            {role: "system", content: system},
+            {role: "user",   content: user}
+        ],
+        response_format:   {type: format},
+        temperature:       temperature,
+        max_tokens:        maxTokens
+    }
+    TRY
+        httpResponse = httpClient.send(
+            method:  POST,
+            url:     config.deepseek.baseUrl + "/chat/completions",
+            headers: {
+                "Authorization": "Bearer " + config.deepseek.apiKey,
+                "Content-Type":  "application/json"
+            },
+            body:    toJSON(requestBody),
+            timeout: 60s
+        )
+        rawJson = httpResponse.choices[0].message.content
+        parsed  = objectMapper.readValue(rawJson, DeepSeekResponse)
+        RETURN parsed   // {intentType, parameters}
+    CATCH Exception e:
+        log.error("DeepSeek API call failed", e)
+        RETURN fallbackMock()   // demo data, source = "mock"
+    END TRY
+END FUNCTION
+\end{lstlisting}
+
 
 The DeepSeek API configuration in application.yml uses environment variables with development defaults: AI\_DEEPSEEK\_API\_KEY, AI\_DEEPSEEK\_BASE\_URL (defaulting to https://maas-api.cn-huabei-1.xf-yun.com/v1), AI\_DEEPSEEK\_MODEL (defaulting to deepseek-v3), AI\_DEEPSEEK\_TIMEOUT (180s), and AI\_DEEPSEEK\_MAX\_TOKENS (2000).
 
@@ -45,17 +125,126 @@ The first set is for regular users. Regular users has a simple request: ``Check 
 The second set, the management side, uses a completely different logic (although the system administrator and department administrators maintain consistency). Because the Admin class needs to maintain meeting room resources, we provide a complete set of CRUD interfaces through MeetingRoomAdminController. In terms of security, it verifies the X-User-Roles header---this is simple but effective, because the header is injected by the gateway layer, not the client, and therefore cannot be forged.
 
 \vspace{3mm}
-\noindent\textbf{Table 7: Pseudocode --- queryRoomsWithStatus() Three-Phase Room Availability Algorithm}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 7: Pseudocode --- queryRoomsWithStatus() Three-Phase Room Availability Algorithm}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION queryRoomsWithStatus(startTime, endTime, minCapacity): List<Map>
+    // === Phase 1: Query all active meeting rooms ===
+    query = new LambdaQueryWrapper<MeetingRoom>()
+        .eq(MeetingRoom::status, 1)
+    IF minCapacity <> NULL THEN
+        query.ge(MeetingRoom::capacity, minCapacity)
+    END IF
+    rooms = meetingRoomMapper.selectList(query)
+
+    // === Phase 2: Find booked room IDs in time range ===
+    overlapping = bookingMapper.selectList(
+        new LambdaQueryWrapper<MeetingSchedule>()
+            .lt(MeetingSchedule::startTime, endTime)
+            .gt(MeetingSchedule::endTime,   startTime)
+    )
+    bookedRoomIds = {b.roomId | b IN overlapping}
+
+    // === Phase 3: Assemble availability response ===
+    result = []
+    FOR EACH room IN rooms:
+        available = room.id NOT IN bookedRoomIds
+        equipment = split(room.facilities, ",")
+        result.add({
+            id:          toString(room.id),
+            name:        room.roomName,
+            capacity:    room.capacity,
+            location:    room.building + ", Floor " + room.floor,
+            equipment:   equipment,
+            available:   available,
+            statusText:  IF available THEN "Available" ELSE "Booked",
+            nextBooking: findNextBooking(room.id, startTime)
+        })
+    END FOR
+    RETURN result
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 8: Pseudocode --- bookRoom() Atomic Conflict Check-and-Insert}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 8: Pseudocode --- bookRoom() Atomic Conflict Check-and-Insert}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION bookRoom(roomId, startTime, endTime, booker, title): Long
+    // Step 1 -- Atomic conflict check
+    conflicts = scheduleMapper.selectCount(
+        new LambdaQueryWrapper<MeetingSchedule>()
+            .eq(MeetingSchedule::roomId,    roomId)
+            .lt(MeetingSchedule::startTime, endTime)
+            .gt(MeetingSchedule::endTime,   startTime)
+    )
+    IF conflicts > 0 THEN
+        RETURN FALSE   // room already booked in this window
+    END IF
+    // Step 2 -- Insert new booking
+    schedule = new MeetingSchedule()
+    schedule.roomId    = roomId
+    schedule.startTime = startTime
+    schedule.endTime   = endTime
+    schedule.booker    = booker
+    schedule.title     = title
+    schedule.status    = 1
+    scheduleMapper.insert(schedule)
+    RETURN schedule.id
+END FUNCTION
+
+FUNCTION getSchedulesForUsers(userIds, startTime, endTime): List<Schedule>
+    RETURN scheduleMapper.selectList(
+        new LambdaQueryWrapper<MeetingSchedule>()
+            .in(MeetingSchedule::booker, userIds)
+            .ge(MeetingSchedule::startTime, startTime)
+            .le(MeetingSchedule::endTime,   endTime)
+    )
+END FUNCTION
+\end{lstlisting}
+
 
 The MeetingRoom entity (@TableName(``meeting\_room'')) maps to the database table with fields: id (Long, @TableId auto-increment), roomName (String), building (String, e.g., ``Building A''), floor (String, e.g., ``3F''), capacity (Integer), hasProjector/hasWhiteboard/hasVideoConf (Boolean), status (Integer, 0=available, 1=maintenance), and createTime (LocalDateTime).
 
 Table 9 lists the Tool Agent REST API endpoints implemented in ToolController.
 
 \vspace{3mm}
-\noindent\textbf{Table 9: Tool Agent REST API Endpoints}
+
+\needspace{15\baselineskip}
+\begin{center}
+\textbf{Table 9: Tool Agent REST API Endpoints}
+\end{center}
+
+\vspace{2mm}
+
+{\small\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{@{}p{1.5cm}p{3.5cm}p{4cm}p{\dimexpr\textwidth-9cm-6\tabcolsep\relax}@{}}
+\toprule
+\textbf{Method} & \textbf{Endpoint} & \textbf{Key Parameters} & \textbf{Description} \\
+\midrule
+POST   & /tool/execute          & toolType, naturalLanguage, parameters & Unified AI execution --- DeepSeek LLM classifies intent and routes to handler \\
+GET    & /tool/meeting-rooms    & startTime, endTime, capacity         & Query rooms with time-based availability status and capacity filter \\
+POST   & /tool/meeting-room/book & roomId, booker, startTime, endTime, topic & Atomic check-then-insert room booking with conflict verification \\
+POST   & /tool/check-conflict   & attendees[], startTime, endTime      & Check schedule conflicts by attendee list via Redis ZRANGEBYSCORE \\
+POST   & /tool/schedule/create  & userId, eventName, startTime, endTime & Create personal schedule (dual-write: MySQL room\_id=0 + Redis sorted set) \\
+POST   & /tool/schedule/add     & userId, eventId, startTime, endTime  & Add schedule entry to Redis sorted set only \\
+POST   & /tool/schedule/remove  & userId, eventId                      & Remove schedule entry from Redis sorted set by eventId prefix match \\
+GET    & /tool/schedules        & date, users[]                        & Query schedules for specified users on a given date from MySQL \\
+GET    & /tool/my-schedules     & X-User-Name header                   & Get authenticated user's bookings and personal schedules with room details \\
+DELETE & /tool/my-schedule/\{id\} & X-User-Name header, path id          & Cancel schedule: set status=0 in MySQL, remove from Redis if personal \\
+GET    & /tool/route            & from, to, mode (default driving)     & Plan route via Amap API with multi-level geocoding fallback and map data \\
+\bottomrule
+\end{tabular}
+}
+
 
 \subhead{5.1.3 Schedule Conflict Detection}
 
@@ -66,7 +255,7 @@ Figure 6 shows the schedule conflict detection algorithm.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig06_schedule_conflict.png}
-\caption{Figure 6: Schedule Conflict Detection --- Redis Sorted Set-Based Temporal Overlap Algorithm}
+\caption{Schedule Conflict Detection --- Redis Sorted Set-Based Temporal Overlap Algorithm}
 \end{figure}
 
 Each user's schedules are stored in a Redis sorted set at key tool:schedule:\{userId\}. Schedule entries are encoded as members with the format ``\{eventId\}|\{startEpoch\}|\{endEpoch\}'', where startEpoch and endEpoch are Unix timestamps. For conflict detection queries, ZRANGEBYSCORE retrieves all schedule entries whose startEpoch is within the specified query window. For each retrieved schedule, the algorithm checks if the stored endEpoch overlaps with the query range to filter out partial overlaps.
@@ -74,13 +263,123 @@ Each user's schedules are stored in a Redis sorted set at key tool:schedule:\{us
 Table 10--12 shows the schedule management subsystem including Redis sorted-set operations for temporal conflict detection, attendee-based conflict checking,  and the MySQL-Redis dual-write consistency protocol.
 
 \vspace{3mm}
-\noindent\textbf{Table 10: Pseudocode --- Redis Sorted Set Schedule Operations (add / remove / checkConflicts)}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 10: Pseudocode --- Redis Sorted Set Schedule Operations (add / remove / checkConflicts)}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION addSchedule(userId, eventId, startTime, endTime)
+    key      = "tool:schedule:" + userId
+    startTs  = toEpochMillis(startTime)
+    endTs    = toEpochMillis(endTime)
+    member   = eventId + ":" + startTs + ":" + endTs
+    redisTemplate.opsForZSet().add(key, member, startTs)
+END FUNCTION
+
+FUNCTION removeSchedule(userId, eventId)
+    key     = "tool:schedule:" + userId
+    members = redisTemplate.opsForZSet().range(key, 0, -1)
+    FOR EACH member IN members:
+        IF member.startsWith(eventId + ":") THEN
+            redisTemplate.opsForZSet().remove(key, member)
+            BREAK
+        END IF
+    END FOR
+END FUNCTION
+
+FUNCTION checkConflicts(userId, startTime, endTime): List<String>
+    key     = "tool:schedule:" + userId
+    startTs = toEpochMillis(startTime)
+    endTs   = toEpochMillis(endTime)
+    // Query schedules whose start time falls within window
+    overlapping = redisTemplate.opsForZSet()
+        .rangeByScore(key, startTs, endTs)
+    conflicts = []
+    FOR EACH member IN overlapping:
+        [evtId, memStartTs, memEndTs] = split(member, ":")
+        IF parseLong(memStartTs) < endTs THEN
+            conflicts.add(evtId)
+        END IF
+    END FOR
+    RETURN conflicts
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 11: Pseudocode --- POST /tool/check-conflict Attendee-Based Conflict Workflow}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 11: Pseudocode --- POST /tool/check-conflict Attendee-Based Conflict Workflow}
+\end{center}
+
+\begin{lstlisting}
+ENDPOINT POST /tool/check-conflict
+  Request:  {attendees: String[], startTime: String, endTime: String}
+  Response: {hasConflict: Boolean, conflictUser: String?}
+
+FUNCTION checkConflict(attendees, startTime, endTime): ConflictResult
+    FOR EACH userId IN attendees:
+        conflicts = scheduleService.checkConflicts(userId,
+                        startTime, endTime)
+        IF conflicts IS NOT EMPTY THEN
+            // Early exit -- return first conflict found
+            RETURN {
+                hasConflict:  TRUE,
+                conflictUser: userId,
+                conflicts:    conflicts
+            }
+        END IF
+    END FOR
+    RETURN {hasConflict: FALSE, conflictUser: NULL}
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 12: Pseudocode --- Schedule Dual-Write Pattern (MySQL + Redis Consistency)}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 12: Pseudocode --- Schedule Dual-Write Pattern (MySQL + Redis Consistency)}
+\end{center}
+
+\begin{lstlisting}
+// === Schedule Creation (dual-write) ===
+ENDPOINT POST /tool/schedule/create
+FUNCTION createSchedule(request): ScheduleResponse
+    // Write 1 -- Persist to MySQL
+    schedule = meetingRoomService.addPersonalSchedule({
+        roomId:    0,       // personal schedule convention
+        booker:    request.booker,
+        startTime: request.startTime,
+        endTime:   request.endTime,
+        title:     request.title,
+        status:    1
+    })
+    // Write 2 -- Cache to Redis for fast conflict queries
+    eventId = "event_" + schedule.id
+    scheduleService.addSchedule(request.booker, eventId,
+                                 request.startTime, request.endTime)
+    RETURN {scheduleId: schedule.id, eventId: eventId}
+END FUNCTION
+
+// === Schedule Cancellation (dual-delete) ===
+ENDPOINT POST /tool/schedule/cancel
+FUNCTION cancelSchedule(scheduleId): void
+    // Step 1 -- Soft delete from MySQL (preserves audit trail)
+    scheduleMapper.update(null,
+        new LambdaUpdateWrapper<MeetingSchedule>()
+            .eq(MeetingSchedule::id, scheduleId)
+            .set(MeetingSchedule::status, 0)
+            .set(MeetingSchedule::updateTime, now())
+    )
+    // Step 2 -- Remove from Redis cache
+    scheduleService.removeSchedule(currentUser, "event_" + scheduleId)
+END FUNCTION
+\end{lstlisting}
+
 
 \subhead{5.1.4 Route Planning}
 
@@ -89,15 +388,75 @@ The route planning feature integrates the Amap Open API through the AmapService 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig07_route_planning.png}
-\caption{Figure 7: Route Planning Map Visualization --- Interactive Map with Route Polyline and Navigation Steps}
+\caption{Route Planning Map Visualization --- Interactive Map with Route Polyline and Navigation Steps}
 \end{figure}
 
-Table 13: Route Planning Three-Stage Geocoding and Navigation Pipeline
+
+\needspace{8\baselineskip}
+\begin{center}
+\textbf{Table 13: Route Planning Three-Stage Geocoding and Navigation Pipeline}
+\end{center}
+
+\vspace{2mm}
+
+{\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{2.0cm}>{\raggedright\arraybackslash}p{3.2cm}@{}}
+\toprule
+\textbf{Stage} & \textbf{Method} & \textbf{API Endpoint} & \textbf{Input} & \textbf{Output} & \textbf{Fallback} \\
+\midrule
+1 -- Geocoding  & geocode\-With\-Fallback() & \path{GET restapi.amap.com/v3/geocode/geo} & Address string & Location (lng,lat) & POI text search, prepend ``Beijing'' + retry \\
+2 -- Route Calc & plan\-Driving\-Route()   & \path{GET restapi.amap.com/v3/direction/driving} & Origin + Dest coords, strategy (0--4) & Distance, duration, polyline steps & N/A --- returns error to caller \\
+3 -- Enrichment & parse\-Route\-Result()   & --- (local processing) & Amap JSON response & Formatted text + coordinate arrays & N/A --- keeps raw values on parse error \\
+\bottomrule
+\end{tabular}
+}
+
 
 Table 14 shows the route geocoding pipeline with a three-level fallback strategy and LLM-based translation of navigation instructions.
 
 \vspace{3mm}
-\noindent\textbf{Table 14: Pseudocode --- geocodeWithFallback() Multi-Level Address Resolution}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 14: Pseudocode --- geocodeWithFallback() Multi-Level Address Resolution}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION geocodeWithFallback(address: String): Location
+    TRY
+        response = httpGet(restapi.amap.com/v3/geocode/geo,
+            {key: apiKey, address: URL_ENCODE(address)})
+        IF response.geocodes IS NOT EMPTY THEN
+            RETURN parseLocation(response.geocodes[0].location)
+        END IF
+    CATCH:  // fall through
+    TRY
+        // Fallback 1 -- POI text search
+        response = httpGet(restapi.amap.com/v3/place/text,
+            {key: apiKey, keywords: URL_ENCODE(address), offset: 1})
+        IF response.pois IS NOT EMPTY THEN
+            RETURN parseLocation(response.pois[0].location)
+        END IF
+    CATCH:  // fall through
+    // Fallback 2 -- Prepend "Beijing" and retry geocoding
+    RETURN geocodeWithFallback("Beijing " + address)
+END FUNCTION
+
+FUNCTION translateRouteToEnglish(routeData): RouteData
+    fields = extractChineseFields(routeData)
+    TRY
+        translated = deepSeekService.chat(
+            system = "Translate to English, keep JSON structure",
+            user   = toJSON(fields),
+            format = "json_object")
+        RETURN replaceUnits(translated)
+            // e.g., "km" instead of Chinese units
+    CATCH:
+        RETURN routeData   // keep original Chinese
+    END TRY
+END FUNCTION
+\end{lstlisting}
+
 
 On the frontend, the MapContainer.vue component loads the Amap JS API v2.0 SDK through script injection with the API key  and security code. The component creates a map instance with zoom level 12, centered on the starting coordinate. An indigo polyline renders the route path. Green and red custom marker icons indicate the start and end points, respectively. Turning instructions are displayed in a scrollable list below the map, with each instruction showing the road name, distance, and a directional icon.
 
@@ -110,7 +469,27 @@ The Code Agent lets users generate executable SQL queries from natural language 
 Table 15 shows the four-stage pipeline of Code Agent.
 
 \vspace{3mm}
-\noindent\textbf{Table 15: Code Agent Four-Stage Natural Language to SQL Pipeline}
+
+\needspace{10\baselineskip}
+\begin{center}
+\textbf{Table 15: Code Agent Four-Stage Natural Language to SQL Pipeline}
+\end{center}
+
+\vspace{2mm}
+
+{\small
+\begin{tabular}{@{}p{1.8cm}>{\raggedright\arraybackslash}p{3.8cm}p{4.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.9cm-6\tabcolsep\relax}@{}}
+\toprule
+\textbf{Stage} & \textbf{Service Class} & \textbf{Key Operation} & \textbf{Security Mechanism} \\
+\midrule
+1 -- Metadata Extraction & Metadata\-Cache\-Service & Query information\_schema for table/column definitions; cache as JSON in Redis (key: code\_agent:metadata:tables) & Provides whitelists (table names, column names) to the validation layer \\
+2 -- SQL Generation & Onnx\-Code\-Generation\-Service & HTTP POST \{question\} $\rightarrow$ Python LLM inference server (port 8090); receives \{sql, method\} & N/A --- generation only; output is untrusted at this stage \\
+3 -- SQL Validation & Sql\-Validation\-Service & Five-layer defense-in-depth pipeline: (1) operation type, (2) forbidden keywords, (3) table whitelist, (4) column whitelist, (5) complexity limits & Blocks: non-SELECT, DDL/DML keywords, unrecognized tables/columns, overly complex queries \\
+4 -- SQL Execution & Sql\-Execution\-Service & Re-validate (defense in depth) $\rightarrow$ execute via Jdbc\-Template with Prepared\-Statement & Parameterized queries prevent injection; read-only connection enforced \\
+\bottomrule
+\end{tabular}
+}
+
 
 The CodeAgentController exposes six endpoints: POST /code/query (one-shot generate and execute, returns FullResult with SQL, columns, rows, elapsedMs), POST /code/generate (preview only, generates SQL without execution), POST /code/execute (execute only, runs previously generated SQL), GET /code/metadata (returns cached schema metadata), POST /code/metadata/refresh (manually triggers schema refresh), and GET /code/health (returns service status and LLM connectivity).
 
@@ -119,7 +498,7 @@ Figure 8 shows the Code Agent use case diagram. Business analysts interact with 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig08_code_agent_usecase.png}
-\caption{Figure 8: Code Agent Use Case Diagram --- Natural Language to Safe SQL Execution}
+\caption{Code Agent Use Case Diagram --- Natural Language to Safe SQL Execution}
 \end{figure}
 
 The use case covers schema-aware query generation, five-layer security validation, JdbcTemplate-based execution, and result presentation with export capabilities.
@@ -129,7 +508,45 @@ The use case covers schema-aware query generation, five-layer security validatio
 Table 16 shows the SQL generation HTTP proxy that forwards natural language questions to the Python LLM inference server and parses the returned SQL.
 
 \vspace{3mm}
-\noindent\textbf{Table 16: Pseudocode --- OnnxCodeGenerationService HTTP Proxy to Python Inference Server}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 16: Pseudocode --- OnnxCodeGenerationService HTTP Proxy to Python Inference Server}
+\end{center}
+
+\begin{lstlisting}
+// @Service, @ConditionalOnProperty(code-agent.onnx.enabled=true)
+// Acts as HTTP proxy (NOT direct ONNX Runtime inference)
+FUNCTION generateSQL(question: String): CodeGenerationResponse
+    payload = {question: question}
+    TRY
+        httpResponse = httpClient.send(
+            method:  POST,
+            url:     config.serverUrl,  // default: http://localhost:8090/infer
+            headers: {"Content-Type": "application/json"},
+            body:    toJSON(payload),
+            connectTimeout: 10s,
+            responseTimeout: 60s
+        )
+        responseBody = objectMapper.readTree(httpResponse.body)
+        sql    = responseBody.get("sql").asText()
+        method = responseBody.get("method").asText()
+        IF sql IS BLANK THEN
+            RETURN failure("Generated SQL is empty")
+        END IF
+        RETURN success(sql, method)
+    CATCH Exception e:
+        log.error("SQL generation failed", e)
+        RETURN failure(e.message)
+    END TRY
+END FUNCTION
+
+// Design note: Any LLM serving framework can back port 8090
+// as long as it accepts {question} and returns {sql, method}.
+// Reference: Python inference server at data/infer_server.py
+// hosts fine-tuned T5 model (data/fine-tuned-t5-banking/).
+\end{lstlisting}
+
 
 \subhead{5.2.3 Five-Layer SQL Whitelist Validation}
 
@@ -140,43 +557,331 @@ Figure 9 shows the pipeline from natural language input to safe SQL execution. T
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig09_sql_validation.png}
-\caption{Figure 9: SQL Generation and Five-Layer Validation Pipeline}
+\caption{SQL Generation and Five-Layer Validation Pipeline}
 \end{figure}
 
 Table 17--21 shows the five-layer SQL whitelist validation pipeline: operation type restriction, forbidden keyword blacklist, table name whitelist, column  name whitelist, and query complexity limits.
 
 \vspace{3mm}
-\noindent\textbf{Table 17: Pseudocode --- validateOperation() SQL Operation Type Check (Layer 1)}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 17: Pseudocode --- validateOperation() SQL Operation Type Check (Layer 1)}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION validateOperation(sql: String): ValidationResult
+    normalized = collapseWhitespace(sql).trim().uppercase()
+    allowedOps = config.getAllowedOperations()  // default: ["SELECT"]
+    FOR EACH op IN allowedOps:
+        IF normalized.startsWith(op) THEN
+            RETURN PASS
+        END IF
+    END FOR
+    RETURN FAIL("Only SELECT operations are permitted")
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 18: Pseudocode --- validateForbiddenKeywords() Keyword Blacklist Scan (Layer 2)}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 18: Pseudocode --- validateForbiddenKeywords() Keyword Blacklist Scan (Layer 2)}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION validateForbiddenKeywords(sql: String): ValidationResult
+    upperSQL = sql.uppercase()
+    // Default blacklist: DROP, DELETE, INSERT, UPDATE, ALTER,
+    //   TRUNCATE, CREATE, EXEC, EXECUTE, UNION, INTO,
+    //   LOAD_FILE, OUTFILE, DUMPFILE
+    FOR EACH keyword IN config.getForbiddenKeywords():
+        pattern = "\\b" + keyword + "\\b"  // word-boundary regex
+        IF pattern IS FOUND IN upperSQL THEN
+            RETURN FAIL("Forbidden keyword detected: " + keyword)
+        END IF
+    END FOR
+    RETURN PASS
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 19: Pseudocode --- validateTableNames() Table Whitelist Verification (Layer 3)}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 19: Pseudocode --- validateTableNames() Table Whitelist Verification (Layer 3)}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION validateTableNames(sql: String): ValidationResult
+    allowedTables = metadataCacheService.getAllowedTableNames()
+    IF allowedTables IS EMPTY THEN
+        log.warn("Metadata cache empty - skipping table whitelist")
+        RETURN PASS   // skip when Redis/metadata unavailable
+    END IF
+    // Extract table references from FROM and JOIN clauses
+    pattern = "\\b(?:FROM|JOIN)\\s+`?(\\w+)"  // case-insensitive
+    extracted = findAllMatches(pattern, sql)
+    FOR EACH tableName IN extracted:
+        IF tableName NOT IN allowedTables THEN
+            RETURN FAIL(
+                "Table not allowed: " + tableName
+                + ". Allowed: " + allowedTables)
+        END IF
+    END FOR
+    RETURN PASS
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 20: Pseudocode --- validateColumnNames() Column Whitelist Verification (Layer 4)}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 20: Pseudocode --- validateColumnNames() Column Whitelist Verification (Layer 4)}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION validateColumnNames(sql: String): ValidationResult
+    // Skip for SELECT * or SELECT COUNT(*) queries
+    IF sql CONTAINS "SELECT *" OR sql CONTAINS "SELECT COUNT(*)" THEN
+        RETURN PASS
+    END IF
+    allowedColumns = metadataCacheService.getAllowedColumns()
+    IF allowedColumns IS EMPTY THEN
+        log.warn("Metadata cache empty - skipping column whitelist")
+        RETURN PASS   // skip when metadata unavailable
+    END IF
+    // Extract column spec between SELECT and FROM
+    match = regex("SELECT\\s+(.+?)\\s+FROM", sql, CASE_INSENSITIVE)
+    IF match NOT FOUND THEN
+        RETURN PASS   // cannot parse, allow through
+    END IF
+    columnsPart = match.group(1)
+    FOR EACH colSpec IN split(columnsPart, ","):
+        colRef = extractColumnReference(colSpec)
+        // Support both table.column and bare column
+        IF colRef IS qualified (t.col) THEN
+            IF colRef NOT IN allowedColumns[colRef.table] THEN
+                RETURN FAIL("Column not allowed: " + colRef)
+            END IF
+        ELSE
+            found = ANY table IN allowedColumns
+                    WHERE colRef IN allowedColumns[table]
+            IF NOT found THEN
+                RETURN FAIL("Column not allowed: " + colRef)
+            END IF
+        END IF
+    END FOR
+    RETURN PASS
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 21: Pseudocode --- validateComplexity() Query Complexity Limits (Layer 5)}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 21: Pseudocode --- validateComplexity() Query Complexity Limits (Layer 5)}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION validateComplexity(sql: String): ValidationResult
+    // Count table references
+    tableCount = countMatches(
+        "\\b(?:FROM|JOIN)\\s+`?(\\w+)", sql)
+    maxTables  = config.getMaxTablesPerQuery()  // default: 3
+    IF tableCount > maxTables THEN
+        RETURN FAIL(
+            "Too many tables: " + tableCount
+            + " (max: " + maxTables + ")")
+    END IF
+    // Count conditions (AND/OR + 1 for base condition)
+    conditionCount = 1
+        + countMatches("\\bAND\\b", sql)
+        + countMatches("\\bOR\\b",  sql)
+    maxConditions = config.getMaxConditions()  // default: 10
+    IF conditionCount > maxConditions THEN
+        RETURN FAIL(
+            "Too many conditions: " + conditionCount
+            + " (max: " + maxConditions + ")")
+    END IF
+    RETURN PASS
+END FUNCTION
+\end{lstlisting}
+
 
 Table 22 summarizes the five validation layers with their default configurations.
 
 \vspace{3mm}
-\noindent\textbf{Table 22: SQL Whitelist Validation Rules (Five-Layer Defense)}
+
+\needspace{11\baselineskip}
+\begin{center}
+\textbf{Table 22: SQL Whitelist Validation Rules (Five-Layer Defense)}
+\end{center}
+
+\vspace{2mm}
+
+\begin{tabular}{@{}p{2cm}p{3.5cm}p{5cm}p{\dimexpr\textwidth-10.5cm-6\tabcolsep\relax}@{}}
+\toprule
+\textbf{Layer} & \textbf{Check} & \textbf{Default Configuration} & \textbf{Action on Violation} \\
+\midrule
+1. Operation    & SQL must start with allowed operation & [``SELECT''] only & Block execution, return error with permitted operations \\
+2. Keywords     & Word-boundary regex blacklist scan & DROP, DELETE, INSERT, UPDATE, ALTER, TRUNCATE, CREATE, EXEC, EXECUTE, UNION, INTO, LOAD\_FILE, OUTFILE, DUMPFILE & Block execution, identify forbidden keyword \\
+3. Table Names  & FROM/JOIN tables vs. information\_schema & All BASE TABLEs in agent\_platform database & Block execution, show allowed table set \\
+4. Column Names & SELECT columns vs. table column definitions & Per referenced table from metadata cache; skip on empty cache & Block execution, identify invalid column \\
+5. Complexity   & Table count + condition count & Max 3 tables, max 10 conditions (AND/OR count + 1) & Block execution, show actual vs.\ max counts \\
+\bottomrule
+\end{tabular}
+
 
 \subhead{5.2.4 Metadata Caching and Execution}
 
 Table 23--25 shows the schema metadata cache loading from information\_schema to Redis, the cache lifecycle management with scheduled refresh, and thedefense-in-depth SQL execution flow.
 
 \vspace{3mm}
-\noindent\textbf{Table 23: Pseudocode --- refreshAllMetadata() Schema Metadata Cache Loading}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 23: Pseudocode --- refreshAllMetadata() Schema Metadata Cache Loading}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION refreshAllMetadata(): Map<String, TableMetadata>
+    conn = dataSource.getConnection()
+    database = config.getDatabaseName()
+    // Query 1 -- All BASE TABLE names
+    tables = conn.query(
+        "SELECT TABLE_NAME FROM information_schema.TABLES
+         WHERE TABLE_SCHEMA = ? AND TABLE_TYPE = 'BASE TABLE'",
+        database)
+    metadataMap = {}
+    FOR EACH tableName IN tables:
+        // Query 2 -- Column metadata
+        columns = conn.query(
+            "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE,
+                    COLUMN_COMMENT, COLUMN_KEY
+             FROM information_schema.COLUMNS
+             WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
+             ORDER BY ORDINAL_POSITION",
+            database, tableName)
+        // Query 3 -- Table comment
+        comment = conn.querySingle(
+            "SELECT TABLE_COMMENT FROM information_schema.TABLES
+             WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?",
+            database, tableName)
+        metadataMap[tableName] = {
+            columns: columns,
+            comment: comment
+        }
+    END FOR
+    conn.close()
+    // Serialize and cache to Redis
+    json = objectMapper.writeValueAsString(metadataMap)
+    redisTemplate.opsForHash().put(
+        "code_agent:metadata", "tables", json)
+    redisTemplate.expire(
+        "code_agent:metadata", config.getCacheTtl())  // default: 3600s
+    RETURN metadataMap
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 24: Pseudocode --- MetadataCacheManager Cache Lifecycle Management}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 24: Pseudocode --- MetadataCacheManager Cache Lifecycle Management}
+\end{center}
+
+\begin{lstlisting}
+// @Component - manages metadata cache lifecycle
+
+// === Startup - initial cache load ===
+@EventListener(ApplicationReadyEvent)
+FUNCTION onApplicationReady():
+    TRY
+        metadataCacheService.refreshAllMetadata()
+        log.info("Metadata cache loaded successfully")
+    CATCH Exception e:
+        log.warn("Database not ready. Manually refresh via:")
+        log.warn("  POST /api/code/metadata/refresh")
+    END TRY
+END FUNCTION
+
+// === Periodic refresh - every 30 minutes ===
+@Scheduled(fixedRate = 1800000)
+FUNCTION scheduledRefresh():
+    TRY
+        metadataCacheService.refreshAllMetadata()
+    CATCH Exception e:
+        log.error("Scheduled metadata refresh failed", e)
+    END TRY
+END FUNCTION
+
+// === Fallback - direct query when Redis unavailable ===
+FUNCTION getAllTableMetadata(): Map<String, TableMetadata>
+    TRY
+        cached = redisTemplate.opsForHash()
+            .get("code_agent:metadata", "tables")
+        IF cached NOT NULL THEN
+            RETURN deserializeJSON(cached)
+        END IF
+    CATCH:  // Redis unavailable - fall through
+    // Direct DB query as fallback
+    RETURN refreshAllMetadata()
+END FUNCTION
+\end{lstlisting}
+
 
 \vspace{3mm}
-\noindent\textbf{Table 25: Pseudocode --- SqlExecutionService Defense-in-Depth SQL Execution}
+
+\needspace{6\baselineskip}
+\begin{center}
+\textbf{Table 25: Pseudocode --- SqlExecutionService Defense-in-Depth SQL Execution}
+\end{center}
+
+\begin{lstlisting}
+FUNCTION execute(sql: String): QueryResult
+    // Defense in depth - re-validate even from trusted pipeline
+    validation = sqlValidationService.validate(sql)
+    IF validation IS NOT PASS THEN
+        RETURN failure(validation.errorMessage)
+    END IF
+    // Execute via PreparedStatement (JdbcTemplate handles this)
+    TRY
+        rows = jdbcTemplate.queryForList(sql)
+        RETURN success({
+            columns:   extractColumnNames(rows),
+            data:      rows,
+            rowCount:  rows.size(),
+            elapsedMs: measureElapsed()
+        })
+    CATCH DataAccessException e:
+        RETURN failure("Query execution failed: " + e.message)
+    END TRY
+END FUNCTION
+
+FUNCTION generateAndExecute(question, generationService): FullResult
+    genResult = generationService.generateSQL(question)
+    IF genResult IS FAILURE THEN
+        RETURN FullResult.failure(genResult.error)
+    END IF
+    execResult = execute(genResult.sql)
+    RETURN FullResult({
+        success:         execResult.success,
+        sql:             genResult.sql,
+        inferenceMethod: genResult.method,
+        columns:         execResult.columns,
+        rows:            execResult.data,
+        rowCount:        execResult.rowCount,
+        elapsedMs:       execResult.elapsedMs
+    })
+END FUNCTION
+\end{lstlisting}
+
 
 The test dataset provides three core tables for evaluation and demonstration: bank\_customer (5 rows with customer\_no, name, id\_card, phone, risk\_level LOW/MEDIUM/HIGH, status), bank\_account (5 rows with account\_no, customer\_no FK, account\_type, balance, currency HKD/USD, open\_date, status), and bank\_transaction (5 rows with transaction\_no, account\_no FK, type DEPOSIT/WITHDRAW/TRANSFER, amount, transaction\_date, description). The test data is designed to cover common banking query patterns including customer summaries, balance aggregations, transaction histories, and multi-table joins.
 
