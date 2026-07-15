@@ -137,17 +137,28 @@ I was responsible for building the RAG Agent into a complete enterprise document
 
 \vspace{2mm}
 
-I built the platform's early-stage authentication and permission system with Spring Security, using stateless JWT tokens (HMAC-SHA256) and BCrypt password encoding to separate admin and regular user access. I configured the security filter chain to open only the login and registration endpoints while requiring authentication for all other routes, and defined standardized Result\textless T\textgreater response wrappers and DTOs.
+I contributed across backend security, frontend internationalization, documentation standardization, authentication, multilingual support, and visual communication of system architecture.
 
-For internationalization, I adapted all business and UI components to support three languages (Simplified Chinese, Traditional Chinese, and English) with dynamic switching through Vue3 and Element Plus i18n. This required reorganizing component-level text, validation messages, and document metadata into locale files.
+\textbf{1. Backend}
 
-Building on the existing team codebase, I integrated QQ Mail's SMTP service to deliver verification codes, storing them in Redis with a 5-minute TTL and a 60-second send rate limit, and wired the code verification into the registration flow.
+\textbf{1.1 Authentication & Authorization}
+I built the platform's initial Spring Security layer with stateless JWT tokens (HMAC-SHA256) and BCrypt password encoding to separate admin and regular user access. I configured the security filter chain to expose only the login and registration endpoints publicly while requiring authentication for all other routes, and defined the foundational Result<T> response wrapper and DTOs to ensure consistent error handling and data exchange across the codebase.
 
-I was responsible for the final report. I redrew all twelve system diagrams, standardized and expanded the technical tables, and synchronized the report with the latest codebase.
+\textbf{1.2 Email Verification Integration}
+Building on the existing team codebase, I integrated the QQ Mail SMTP service to deliver verification codes during registration. I stored codes in Redis with a 5-minute TTL, enforced a 60-second per-email send rate limit to prevent abuse, and wired the code verification step directly into the registration flow, completing the end-to-end sign-up process.
 
-Figure redesign. I designed the first version of all figures, and after team discussion, I redrew the original dense, small-font figures into clean, wide-format vector graphics with a unified visual style. Every diagram maintained readability and visual hierarchy, ensuring clear communication of complex architectural concepts. A total of 12 figures were created and refined.
+\textbf{2. Frontend & Internationalization}
 
-Table standardization. I converted all seven data tables into the three-line table format (1.5 pt top and bottom rules, a 0.75 pt rule below the header, no vertical or interior horizontal lines). I also suggested moving long pseudocode blocks to standalone tables---both to maintain formatting consistency and to communicate algorithms more clearly to readers.
+\textbf{2.1 Multi-Language i18n Support}
+I adapted all business and UI components to support three languages (Simplified Chinese, Traditional Chinese, and English) with dynamic switching through Vue3 and Element Plus i18n. This required systematically reorganizing component-level text, validation messages, and document metadata into structured locale files, ensuring the entire frontend remained maintainable and language-agnostic.
+
+\textbf{3. Documentation & Visualization Standardization}
+
+\textbf{3.1 System Diagrams Redesign}
+I designed the first version of all figures, and after team discussion, I redrew the original dense, small-font diagrams into clean, wide-format vector graphics with a unified visual style. Every diagram maintained readability and visual hierarchy, ensuring clear communication of complex architectural concepts. A total of 12 figures were created and refined.
+
+\textbf{3.2 Final Report & Table Standardization}
+I was responsible for synchronizing the final report with the latest codebase. I converted all seven data tables into the three-line table format (1.5 pt top and bottom rules, a 0.75 pt rule below the header, no vertical or interior horizontal lines) and suggested moving long pseudocode blocks to standalone tables—both to maintain formatting consistency and to communicate algorithms more clearly to readers.
 
 \vspace{4mm}
 

@@ -30,12 +30,12 @@ Table 27 shows the WebSocket-based task progress streaming mechanism with step-b
 
 \subhead{6.4 Containerized Deployment}
 
-Figure 11 shows the Docker Compose service topology, illustrating how each service (Gateway, four backend microservices, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal Docker network, with only the Gateway port exposed externally.
+Figure 10 shows the Docker Compose service topology, illustrating how each service (Gateway, four backend microservices, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal Docker network, with only the Gateway port exposed externally.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig11_docker_topology.png}
-\caption{Figure 11: Docker Compose Service Topology}
+\includegraphics[width=0.92\textwidth]{figures/fig10_docker_topology.png}
+\caption{Figure 10: Docker Compose Service Topology}
 \end{figure}
 
 The platform is deployed through Docker Compose. Each service (Gateway, four backend services, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal bridge network. Only the Gateway (port 8080) is exposed. The frontend Nginx (port 80) serves static Vue 3 SPA files and proxies API and WebSocket requests to the Gateway. MySQL initialization is handled via a mounted SQL dump file. The Python inference server for the Code Agent runs in a separate container with FastAPI.
