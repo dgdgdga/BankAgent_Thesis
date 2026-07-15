@@ -166,6 +166,74 @@ I was responsible for synchronizing the final report with the latest codebase. I
 
 \vspace{2mm}
 
-I independently designed and implemented the code-agent module, a Text-to-SQL system built on Spring Boot 3.2 and Java 17. The service converts natural language questions into secure, executable SQL through a four-stage pipeline: (1) schema metadata caching via information\_schema \textrightarrow{} Redis, (2) prompt construction with schema injection and natural language question forwarding to the Python LLM inference server, (3) five-layer SQL whitelist validation (operation type \textrightarrow{} forbidden keywords \textrightarrow{} table whitelist \textrightarrow{} column whitelist \textrightarrow{} complexity limits), and (4) defense-in-depth SQL execution through JdbcTemplate. The OnnxCodeGenerationService (enabled via the code-agent.onnx.enabled=true feature flag) is the single CodeGenerationService implementation, using RestTemplate as an HTTP proxy to the Python server. The SqlValidationService implements all five validation layers with configurable rules. Six REST API endpoints expose generation, preview-only, and execute-only modes. The entire service is containerized with a multi-stage Docker build targeting OpenJDK 17-slim.
+I designed and implemented the Code Agent module — the natural-language-to-SQL engine that translates user questions into MySQL queries, validates them through a five-layer security whitelist, and executes them safely against the database. The module comprises a dedicated Spring Boot microservice and a Python LLM inference bridge. I also conducted model-level experimentation, fine-tuning two T5 variants before converging on the final LLM API-based approach.
+
+\textbf{1. Code Agent Microservice Architecture}
+
+I built the code-agent microservice (port 8084) from scratch as a standalone Spring Boot 3.2 service.
+
+Designed the service with a clean separation of concerns: CodeAgentController (REST layer, 6 endpoints), CodeGenerationService (interface with pluggable implementations), SqlValidationService (five-layer whitelist engine), SqlExecutionService (JdbcTemplate-based safe execution), MetadataCacheService (information_schema → Redis), and MetadataCacheManager (lifecycle management).
+
+Implemented the OnnxCodeGenerationService as an HTTP proxy to the Python LLM inference server (port 8090), using java.net.http.HttpClient with 10-second connect timeout and 60-second response timeout. The contract is POST {question} → returns {sql, method} JSON.
+
+Built the CodeAgentProperties configuration class with @ConfigurationProperties(prefix = "code-agent"), supporting three config groups (ONNX inference, SQL whitelist, metadata cache) all overridable via environment variables for seamless Dev/Prod switching.
+
+\textbf{2. Five-Layer SQL Whitelist Validation Engine}
+
+I designed and implemented a defense-in-depth SQL validation pipeline (SqlValidationService) that blocks injection and unauthorized queries at five sequential layers, each with immediate rejection on failure:
+
+Layer 1 — Operation Type: Enforces SELECT-only. Any non-SELECT statement is rejected before further processing, preventing write operations at the earliest stage.
+
+Layer 2 — Forbidden Keywords: Scans SQL with word-boundary regular expressions (\bDROP\b, \bDELETE\b, \bINSERT\b, \bUPDATE\b, \bALTER\b, \bTRUNCATE\b, \bCREATE\b, \bEXEC\b, \bUNION\b, \bINTO\b, \bLOAD_FILE\b, \bOUTFILE\b, \bDUMPFILE\b). The \b boundary prevents false positives — for example, customer_no is not flagged for containing the substring IN.
+
+Layer 3 — Table Whitelist: Extracts all tables referenced in FROM and JOIN clauses via regex and validates each against the cached information_schema table list. Unknown tables are rejected with the allowed set shown in the error message.
+
+Layer 4 — Column Whitelist: For non-SELECT * queries, extracts every column from the SELECT clause and validates each against the actual column definitions of the referenced tables — supporting JOIN queries by merging all referenced tables' column sets. Aggregate functions and expressions are intelligently skipped.
+
+Layer 5 — Complexity Limits: Caps queries at a maximum of 3 joined tables and 10 conditions (counting AND/OR occurrences + 1 base). This prevents resource exhaustion from overly complex LLM-generated queries.
+
+All layer parameters are configurable through code-agent.whitelist.* in application.yml.
+
+\textbf{3. Metadata Caching & Execution Infrastructure}
+
+I built the metadata caching layer and safe SQL execution service:
+
+Implemented MetadataCacheService that queries MySQL information_schema (using JDBC directly, not MyBatis) to extract table names, column names, data types, and comments — caching them in Redis as a JSON Hash map keyed by table name with a 1-hour TTL. When Redis is unavailable, the service falls back to direct MySQL queries, ensuring zero-downtime operation.
+
+Built MetadataCacheManager with an @EventListener(ApplicationReadyEvent.class) for startup cache warm-up and a @Scheduled(fixedRate = 30 * 60 * 1000) for periodic refresh every 30 minutes.
+
+Implemented SqlExecutionService with defense-in-depth: before executing any SQL, it re-validates through the full five-layer pipeline, catching edge cases where SQL might have been tampered with between generation and execution. Only then does it run via JdbcTemplate.queryForList(sql) and return results with column names and data rows.
+
+Built the generateAndExecute one-shot method that chains generation → validation → execution into a single FullResult response.
+
+\textbf{4. REST API Endpoints}
+
+I designed and implemented all six REST endpoints for the Code Agent, centered around the Human-in-the-Loop (HITL) pattern that separates generation from execution:
+
+POST /code/query is the one-shot endpoint: it accepts a natural language question, calls the LLM inference service to generate SQL, runs the five-layer validation, executes the query, and returns the full result including column headers, data rows, row count, and elapsed time.
+
+POST /code/generate handles SQL generation only — it takes a question and returns the LLM-generated SQL with inference metadata, without executing anything. This enables the frontend to display the generated SQL for human review before it touches the database.
+
+POST /code/execute accepts a reviewed (and potentially human-edited) SQL string, re-validates it through the full whitelist pipeline, and executes it — completing the supervised HITL workflow.
+
+GET /code/metadata returns the currently cached table metadata from Redis or MySQL fallback.
+
+POST /code/metadata/refresh forces an immediate refresh of the metadata cache from information_schema.
+
+GET /code/health returns the service status and active inference method for operational monitoring.
+
+\textbf{5. Model-Level Experimentation: Fine-Tuned T5 vs. LLM API}
+
+Before settling on the final architecture, I conducted practical experiments comparing local fine-tuned models against cloud LLM APIs for the text-to-SQL task:
+
+Fine-tuned two T5 variants on our banking-domain dataset, deploying them via ONNX Runtime for local inference. The goal was to evaluate whether a small, domain-specific model could match general-purpose LLMs on our constrained schema.
+
+Through systematic comparison, I found that the fine-tuned T5 models consistently underperformed the LLM API approach — even with careful training, the smaller models struggled with schema grounding, complex JOIN logic, and edge cases that a general-purpose LLM handled naturally when given well-structured metadata in the prompt.
+
+This led to the key architectural decision: rather than investing further in local model optimization, I adopted the LLM API + rich metadata prompt strategy, where the cached information_schema context (table names, column definitions, data types, example values) is injected into every generation request. This approach proved both more accurate and more maintainable, as schema changes require no model retraining — only a metadata cache refresh.
+
+\textbf{6. Test Dataset & Banking Domain}
+
+I authored the banking_data.sql test dataset with three relational tables — bank_customer (5 rows, risk levels LOW/MEDIUM/HIGH), bank_account (7 rows, account types SAVINGS/CHECKING/FIXED), and bank_transaction (10 rows, transaction types DEPOSIT/WITHDRAW/TRANSFER) — covering diverse NL2SQL scenarios from simple lookups to multi-table JOIN aggregations, and providing a realistic testbed for the generation, validation, and execution pipeline.
 
 \end{document}
