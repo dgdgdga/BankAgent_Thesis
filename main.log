@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 03:39
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 03:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -398,12 +398,11 @@ Underfull \hbox (badness 2005) in paragraph at lines 61--61
 []|\TU/TimesNewRoman(0)/m/n/12 Keyword greeting
  []
 
-Missing character: There is no 你 (U+4F60) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 是 (U+662F) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 谁 (U+8C01) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--61
+\TU/TimesNewRoman(0)/m/n/12 you do”, simple
+ []
+
 
 Underfull \hbox (badness 10000) in paragraph at lines 62--62
 \TU/TimesNewRoman(0)/m/n/12 (temperature=0.1,
@@ -429,30 +428,7 @@ Underfull \hbox (badness 3168) in paragraph at lines 63--63
 []|\TU/TimesNewRoman(0)/m/n/12 Keyword fallback
  []
 
-[43] [44]
-Missing character: There is no 查 (U+67E5) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 询 (U+8BE2) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 统 (U+7EDF) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 计 (U+8BA1) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 会 (U+4F1A) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 议 (U+8BAE) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 室 (U+5BA4) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 预 (U+9884) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 订 (U+8BA2) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 日 (U+65E5) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-Missing character: There is no 程 (U+7A0B) in font Times New Roman/OT:script=lat
-n;language=dflt;mapping=tex-text;!
-[45]
+[43] [44] [45]
 Underfull \hbox (badness 7397) in paragraph at lines 128--129
 []\TU/TimesNewRoman(0)/b/n/12 Browser Custom Events\TU/TimesNewRoman(0)/m/n/12 
 : The widget dispatches \TU/lmtt/m/n/12 CustomEvent \TU/TimesNewRoman(0)/m/n/12
@@ -1196,7 +1172,7 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  4494 strings out of 468168
  125390 string characters out of 5432816
- 574074 words of memory out of 5000000
+ 575074 words of memory out of 5000000
  33119 multiletter control sequences out of 15000+600000
  630665 words of font info for 75 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

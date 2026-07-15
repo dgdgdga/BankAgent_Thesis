@@ -58,7 +58,7 @@ The Python Flask \texttt{/route} endpoint is the Copilot's brain. It implements 
 \textbf{Tier} & \textbf{Mechanism} & \textbf{What It Catches} & \textbf{Cost} \\
 \midrule
 Tier 1 & Pattern blocklist (40+ regex rules) & Jailbreak attempts, non-banking topics, prompt injection & Zero (no API call) \\
-Tier 2 & Keyword greeting match & ``Hello'', ``What can you do'', ``你是谁'' & Zero \\
+Tier 2 & Keyword greeting match & ``Hello'', ``What can you do'', simple greeting phrases & Zero \\
 Tier 3a & LLM classification (temperature=0.1, max\_tokens=10) & CODE, TOOL, RAG, CHAT, CLARIFY, SETTINGS & $\sim$10 tokens per query \\
 Tier 3b & Keyword fallback (LLM unavailable) & Same six categories, lower accuracy & Zero \\
 \bottomrule
@@ -82,7 +82,7 @@ Tier 3a is the core classification layer. The user's question is sent to the LLM
 
 The LLM is configured with temperature 0.1 and max\_tokens 10 --- the response is a single word, not a sentence. This keeps classification deterministic and cheap. For CLARIFY and CHAT intents, a second LLM call generates a conversational reply with appropriate follow-up questions or explanations.
 
-Tier 3b activates only when the LLM API is unreachable. A pure keyword-matching fallback scans for Chinese and English terms associated with each intent (e.g., ``SQL'', ``查询'', ``统计'' for CODE; ``会议室'', ``预订'', ``日程'' for TOOL) and defaults to RAG when no keywords match. This ensures the Copilot degrades gracefully rather than failing completely.
+Tier 3b activates only when the LLM API is unreachable. A pure keyword-matching fallback scans for terms associated with each intent --- for CODE: terms related to databases, statistics, and data queries; for TOOL: terms related to meeting rooms, bookings, and schedules --- and defaults to RAG when no keywords match. This ensures the Copilot degrades gracefully rather than failing completely.
 
 \subhead{5.4.4 Frontend Dispatch and User Experience}
 
