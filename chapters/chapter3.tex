@@ -6,29 +6,41 @@
 
 \subhead{3.1 Banking Industry Context}
 
-The system requirements are derived from banking operations. Banks and financial firms handle complex information environments. These settings have four main features. First, they have large relational data stores. These stores hold client profiles, transaction logs, product lists, and compliance reports. Second, they keep large sets of policy documents, rule handbooks, and procedure guides. These are updated often to match new legal needs. They are organized by department. Each has a different security level. Third, daily admin tasks involve resource scheduling. This includes booking meeting rooms, managing staff calendars, and planning travel. These tasks take up a lot of staff time. Fourth, security and compliance needs demand tight control over data access and handling. This includes role-based permissions, separating data by department, and clearance-escalation processes that can be audited.
+The system requirements are derived from banking operations. Banking IT environments share four characteristics that drive the platform's requirements. (i) Large relational databases store client profiles, transaction histories, product catalogs, and compliance records. (ii) Policy and procedure repositories span multiple departments, each document carrying a security classification and subject to frequent regulatory updates. (iii) Administrative workflows such as room booking, calendar coordination, travel planning consume substantial staff hours and remain largely manual. (iv) Security and compliance obligations, including those mandated by the HKMA Supervisory Policy Manual (as discussed in Section 2.6), demand role-based access control, department-scoped data isolation, and auditable escalation processes.
 
-A study of stakeholders finds five main user groups. Business analysts need to query databases without deep SQL knowledge. Compliance officers need to quickly find relevant regulatory clauses with verifiable references. Administrative staff coordinate meetings and schedules across the organization. Departmental administrators manage team membership, document access rights, and approval workflows in their units. System administrators handle platform configuration, manage user permissions, and allocate resources.
+Stakeholder analysis identifies five user groups. Business analysts need to query databases without deep SQL knowledge. Compliance officers need to quickly find relevant regulatory clauses with verifiable references. Administrative staff coordinate meetings and schedules across the organization. Departmental administrators manage team membership, document access rights, and approval workflows in their units. System administrators handle platform configuration, manage user permissions, and allocate resources.
 
 \subhead{3.2 Functional Requirements}
 
-The platform's functional requirements are arranged by microservice. These requirements specify the implemented features, as verified against the codebase.
+The platform's functional requirements are organized by domain. Table 2 summarizes each requirement with its rationale and priority.
 
-FR1 -- User Authentication and RBAC. The system supports registration. Usernames must be in email format. It uses BCrypt to hash passwords. It uses JWT for authentication without server-side sessions. Each JWT carries the user ID (sub). It also carries the roles list (roles[]) and the permissions list (permissions[]). Three roles are supported. ROLE\_ADMIN has full privileges. It can manage users, resources, and departments. ROLE\_DEPT\_ADMIN is limited to departmental tasks. ROLE\_USER has basic access. The Gateway has a filter called JwtAuthGlobalFilter. It checks tokens for all endpoints that are not whitelisted. It then forwards user context to downstream services. It does this through custom headers. These headers are X-User-Name, X-User-Roles, and X-User-Permissions.
-
-FR2 -- Department Management. A department structure with different levels is supported. It has six units: Credit, Compliance, Asset Management, Retail Banking, Investment Banking, and Risk Control. Department administrators can view the member list in their unit. They can browse unassigned users. They can add new members. They can remove existing ones. Users can be assigned to departments with a security clearance level. Level 1 is Public. Level 2 is Internal. Level 3 is Confidential. Newly registered users start at Level 1 by default.
-
-FR3 -- Document Management with Security Clearance. Organizational documents are stored in the sys\_document table. The table has fields for title, markdown content, a department link, and a security level. The department field is called dept\_id. It can be empty for global documents. The security level is a number from 1 to 3. Access is decided by a rule with several conditions. The rule is checked at query time. A document is accessible if two things are true. Its dept\_id must match the user's department, or be empty. Its security level must not be higher than the user's clearance. Documents failing either condition are still returned but marked as inaccessible with an 'Access Restricted' message, rather than being omitted. This supports the Human-in-the-Loop escalation workflow.
-
-FR4 -- Notification System. The notification subsystem handles multiple types. They are stored in the sys\_notification table. One type is CHAT. This is for general messaging. Its status flow is: 0 means Unread, and it moves to 1, which means Read. Another type is RAG\_APPLY. This is for document access escalation requests. Its status flow is: 2 means Pending. It can change to 3, which means Approved, or to 4, which means Denied. Another type is SQL\_AUDIT. This sends alerts on suspicious SQL statements. The alert includes a JSON payload. The payload holds the query and timestamps. The frontend shows a badge with the unread count. This count is checked every 10 seconds. The frontend also provides a three-column message center. It displays messages in different ways for each type.
-
-FR5 -- Code Agent. Natural-language queries are accepted through three endpoints. POST /code/query does generation and execution. POST /code/generate gives a preview only. POST /code/execute runs execution after human-in-the-loop review. The Python LLM inference server listens on port 8090. It receives a question in JSON format. It returns the generated SQL. A five-stage SqlValidationService checks the SQL. It restricts operations to SELECT only. It uses a blacklist to block forbidden keywords. It checks a whitelist of table names from information\_schema. It checks a whitelist of column names. It enforces complexity limits. No more than 3 tables are allowed. No more than 10 conditions are allowed. Metadata is pulled from information\_schema. It is cached as JSON in Redis. The key is code\_agent:metadata:tables. The TTL is 3600 seconds. A scheduled task refreshes the cache every 30 minutes. An initial load happens when the application starts.
-
-FR6 -- RAG. RAG accepts natural-language policy questions. It searches a Milvus database for semantically similar text chunks. It generates responses with source citations. It respects document security clearance levels during retrieval. Note that this agent is under active development. Its foundational infrastructure is in place.
-
-FR7 -- Tool Agent. There is a single AI execution endpoint. It is POST /tool/execute. It accepts ToolRequest objects. These objects contain a toolType field, a parameters map, and a natural language field. The DeepSeek Service classifies the input into one of three intents. The intents are ROUTE\_PLAN, MEETING\_QUERY, and SCHEDULE\_CHECK. It also extracts structured parameters. There are dedicated endpoints for specific tasks. One endpoint handles meeting-room query and booking. Another endpoint handles schedule-conflict detection. It uses Redis sorted sets. The sets are keyed as tool:schedule:{userId}. Another endpoint handles route planning with map visualization. It uses the Amap Open API. It includes multi-level geocoding fallback.
-
-FR8 -- Admin Resource Management. Users with the ROLE\_ADMIN role can use two controllers. One is the MeetingRoomAdminController. It handles CRUD at /tool/admin/meeting-rooms. The other is the MeetingScheduleAdminController. It handles CRUD at /tool/admin/schedules. All admin endpoints check for the ROLE\_ADMIN role. They look for it in the X-User-Roles header. Resource management applies several rules. The room name and floor are required. Capacity must be greater than zero. Start time must be before end time. The booker's name is required.
+\begin{table}[H]
+\centering
+\small\singlespacing
+\caption{Functional Requirements}
+\label{tab:functional-requirements}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}>{\RaggedRight\arraybackslash}p{0.34\textwidth}>{\RaggedRight\arraybackslash}p{0.14\textwidth}}
+\toprule
+\textbf{ID} & \textbf{Requirement} & \textbf{Description} & \textbf{Priority} \\
+\midrule
+FR1 & User Authentication \& RBAC & Email-format registration with hashed passwords and stateless JWT authentication. Three roles (Admin, Department Admin, End-User) with fine-grained permissions enforced at the gateway level. & High \\
+\midrule
+FR2 & Department Management & Hierarchical department structure with six banking units. Department administrators can manage membership and assign clearance levels (Public, Internal, Confidential). & High \\
+\midrule
+FR3 & Document Management with Security Clearance & Documents stored with department ownership and security level. Access granted only when the user's department and clearance meet the document's requirements. Inaccessible documents trigger a human-in-the-loop escalation pathway. & High \\
+\midrule
+FR4 & Notification System & Multi-type notifications (chat, access request, SQL audit alert) with a five-state state machine. Unread badge and role-specific views provided on the frontend. & Medium \\
+\midrule
+FR5 & Code Agent --- NL2SQL & Natural language to SQL translation with security validation before execution. Schema metadata cached to improve generation accuracy. Human-in-the-loop mode supported: generate, review, then execute. & High \\
+\midrule
+FR6 & RAG Agent --- Policy Q\&A & Natural language questions answered from organizational documents with verifiable source citations. Retrieval filtered by the user's department and clearance level. & Medium \\
+\midrule
+FR7 & Tool Agent --- Task Automation & Unified natural language interface for meeting room booking, schedule conflict detection, and route planning. Intent recognized automatically and routed to the appropriate handler. & Medium \\
+\midrule
+FR8 & Admin Resource Management & Role-restricted CRUD endpoints for meeting rooms and schedules. Validation rules enforce required fields, positive capacity, and chronological time ranges. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subhead{3.3 Non-Functional Requirements}
 
