@@ -48,7 +48,23 @@ compliance\_staff & 123456 & Compliance Department Staff (Level 1) \\
 \end{tabularx}
 \end{table}
 
-\subhead{C.3 Navigating the Platform}
+\subhead{C.3 Troubleshooting Common Issues}
+
+\textbf{Port 80 already in use.} If port 80 is occupied by another service on the host machine (e.g., an existing web server or local development tool), Docker Compose will fail to start the Nginx container with a port binding error. Either stop the conflicting service or change the host port in \texttt{docker-compose.yml} by editing the Nginx port mapping (e.g., \texttt{"8080:80"}) and then access the platform at \texttt{http://localhost:8080}.
+
+\textbf{Milvus fails to start.} Milvus depends on etcd and MinIO being healthy before it can initialize. If it fails to become healthy, restart the dependencies first:
+
+\begin{lstlisting}
+docker compose restart etcd minio
+sleep 10
+docker compose restart milvus
+\end{lstlisting}
+
+\textbf{RAG embedding worker model download fails.} The BGE-M3 model (approximately 2 GB) is downloaded from Hugging Face during the first container startup. If the network is restricted or Hugging Face is temporarily unavailable, the worker will fail. Set \texttt{RAG\_EMBEDDING\_PROVIDER=mock} in \texttt{.env} and restart with \texttt{docker compose up -d} to run with a mock embedding provider. Retrieval quality will be degraded; this is intended only as a fallback for basic functionality verification.
+
+\textbf{Insufficient RAM.} If the host machine has less than 16 GB of RAM, comment out the \texttt{rag-worker} and \texttt{rag-agent} services in \texttt{docker-compose.yml}. The remaining 13 containers will run normally without the RAG knowledge base capability.
+
+\subhead{C.4 Navigating the Platform}
 
 \textbf{Main Dashboard.} Displays a welcome message, a pending approval alert banner for administrators, and a statistics overview. The Copilot floating widget (blue icon, bottom-right corner) is accessible from every page and serves as the unified natural language interface. Users can type a question into the Copilot to query databases, search policies, book meeting rooms, or plan routes without navigating to a specific agent page.
 
