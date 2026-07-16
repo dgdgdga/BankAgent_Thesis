@@ -316,17 +316,13 @@ updated\_at   & DATETIME                           & Auto-updated on modificatio
 
 \vspace{4mm}
 
-% --- Table A12: RAG tables ---
+% --- Table A12: rag_knowledge_base ---
 \begin{table}[H]
 \small\singlespacing
 \centering
-\caption{RAG knowledge base tables}
-\label{tab:schema-rag}
+\caption{RAG Knowledge Base --- rag\_knowledge\_base}
+\label{tab:schema-rag-kb}
 \vspace{2mm}
-
-\noindent\textit{rag\_knowledge\_base}
-\vspace{1mm}
-
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \schematableheader
 id             & BIGINT, PK, AUTO\_INCREMENT             & Unique KB identifier \\
@@ -343,12 +339,17 @@ create\_time   & DATETIME                                & Record creation times
 update\_time   & DATETIME                                & Auto-updated on modification \\
 \bottomrule
 \end{tabular}
+\end{table}
 
-\vspace{3mm}
+\vspace{2mm}
 
-\noindent\textit{rag\_source\_document}
-\vspace{1mm}
-
+% --- Table A13: rag_source_document ---
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{RAG Source Document --- rag\_source\_document}
+\label{tab:schema-rag-source}
+\vspace{2mm}
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \schematableheader
 id                 & BIGINT, PK, AUTO\_INCREMENT           & Unique source document identifier \\
@@ -376,12 +377,17 @@ create\_time       & DATETIME                             & Record creation time
 update\_time       & DATETIME                             & Auto-updated on modification \\
 \bottomrule
 \end{tabular}
+\end{table}
 
-\vspace{3mm}
+\vspace{2mm}
 
-\noindent\textit{rag\_document\_chunk}
-\vspace{1mm}
-
+% --- Table A14: rag_document_chunk ---
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{RAG Document Chunk --- rag\_document\_chunk}
+\label{tab:schema-rag-chunk}
+\vspace{2mm}
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \schematableheader
 id             & BIGINT, PK, AUTO\_INCREMENT    & Unique chunk identifier \\
@@ -402,12 +408,17 @@ update\_time   & DATETIME                      & Auto-updated on modification \\
 deleted        & TINYINT, NOT NULL, DEFAULT 0  & Logical delete flag \\
 \bottomrule
 \end{tabular}
+\end{table}
 
-\vspace{3mm}
+\vspace{2mm}
 
-\noindent\textit{rag\_query\_log}
-\vspace{1mm}
-
+% --- Table A15: rag_query_log ---
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{RAG Query Log --- rag\_query\_log}
+\label{tab:schema-rag-query}
+\vspace{2mm}
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \schematableheader
 id               & BIGINT, PK, AUTO\_INCREMENT       & Unique log entry identifier \\
@@ -427,12 +438,17 @@ error\_msg       & TEXT                              & Error details on failure 
 create\_time     & DATETIME                          & Record creation timestamp \\
 \bottomrule
 \end{tabular}
+\end{table}
 
-\vspace{3mm}
+\vspace{2mm}
 
-\noindent\textit{rag\_index\_task}
-\vspace{1mm}
-
+% --- Table A16: rag_index_task ---
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{RAG Index Task --- rag\_index\_task}
+\label{tab:schema-rag-index-task}
+\vspace{2mm}
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \schematableheader
 id          & BIGINT, PK, AUTO\_INCREMENT         & Unique task identifier \\
