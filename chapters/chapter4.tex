@@ -255,44 +255,57 @@ All external communication uses HTTPS with TLS 1.3. WebSocket connections are up
 
 \subhead{4.5 Data Layer Architecture}
 
-For the data persistence layer, we adopted a multi-engine heterogeneous architecture. The main reason for not using a single database were the significant difference in storage requirements for different data types---storing vectors, relational data, and cache data all in MySQL would have created performance bottlenecks and architectural complexity. Instead, three specialized storage engines were deployed, each optimized for its specific data type.
-
-All relational data resides on MySQL 8.0. We agreed on the database name agent\_platform, character set utf8mb4, and collation utf8mb4\_unicode\_ci---while general\_ci is more faster, it causes garbled characters in Chinese and emoji symbols. This design is essential for internationalization (including Traditional Chinese). The complete schema, including the base business tables and RAG metadata tables, is documented in Appendix A.
-
-The user and permission management uses five tables: sys\_user stores account information, passwords are hashed using BCrypt, and it's linked to sys\_department as foreign key, also recording security levels (1-3). sys\_role defines three role codes (ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, ROLE\_USER). sys\_permission defines six granular permissions covering user management, role management, and department management. sys\_user\_role is a many-to-many association table connecting users to roles, and sys\_role\_permission connects roles to granular permissions. The primary identity management process relies on the RBAC model described in the security section. For document management, the sys\_document table stores knowledge base content with clearance levels and department associations. Meeting room management uses meeting\_room and meeting\_schedule tables, where schedule records include room\_id FK, booker, start\_time, end\_time, and attendee list.
-
-During system initialization, we added a batch of seed data: four meeting rooms, five users with different roles and security levels, six departments, six permissions, a complete role allocation relationship tree, and eleven system documents covering banking compliance scenarios.
-
-Cache and high-frequency operational data are handled by Redis 5.0+. Session tokens are stored in memory with configurable TTLs; atomic counting also rely on Redis when the gateway layer performs IP-level rate limiting (INCR + EXPIRE is the only strategy we use, it's simple, reliable, and effectively prevents race conditions). The JWT single-session mechanism is implemented through Redis keys token:username: \{username\}; on each login, the system invalidates any existing token for the same user.
-
-Redis is also used for the tool's intelligent agent's schedule conflict detection. The key format is tool:schedule:\{userId\}. We store the meeting timestamps as scores using an ordered set. For overlapping queries, we use ZRANGEBYSCORE to retrieve entries whose startEpoch is within the query time window. The operation has logarithmic time complexity for both insertion and query. For MySQL-Redis consistency, we adopted a scheme of ``write MySQL first, then write Redis, and delete the Redis key on failure,'' this is basically a simple cache-aside pattern, prioritizing strong consistency for persistent data.
-
-Semantic retrieval for RAG agents requires vector support, so we separately introduced Milvus. The deployed container uses Milvus 2.6.15 in standalone mode. During the selection process, we considered several vector engines, and Milvus, with its relatively advanced four-tier architecture (access layer, coordinator, worker node, and object storage), ultimately stood out for enterprise deployment scenarios. Milvus's collection schema is dynamically configured at startup, with dimension matching the embedding model dimension. The default local BGE-M3 profile uses 1024-dimensional embeddings, COSINE similarity, and an HNSW index.
-
-The RAG retrieval pipeline applies security filtering before generated answers are produced. The raw vector results returned by Milvus are not directly passed to the LLM; instead, they are checked against the allowed document list computed from the user's department, clearance level, role, and approved RAG\_APPLY requests. Only permission-safe chunks are assembled into the final prompt.
-
-Table \ref{tab:data-storage} summarizes the data storage strategy.
-
-\vspace{3mm}
+The data layer uses a multi-engine approach. Each storage engine was chosen for the type of data it handles best. Table \ref{tab:data-storage} summarizes the four engines and their roles.
 
 \begin{table}[H]
 \small\singlespacing
 \centering
-\caption{Multi-Modal Data Storage Strategy and Layered Access Patterns}
+\caption{Multi-Modal Data Storage Strategy}
 \label{tab:data-storage}
-\vspace{2mm}
-
-\begin{tabular}{@{}p{2.5cm}p{2.5cm}p{5.5cm}p{\dimexpr\textwidth-10.5cm-6\tabcolsep\relax}@{}}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.16\textwidth}>{\RaggedRight\arraybackslash}p{0.14\textwidth}>{\RaggedRight\arraybackslash}p{0.38\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
-\textbf{Category} & \textbf{Engine} & \textbf{Primary Data Types} & \textbf{Access Pattern} \\
+\textbf{Category} & \textbf{Engine} & \textbf{Stored Data} & \textbf{Usage} \\
 \midrule
-Operational Layer & MySQL 8.0   & Users, roles, departments, documents, meeting rooms, schedules, notifications & Transactional, ACID-compliant read/write \\
-Caching Layer     & Redis 5.0+  & Session tokens, rate limit counters, metadata cache (hash), schedule conflicts (sorted sets) & High-concurrency, sub-millisecond reads \\
-Object Storage    & MinIO       & PDF, DOCX, PPT files; Milvus backend objects & Document upload/download, RAG source document storage \\
-Vector Layer      & Milvus 2.6.15 & Document chunk embeddings (BGE-M3, 1024 dimensions), source metadata & Semantic approximate nearest neighbor search \\
+Relational & MySQL 8.0 & Users, roles, permissions, departments, documents, meeting rooms, schedules, notifications, RAG metadata & Transactional read/write with ACID guarantees \\
+\midrule
+Cache & Redis 7 & Session tokens, rate limit counters, schema metadata cache, schedule conflict sorted sets & Sub-millisecond reads for hot data and real-time checks \\
+\midrule
+Object & MinIO & Uploaded PDF, DOCX, PPT, and Markdown files; Milvus backend storage & Document file storage and retrieval \\
+\midrule
+Vector & Milvus 2.6 & Document chunk embeddings with source metadata and security labels & Semantic ANN search filtered by department and clearance \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
+
+\textbf{MySQL.} The relational schema has two groups of tables, summarized in Table \ref{tab:mysql-tables}.
+
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{MySQL Table Groups}
+\label{tab:mysql-tables}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{0.20\textwidth}}
+\toprule
+\textbf{Group} & \textbf{Tables} & \textbf{Record Count (Seed)} \\
+\midrule
+RBAC & sys\_user, sys\_role, sys\_permission, sys\_user\_role, sys\_role\_permission & 5 users, 3 roles, 6 permissions \\
+\midrule
+Organization & sys\_department & 6 departments \\
+\midrule
+Documents & sys\_document & 11 documents \\
+\midrule
+Meetings & meeting\_room, meeting\_schedule & 4 rooms \\
+\midrule
+Tasks \& Notifications & task\_record, sys\_notification & — \\
+\midrule
+RAG Metadata & rag\_document\_chunk, rag\_query\_log & — \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Redis.} Redis serves four purposes. Session tokens with configurable TTL enforce single-session login. Atomic counters (INCR + EXPIRE) back the IP-level rate limiter at the Gateway. Schema metadata from information\_schema is cached as JSON hashes for the Code Agent. Sorted sets keyed as tool:schedule:\{userId\} enable O(log N) schedule conflict detection with ZRANGEBYSCORE queries. The MySQL-Redis consistency follows a simple cache-aside pattern: write MySQL first, then Redis, deleting the Redis key on failure.
+
+\textbf{Milvus.} Milvus stores document chunk embeddings for the RAG Agent. The collection schema is configured at startup to match the active embedding profile. The default BGE-M3 profile produces 1024-dimensional vectors with COSINE similarity and an HNSW index. Retrieval results are filtered against the user's department and clearance level before entering the LLM prompt.
 
 
 \subhead{4.6 Technology Stack Rationale}
