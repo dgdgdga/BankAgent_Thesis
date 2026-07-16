@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 11:24
+=======
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  16 JUL 2026 11:56
+>>>>>>> f140a12 (修改code agent相关描述)
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -836,6 +840,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 785--786
 []|\TU/TimesNewRoman(0)/m/n/10.95 Block execution,
  []
 
+<<<<<<< HEAD
 [49] [50] [51] [52]
 Underfull \hbox (badness 6691) in paragraph at lines 946--947
 []\TU/TimesNewRoman(0)/m/n/12 The test dataset provides three core tables for e
@@ -850,12 +855,16 @@ d_- card, phone, risk_- level
 
 [53] [54] [55] [56]
 Underfull \hbox (badness 1831) in paragraph at lines 996--997
+=======
+[50] [51] [52] [53] [54] [55] [56]
+Underfull \hbox (badness 1831) in paragraph at lines 994--995
+>>>>>>> f140a12 (修改code agent相关描述)
 []\TU/TimesNewRoman(0)/m/n/12 A synchronization mechanism ensures that the docu
 ment library remains in sync
  []
 
 
-Underfull \hbox (badness 1478) in paragraph at lines 996--997
+Underfull \hbox (badness 1478) in paragraph at lines 994--995
 \TU/TimesNewRoman(0)/m/n/12 with the RAG index. The initial version provides an
  admin-accessible “Rebuild
  []
@@ -1229,7 +1238,7 @@ L3 programming layer <2026-01-19>
  ) ) 
 Here is how much of TeX's memory you used:
  8244 strings out of 468168
- 188432 string characters out of 5432816
+ 188432 string characters out of 5432815
  885579 words of memory out of 5000000
  36808 multiletter control sequences out of 15000+600000
  631653 words of font info for 87 fonts, out of 8000000 for 9000
