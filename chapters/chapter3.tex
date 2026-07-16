@@ -33,7 +33,7 @@ FR4 & Notification System & Multi-type notifications (chat, access request, SQL 
 \midrule
 FR5 & Code Agent --- NL2SQL & Natural language to SQL translation with security validation before execution. Schema metadata cached to improve generation accuracy. Human-in-the-loop mode supported: generate, review, then execute. \\
 \midrule
-FR6 & RAG Agent --- Policy Q\&A & Natural language questions answered from organizational documents with verifiable source citations. Retrieval uses Milvus-indexed chunks, configurable embeddings, permission filtering, and audit records for retrieved and blocked documents. \\
+FR6 & RAG Agent --- Policy Q\&A & Natural language questions answered from organizational documents with verifiable source citations. Retrieval uses Milvus-indexed chunks, configurable embedding profiles, permission filtering, index status tracking, and audit records for retrieved and blocked documents. \\
 \midrule
 FR7 & Tool Agent --- Task Automation & Unified natural language interface for meeting room booking, schedule conflict detection, and route planning. Intent recognized automatically and routed to the appropriate handler. \\
 \midrule
@@ -59,7 +59,7 @@ NFR1 & Data Sovereignty & All core relational storage, vector storage, document 
 \midrule
 NFR2 & Performance & SQL generation must complete within 3 seconds. Meeting-room and schedule queries must respond within 500 ms. Route planning must return within 2 seconds. RAG vector retrieval should complete within 1 second after the index is ready, while full answer generation depends on the configured LLM endpoint. WebSocket progress updates must be delivered within 200 ms. Initial page load must not exceed 3 seconds. \\
 \midrule
-NFR3 & Security & All traffic must use HTTPS (WSS for WebSocket). Passwords must be hashed with BCrypt. Authentication must be stateless via signed JWT tokens with configurable expiry. Access must be enforced at the method level. SQL injection must be prevented through parameterized queries. Data deletion must be logical rather than physical for auditability. \\
+NFR3 & Security & All traffic must use HTTPS (WSS for WebSocket). Passwords must be hashed with BCrypt. Authentication must be stateless via signed JWT tokens with configurable expiry. Access must be enforced at the method level. SQL injection must be prevented through parameterized queries. RAG retrieval must filter candidate chunks by department, clearance level, and approved access requests before any text is sent to the answer-generation model. Data deletion must be logical rather than physical for auditability. \\
 \midrule
 NFR4 & Reliability & The platform must achieve 99.5\% uptime during business hours. External service failures must trigger graceful degradation using mock fallbacks or permission-safe retrieval context rather than hard failures. RAG readiness checks expose Milvus, embedding, and LLM availability. All task failures must be logged with user context for post-incident analysis. \\
 \midrule
@@ -109,7 +109,7 @@ The five core use cases spanning these actors are summarized in Table \ref{tab:u
 \midrule
 UC1 & Business analyst & Query database without writing SQL & Code Agent & User enters a natural language question; LLM generates SQL; whitelist validation runs; query executes; tabular result returned. \\
 \midrule
-UC2 & Compliance officer & Find policy clauses with verifiable citations & RAG Agent & User asks a regulatory question; query embedded; top-k chunks retrieved and filtered by department and clearance; LLM generates answer with source citations. \\
+UC2 & Compliance officer & Find policy clauses with verifiable citations & RAG Agent & User asks a regulatory question; query embedded with the active profile; Milvus returns candidate chunks; permission filtering removes inaccessible evidence; LLM generates answer with source citations and the query log records retrieved and blocked document IDs. \\
 \midrule
 UC3 & Staff member & Book a meeting room via natural language & Tool Agent & User describes requirements; intent classified; parameters extracted; available rooms queried; options displayed. \\
 \midrule

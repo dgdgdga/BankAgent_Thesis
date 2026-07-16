@@ -149,7 +149,7 @@ RAG & rag-agent (8085) & \texttt{POST /rag/query} & \texttt{\{question: input, t
 \label{tab:task-routing}
 \end{table}
 
-All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Name}, \texttt{X-User-Roles}) are forwarded so that each agent can apply its own authorization logic. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
+All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Id}, \texttt{X-User-Name}, \texttt{X-User-Dept-Id}, \texttt{X-User-Roles}, and \texttt{X-User-Security-Level}) are forwarded so that each agent can apply its own authorization logic. This is especially important for RAG tasks because the query service uses these headers to build the permission snapshot before vector candidates are allowed into the LLM prompt. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
 
 \subsubhead{6.2.4 Retry with Exponential Backoff}
 
@@ -195,7 +195,7 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \label{tab:task-service-api}
 \end{table}
 
-RAG tasks use the same orchestration path. When the submitted task type is RAG, the task service forwards the question to rag-agent through POST /rag/query, stores the returned answer and citations in task\_record.output, and pushes progress messages back to the frontend. This allows the Copilot, Task Center, and the dedicated RAG workbench to share the same backend capability instead of maintaining separate query implementations.
+RAG tasks use the same orchestration path. When the submitted task type is RAG, the task service forwards the question to rag-agent through \texttt{POST /rag/query}, stores the returned answer, citations, retrieved document IDs, blocked document IDs, trace ID, and latency in \texttt{task\_record.output}, and pushes progress messages back to the frontend. This allows the Copilot, Task Center, and the dedicated RAG workbench to share the same backend capability instead of maintaining separate query implementations.
 
 \subhead{6.3 WebSocket Real-Time Communication}
 
