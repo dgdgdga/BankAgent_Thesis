@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="100%" height="100%">
+  <defs>
+    <!-- 字体样式定义 -->
+    <style>
+      .title { font-family: 'Times New Roman', Times, serif; font-size: 16px; font-weight: bold; fill: #1a1a1a; }
+      .layer-label { font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; fill: #2c3e50; }
+      .node-text { font-family: 'Times New Roman', Times, serif; font-size: 12px; fill: #2c3e50; }
+      .sub-text { font-family: 'Times New Roman', Times, serif; font-size: 10px; fill: #555555; }
+      .port-text { font-family: 'Times New Roman', Times, serif; font-size: 11px; fill: #7f8c8d; }
+      .note-text { font-family: 'Times New Roman', Times, serif; font-size: 11px; font-style: italic; fill: #7f8c8d; }
+      
+      /* 节点边框与填充 */
+      .bg-layer1 { fill: #f4f6f7; stroke: #bdc3c7; stroke-width: 1.2; }
+      .bg-layer2 { fill: #eaeded; stroke: #95a5a6; stroke-width: 1.2; }
+      .bg-layer3 { fill: #ebf5fb; stroke: #a9cce3; stroke-width: 1.2; }
+      .bg-layer4 { fill: #ebf5fb; stroke: #a9cce3; stroke-width: 1.2; }
+      .bg-layer4-sub { fill: #f4f6f7; stroke: #bdc3c7; stroke-width: 1.2; }
+      .bg-layer5 { fill: #f9ebea; stroke: #f1948a; stroke-width: 1.2; }
+      
+      /* 连接线 */
+      .arrow-line { fill: none; stroke: #34495e; stroke-width: 1.2; }
+      .arrow-dash { fill: none; stroke: #7f8c8d; stroke-width: 1.2; stroke-dasharray: 4,4; }
+    </style>
+
+    <!-- 箭头定义 -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#34495e"/>
+    </marker>
+    <marker id="arrow-dash-marker" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#7f8c8d"/>
+    </marker>
+  </defs>
+
+  <!-- 全局背景 -->
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <!-- ==================== 左侧层级标注 (Layer Labels) ==================== -->
+  <g transform="translate(30, 0)">
+    <text x="0" y="55" class="layer-label">Layer 1: Web Presentation</text>
+    <text x="0" y="135" class="layer-label">Layer 2: Gateway</text>
+    <text x="0" y="215" class="layer-label">Layer 3: Business Services</text>
+    <text x="0" y="315" class="layer-label">Layer 4: AI Services</text>
+    <text x="0" y="495" class="layer-label">Layer 5: Data Infrastructure</text>
+  </g>
+
+  <!-- ==================== LAYER 1 (Web Presentation) ==================== -->
+  <g transform="translate(240, 25)">
+    <!-- Browser 标注 -->
+    <text x="240" y="10" text-anchor="middle" class="sub-text">Browser</text>
+    <!-- Vue 3 SPA -->
+    <rect x="0" y="15" width="480" height="35" rx="3" class="bg-layer1"/>
+    <text x="240" y="37" text-anchor="middle" class="node-text" font-weight="bold">Vue 3 SPA <tspan class="port-text">(Nginx :443)</tspan></text>
+  </g>
+
+  <!-- ==================== LAYER 2 (Gateway) ==================== -->
+  <g transform="translate(240, 110)">
+    <!-- Spring Cloud Gateway -->
+    <rect x="0" y="10" width="480" height="35" rx="3" class="bg-layer2"/>
+    <text x="240" y="32" text-anchor="middle" class="node-text" font-weight="bold">Spring Cloud Gateway <tspan class="port-text">:8080</tspan></text>
+    <!-- JWT Auth · Rate Limit -->
+    <text x="240" y="58" text-anchor="middle" class="sub-text">JWT Auth · Rate Limit</text>
+  </g>
+
+  <!-- ==================== LAYER 3 (Business Services) ==================== -->
+  <g transform="translate(240, 195)">
+    <!-- User Service -->
+    <rect x="0" y="10" width="220" height="35" rx="3" class="bg-layer3"/>
+    <text x="110" y="32" text-anchor="middle" class="node-text" font-weight="bold">User Service <tspan class="port-text">:8081</tspan></text>
+
+    <!-- Task Service -->
+    <rect x="260" y="10" width="220" height="35" rx="3" class="bg-layer3"/>
+    <text x="370" y="32" text-anchor="middle" class="node-text" font-weight="bold">Task Service <tspan class="port-text">:8082</tspan></text>
+  </g>
+
+  <!-- ==================== LAYER 4 (AI Services) ==================== -->
+  <!-- 左侧 AI Agent 虚线大框包裹 Tool, Code, RAG Agent 以示其统称 -->
+  <rect x="225" y="275" width="510" height="175" rx="6" fill="none" stroke="#bdc3c7" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="235" y="292" class="note-text">AI Agents</text>
+
+  <g transform="translate(240, 295)">
+    <!-- Tool Agent -->
+    <rect x="0" y="10" width="140" height="35" rx="3" class="bg-layer4"/>
+    <text x="70" y="32" text-anchor="middle" class="node-text" font-weight="bold">Tool Agent <tspan class="port-text">:8083</tspan></text>
+
+    <!-- Code Agent -->
+    <rect x="170" y="10" width="140" height="35" rx="3" class="bg-layer4"/>
+    <text x="240" y="32" text-anchor="middle" class="node-text" font-weight="bold">Code Agent <tspan class="port-text">:8084</tspan></text>
+    <!-- Python LLM Inference -->
+    <rect x="170" y="75" width="140" height="35" rx="3" class="bg-layer4-sub"/>
+    <text x="240" y="97" text-anchor="middle" class="node-text">Python LLM Inference <tspan class="port-text">:8090</tspan></text>
+
+    <!-- RAG Agent -->
+    <rect x="340" y="10" width="140" height="35" rx="3" class="bg-layer4"/>
+    <text x="410" y="32" text-anchor="middle" class="node-text" font-weight="bold">RAG Agent <tspan class="port-text">:8085</tspan></text>
+    <!-- Python Embed Worker -->
+    <rect x="340" y="75" width="140" height="35" rx="3" class="bg-layer4-sub"/>
+    <text x="410" y="97" text-anchor="middle" class="node-text">Python Embed Worker <tspan class="port-text">:8091</tspan></text>
+  </g>
+
+  <!-- ==================== LAYER 5 (Data) ==================== -->
+  <g transform="translate(240, 475)">
+    <!-- MySQL -->
+    <rect x="0" y="10" width="85" height="35" rx="3" class="bg-layer5"/>
+    <text x="42.5" y="32" text-anchor="middle" class="node-text" font-weight="bold">MySQL <tspan class="port-text">:3306</tspan></text>
+
+    <!-- Redis -->
+    <rect x="100" y="10" width="85" height="35" rx="3" class="bg-layer5"/>
+    <text x="142.5" y="32" text-anchor="middle" class="node-text" font-weight="bold">Redis <tspan class="port-text">:6379</tspan></text>
+
+    <!-- Milvus -->
+    <rect x="200" y="10" width="85" height="35" rx="3" class="bg-layer5"/>
+    <text x="242.5" y="32" text-anchor="middle" class="node-text" font-weight="bold">Milvus <tspan class="port-text">:9091</tspan></text>
+
+    <!-- MinIO -->
+    <rect x="300" y="10" width="85" height="35" rx="3" class="bg-layer5"/>
+    <text x="342.5" y="32" text-anchor="middle" class="node-text" font-weight="bold">MinIO <tspan class="port-text">:9000</tspan></text>
+
+    <!-- etcd -->
+    <rect x="400" y="10" width="80" height="35" rx="3" class="bg-layer5"/>
+    <text x="440" y="32" text-anchor="middle" class="node-text" font-weight="bold">etcd <tspan class="port-text">:2379</tspan></text>
+  </g>
+
+  <!-- ==================== 连接线与箭头 (Connections) ==================== -->
+
+  <!-- Layer 1 -> Layer 2 -->
+  <path d="M 480, 75 L 480, 115" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2 -> Layer 3 -->
+  <!-- 转发到 User Service & Task Service -->
+  <path d="M 480, 160 L 480, 180 L 350, 180 L 350, 200" class="arrow-line" marker-end="url(#arrow)"/>
+  <path d="M 480, 160 L 480, 180 L 610, 180 L 610, 200" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Layer 3 -> Layer 4 -->
+  <!-- User Service :8081 -> Tool Agent :8083 -->
+  <path d="M 350, 240 L 350, 265 L 310, 265 L 310, 300" class="arrow-line" marker-end="url(#arrow)"/>
+  
+  <!-- Task Service :8082 -> Code Agent :8084 & RAG Agent :8085 -->
+  <path d="M 610, 240 L 610, 265 L 480, 265 L 480, 300" class="arrow-line" marker-end="url(#arrow)"/>
+  <path d="M 610, 240 L 610, 265 L 650, 265 L 650, 300" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Layer 4 (Agents -> Internal Sub-workers) -->
+  <!-- Code Agent -> Python LLM Inference -->
+  <path d="M 480, 340 L 480, 365" class="arrow-line" marker-end="url(#arrow)"/>
+  <!-- RAG Agent -> Python Embed Worker -->
+  <path d="M 650, 340 L 650, 365" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Layer 4 -> Layer 5 (Cross-Layer Database Calls) -->
+  <!-- Python LLM Inference :8090 -> MySQL :3306 -->
+  <path d="M 480, 410 L 480, 435 L 282.5, 435 L 282.5, 480" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- Python Embed Worker :8091 -> Milvus :9091 -->
+  <path d="M 650, 410 L 650, 435 L 482.5, 435 L 482.5, 480" class="arrow-line" marker-end="url(#arrow)"/>
+
+  <!-- ==================== 虚线连接 (Dashed Database Calls) ==================== -->
+  <!-- User Service :8081 -> MySQL :3306 (Dashed) -->
+  <!-- 避让路线，从左侧绕行 -->
+  <path d="M 240, 222.5 L 200, 222.5 L 200, 460 L 260, 460 L 260, 480" class="arrow-dash" marker-end="url(#arrow-dash-marker)"/>
+
+  <!-- Tool Agent :8083 -> Redis :6379 (Dashed) -->
+  <path d="M 310, 340 L 310, 360 L 382.5, 360 L 382.5, 480" class="arrow-dash" marker-end="url(#arrow-dash-marker)"/>
+
+  <!-- RAG Agent :8085 -> MinIO :9000 (Dashed) -->
+  <!-- 从 RAG Agent 下侧稍微折绕 -->
+  <path d="M 650, 340 L 650, 355 L 595, 355 L 595, 450 L 582.5, 450 L 582.5, 480" class="arrow-dash" marker-end="url(#arrow-dash-marker)"/>
+
+</svg>
