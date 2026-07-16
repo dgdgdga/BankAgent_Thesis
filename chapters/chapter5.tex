@@ -984,23 +984,21 @@ Figure \ref{fig:rag-agent-architecture} shows the two parallel flows inside the 
 \fbox{%
 \begin{minipage}{0.94\textwidth}
 \small\singlespacing
-\textbf{Indexing flow}\\[1mm]
-Document library / upload
-$\rightarrow$ RagIndexService
-$\rightarrow$ parser
-$\rightarrow$ structure-aware chunker
-$\rightarrow$ EmbeddingClient
-$\rightarrow$ MySQL chunk metadata + Milvus vector upsert\\[2mm]
-\textbf{Query flow}\\[1mm]
-Gateway JWT headers
-$\rightarrow$ RagQueryService
-$\rightarrow$ RagPermissionService
-$\rightarrow$ query embedding
-$\rightarrow$ Milvus over-fetch
-$\rightarrow$ permission filter
-$\rightarrow$ prompt builder
-$\rightarrow$ LLM answer
-$\rightarrow$ citations + rag\_query\_log
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.20\textwidth}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{0.25\textwidth}}
+\textbf{Lane} & \textbf{Processing Path} & \textbf{Durable Output} \\
+\midrule
+Indexing &
+Document upload $\rightarrow$ parser $\rightarrow$ structure-aware chunker $\rightarrow$ EmbeddingClient $\rightarrow$ VectorStoreService &
+rag\_document\_chunk rows + Milvus vectors \\
+\addlinespace[1mm]
+Query &
+JWT headers $\rightarrow$ RagPermissionService $\rightarrow$ query embedding $\rightarrow$ Milvus over-fetch $\rightarrow$ permission filter $\rightarrow$ prompt builder $\rightarrow$ LLM &
+answer + citations + rag\_query\_log \\
+\addlinespace[1mm]
+Shared controls &
+Embedding profile, vector collection, document security level, department scope, approved RAG\_APPLY records &
+traceable profile and access decision for every query \\
+\end{tabularx}
 \end{minipage}
 }
 \caption{RAG Agent Architecture --- Indexing Flow and Permission-Safe Query Flow}
@@ -1106,6 +1104,30 @@ END FUNCTION
 
 The query pipeline deliberately separates semantic relevance from authorization. Milvus is asked for a broader candidate set than the final top-K because some high-similarity chunks may be inaccessible to the current user. The platform then filters candidates using the same document access model used by the normal document library.
 
+Figure \ref{fig:rag-permission-gate} visualizes the security gate inside the query flow. The important point is that vector similarity only proposes candidates. The permission snapshot decides which chunks can become evidence. Blocked chunks are counted and logged, but their text is never copied into the LLM prompt or frontend citation panel.
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\begin{minipage}{0.94\textwidth}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}>{\RaggedRight\arraybackslash}X}
+\textbf{Vector candidates} & \textbf{Permission gate} & \textbf{Allowed output} \\
+\midrule
+Milvus returns over-fetched chunks with document IDs, chunk IDs, similarity scores, and security labels. &
+Permission service compares each candidate with department scope, clearance level, admin role, and approved access requests. &
+Allowed chunks become numbered context blocks for the LLM, citation cards for the frontend, and retrieved-document records in the audit log. \\
+\addlinespace[2mm]
+High-similarity chunks can still belong to restricted documents. &
+Unauthorized candidates are removed after retrieval and before prompt construction. &
+Blocked document IDs and blocked counts are stored for diagnostics, but blocked text is not exposed to the model or user interface. \\
+\end{tabularx}
+\end{minipage}
+}
+\caption{RAG Permission Gate --- Similarity Candidates Become Evidence Only After Authorization}
+\label{fig:rag-permission-gate}
+\end{figure}
+
 Tables \ref{tab:pseudocode-rag-retrieve} and \ref{tab:pseudocode-rag-generate} show the complete query workflow. No retrieved chunk is allowed to enter the LLM prompt unless it passes the permission filter. This is the key difference between a normal RAG demo and an enterprise RAG system.
 
 \vspace{3mm}
@@ -1203,6 +1225,29 @@ The answer generation step uses an OpenAI-compatible chat-completions endpoint c
 Failure handling is part of the query contract rather than an unhandled exception path. If the user has no accessible documents, the service returns an empty evidence response with a controlled status and message. If Milvus, the embedding endpoint, or the LLM endpoint fails, RagQueryServiceImpl catches the exception, preserves the traceId, writes the status and message into rag\_query\_log, and returns a frontend-renderable failure response. This keeps the RAG workbench debuggable without exposing inaccessible document content.
 
 The implementation also separates retrieval diagnostics from answer text. Similarity scores, chunk identifiers, document IDs, embedding profile, vector collection, blocked document IDs, and latency are carried as structured fields. This makes the RAG response inspectable by the frontend and auditable by administrators, while avoiding the common problem where a RAG answer is only a free-form paragraph with no operational trace.
+
+\vspace{3mm}
+
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{RAG Runtime Evidence and Observability Fields}
+\label{tab:rag-runtime-evidence}
+\vspace{2mm}
+
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.21\textwidth}>{\RaggedRight\arraybackslash}p{0.26\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{Field / Signal} & \textbf{Where It Appears} & \textbf{Why It Matters} \\
+\midrule
+traceId & API response, frontend result card, rag\_query\_log & Connects a user-visible answer to backend retrieval, generation, and audit records. \\
+citations[] & API response and RAG Workbench citation cards & Shows which document chunks support the answer, including snippet, source document, chunk index, and similarity score. \\
+retrieved docs & API response and query log & Records the accessible documents that contributed evidence to the prompt. \\
+blocked docs & API response metadata and query log & Proves that restricted candidates were detected and excluded without revealing blocked text. \\
+embeddingProfile + collection & Health endpoints, chunk metadata, query log & Makes vector-space selection auditable when BGE-M3 and Qwen profiles use separate Milvus collections. \\
+latencyMs + status & API response, task output, query log & Supports frontend progress display, failure diagnosis, and service-level monitoring. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subhead{5.3.5 API Surface and Orchestration Integration}
 
