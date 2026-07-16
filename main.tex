@@ -14,7 +14,16 @@
 \input{chapters/chapter7.tex}
 \input{chapters/chapter8.tex}
 \input{chapters/references.tex}
+% --- Appendices: independent table numbering per appendix ---
+\renewcommand{\thetable}{A.\arabic{table}}
+\setcounter{table}{0}
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\setcounter{figure}{0}
 \input{chapters/appendix_a.tex}
+\renewcommand{\thetable}{B.\arabic{table}}
+\setcounter{table}{0}
 \input{chapters/appendix_b.tex}
+\renewcommand{\thetable}{C.\arabic{table}}
+\setcounter{table}{0}
 \input{chapters/appendix_c.tex}
 \input{chapters/contributions.tex}
