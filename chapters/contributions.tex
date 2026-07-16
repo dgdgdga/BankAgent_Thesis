@@ -17,11 +17,11 @@ In accordance with the University of Hong Kong's guidelines for group project re
 
 In the Agent Platform project, I was responsible for developing three core modules from scratch: the Tool Agent microservice, the User Service microservice, and the full-stack implementation of the initial front-end version, delivering a total of 30+ core files. Below are my specific responsibilities:
 
-\textbf{1 Tool Agent Module}
+\textbf{1. Tool Agent}
 
 The Tool Agent is the core intelligent agent of the system, built on Spring Boot, integrating the DeepSeek large language model to achieve natural language understanding and intent recognition. It covers five subsystems: AI intent routing, meeting room management, schedule conflict detection, intelligent route planning, and WebSocket real-time communication.
 
-1.1 System Architecture and AI Intent Recognition
+\textbf{(1) System Architecture and AI Intent Recognition}
 
 I designed a layered architecture for the Tool Agent, clearly defining the Controller layer, Service layer, external service layer, and data access layer. The Controller layer provides a unified RESTful API entry point; the Service layer is responsible for core business functions such as intent routing, meeting room management, and schedule conflict detection; the external service layer encapsulates DeepSeek AI calls and the Gaode Map API; and the data layer implements database access through MyBatis-Plus.
 
@@ -29,57 +29,57 @@ The AI intent recognition module is the intelligent brain of the Tool Agent. I e
 
 Considering the potential unavailability of AI services in a production environment, I implemented a robust fallback mechanism: when a DeepSeek call fails, the system returns preset demo data based on the tool type, ensuring the front-end always displays correctly and the user experience is not affected by AI service failures.
 
-1.2 Tool Agent Module
+\textbf{(2) Meeting Room Management}
 
 The meeting room module contains two core data models: meeting room entities and schedule booking entities. I implemented time period overlap detection logic, returning complete data including availability status and a list of devices. The booking function first checks for conflicts; if the time period is already booked, it returns a failure.
 
 For AI intelligent matching, the system calls DeepSeek to analyze the user's meeting room needs, extracting information such as date, number of people, and equipment. The returned results include an AI matching score and recommendation reasons, helping users quickly find the most suitable meeting room.
 
-1.3 Schedule Conflict Detection (High-Performance Redis Implementation)
+\textbf{(3) Schedule Conflict Detection}
 
 Schedule data is stored in a Redis ordered set, using user ID as the key and timestamp as the score, achieving range queries with O(log N) time complexity. I designed three core interfaces: range query conflict detection, schedule data storage, and record deletion by event ID.
 
 Timestamp calculation uses the East 8 time zone to ensure consistency with domestic business time.
 
-1.4 Intelligent Route Planning (Gaode API Three-Level Degradation)
+\textbf{(4) Intelligent Route Planning}
 
 I encapsulated the calls to the Gaode Map REST API, mainly using three interfaces: geocoding, POI search, and driving route planning. To address the address resolution success rate issue, I designed a three-level degradation strategy: first, attempt direct geocoding; if it fails and the address does not contain a city prefix, automatically append the "Beijing" prefix and retry (this was later modified); finally, use POI text search as a fallback, significantly improving the address resolution success rate.
 
 The system formats the raw data returned by Gaode Maps in a user-friendly way: distance is automatically converted to "km/m" units, duration to "hours/minutes" units, and traffic conditions are automatically classified into three levels: "smooth/slow/congested" based on average speed.
 
-1.5 WebSocket Real-time Task Progress Push
+\textbf{(5) WebSocket Real-time Task Progress Push}
 
 The system provides a real-time task progress push service via WebSocket, supporting the establishment of independent connections by task ID. A concurrent and secure session management mechanism is used to manage all active connections, simulating a complete processing flow (parsing natural language → querying the database → AI model inference → organizing results), with progress updates pushed at fixed intervals for each stage. A thread pool is used to manage task execution, supporting a maximum of 10 concurrent tasks.
 
-\textbf{2 User Service Module}
+\textbf{2. User Service}
 
 The User Service is the system's user authentication and permission management microservice, built on Spring Boot + Spring Security, using JWT to implement stateless identity authentication, supporting encrypted password storage and interface-level permission control. Yao Jiacheng and Xia Xin subsequently made some improvements and developments on this basis.
 
-2.1 System Architecture Design
+\textbf{(1) System Architecture Design}
 
 The User Service adopts a layered architecture, including a Controller layer, a Service layer, a data access layer, and an entity/DTO layer. Global security control is implemented through Spring Security configuration, including CSRF disabling, stateless session management, allowing login interfaces, and authentication protection for other interfaces.
 
-2.2 JWT Authentication and Security Module
+\textbf{(2) JWT Authentication and Security Module}
 
 I encapsulated complete lifecycle management of JWTs, including token generation, parsing, and verification. The HMAC-SHA256 signature algorithm is used, with the key and expiration time injected from the configuration file for flexible configuration management. The generation method encodes the username and role information into the token; the parsing method verifies the token signature; the verification method catches all exceptions and returns a boolean value to ensure the security of the caller.
 
 The security policy is configured with complete Spring Security protection: disabling CSRF (using JWT instead of Session in a front-end/back-end separation architecture), setting up stateless session management, allowing login interfaces, and requiring authentication for all other requests. Passwords are stored using BCrypt with one-way hash encryption.
 
-2.3 User Login and Permission Management
+\textbf{(3) User Login and Permission Management}
 
 The login process implements a complete four-step security verification: querying users by username, checking user status, BCrypt password matching verification, generating a token, and encapsulating the response for return.
 
 I designed standardized request and response DTOs, using annotations to implement parameter validation to ensure that usernames and passwords are not empty. I also defined a unified generic response encapsulation class containing three fields: status code, message, and data, providing static factory methods for success and failure to ensure consistent return formats across all microservices.
 
-\textbf{3 Front-end Development (Initial Version)}
+\textbf{3. Front-end Development (Initial Version)}
 
 I was responsible for building the initial version of the front-end project and implementing the core pages, providing the basic framework for subsequent iterative development by team members (later, Yao Jiacheng and Xia Xin proposed many excellent new ideas and made many significant improvements). My front-end uses the Vue 3 + TypeScript + Vite technology stack, combined with the Element Plus UI component library and Pinia state management.
 
-3.1 Front-end Technology Architecture and Engineering
+\textbf{(1) Technology Architecture and Engineering}
 
 The project uses Vue 3's composable API to organize code logic, TypeScript for type safety, and Vite as the build tool for rapid development and hot updates. I configured path aliases to significantly improve code maintainability. I also configured API proxies and WebSocket proxies to solve cross-domain issues in the development environment. Element Plus uses on-demand plugin loading to import components as needed, reducing the package size.
 
-3.2 Core Page Implementation (Initial Version)
+\textbf{(2) Core Page Implementation (Initial Version)}
 
 Login Page: Uses a centered card layout with a gradient background for a modern feel. A form component is used for username and password input, with validation rules ensuring input integrity. The login logic calls a state management method; upon successful login, the token is persisted and the user is redirected to the homepage.
 
@@ -89,13 +89,13 @@ The tool call page adopts a left-right split layout. The left side is the functi
 
 Note: The above front-end components and pages are the initial version. Subsequent versions were refactored and expanded by Yao Jiacheng and Xia Xin, including a multi-tab system, responsive mobile adaptation, a global Copilot component, and a unified UI design system—all production-grade improvements.
 
-3.3 State Management and HTTP Encapsulation
+\textbf{(3) State Management and HTTP Encapsulation}
 
 I designed a user state management module, defined using Pinia's Setup Store pattern, including responsive states such as tokens and user information, as well as Action methods such as login, logout, and retrieving user information. Upon successful login, the token is persisted to local storage; upon logout, the state is cleared and the user is redirected back to the login page. A task state management module was also designed, supporting adding tasks and updating task states.
 
 The HTTP request encapsulation uses Axios to implement a unified request instance, configured with a relatively long timeout (to adapt to AI inference time), a basic path, and JSON content type. The request interceptor automatically reads the token and adds it to the request header. The response interceptor handles backend responses uniformly: returning data on success and displaying an error message on failure; unauthorized status triggers login expiration confirmation, and the user is automatically logged out and redirected to the login page after confirmation.
 
-3.4 WebSocket Client and Task Orchestration (Initial Version)
+\textbf{(4) WebSocket Client and Task Orchestration (Initial Version)}
 
 I encapsulated a WebSocket client class, providing core methods such as connect, send, close, and event listeners. It supports an automatic reconnection mechanism (up to 3 times, 2-second interval), and achieves loosely coupled message processing through an event listener pattern. A singleton pattern is used to ensure global sharing of the same connection.
 
@@ -111,7 +111,7 @@ I served as the backend architecture lead and, over the course of the project, t
 
 \textbf{1. Backend}
 
-1.1 RBAC authentication \& authorization
+\textbf{(1) RBAC authentication \& authorization}
 
 Building on the initial user-service skeleton (basic JWT login with a single admin/user role) created by Lin Chuanbin, I extended the platform's security model into a multi-layer permission architecture:
 
@@ -121,7 +121,7 @@ Building on the initial user-service skeleton (basic JWT login with a single adm
 - Introduced multi-level department trees with automatic department-scoped data isolation in all data-access controllers.
 - Implemented three-tier document clearance enforcement with department scoping, clearance level comparison, and HITL override via approved access requests.
 
-1.2 API gateway, session management \& unified response format
+\textbf{(2) API gateway, session management \& unified response format}
 
 I built the platform's unified API gateway layer and standardized the cross-service response format:
 
@@ -130,33 +130,33 @@ I built the platform's unified API gateway layer and standardized the cross-serv
 - Propagated user identity through HTTP headers so downstream services operate without holding JWT\_SECRET.
 - Defined the Result\textless T\textgreater generic wrapper standard, deployed identical DTOs across all four microservices, and wrote the frontend Axios interceptor with automatic unwrapping.
 
-1.3 Notification \& HITL approval system
+\textbf{(3) Notification \& HITL approval system}
 
 I independently designed and implemented the platform's notification and approval subsystem:
 
 - Designed the notification table with threaded messaging support (parent\_id/thread\_id) and a five-state state machine spanning unread, read, pending, approved, and rejected statuses.
 - Built the notification controller with endpoints for sending, filtered listing, read marking, approve/deny with audit trail, and threaded conversation view.
 
-1.4 Task center orchestration
+\textbf{(4) Task center orchestration}
 
-I designed and implemented the task center, a centralized orchestration layer that tracks and manages all Agent workflows across the platform. When a user submits a request through any Agent, the task center persists it as a task record, queues it for asynchronous execution, and pushes real-time progress updates to the frontend.
+Building on the initial static agent routing scaffold, I designed and implemented the complete task-service microservice as a centralized orchestration layer that tracks and manages all Agent workflows across the platform. When a user submits a request through any Agent, the task center persists it as a task record, queues it for asynchronous execution in a bounded thread pool, and pushes real-time progress updates to the frontend via WebSocket.
 
-- Built the task-service microservice with an async execution pipeline.
-- Implemented routing by task type to the corresponding Agent, with progress pushed in three stages to the frontend.
-- Designed fault-tolerance mechanisms including connection timeout, read timeout, up to 3 automatic retries, and graceful queue overflow rejection to prevent system overload.
+- Built the task-service microservice with a four-state lifecycle (INIT → RUNNING → SUCCESS / FAIL) and an async execution pipeline backed by a ThreadPoolExecutor.
+- Implemented routing by task type (CODE / TOOL / RAG) to the corresponding Agent, with domain-meaningful progress milestones pushed at each stage.
+- Designed fault-tolerance mechanisms including connection timeout, read timeout, up to 3 automatic retries with exponential backoff, and graceful queue overflow rejection via AbortPolicy to prevent system overload under high concurrency.
 
-1.5 Email verification system
+\textbf{(5) Email verification system}
 
 I replaced the initial QQ SMTP implementation (originally contributed by Xia Xin) with a production-grade solution after identifying reliability and security limitations:
 
 - Migrated from QQ SMTP to the Resend HTTP API with a redesigned HTML email template.
 - Hardened security with brute-force protection against verification code guessing and a three-tier rate limiting system (per-email cooldown, per-IP hourly cap, per-email daily cap).
 
-1.6 Copilot backend \& AI provider unification
+\textbf{(6) Copilot backend \& AI provider unification}
 
 I built the backend for the global Copilot assistant, which generalized the AI chat panel originally confined to Lin Chuanbin's Tool Agent page into a cross-page, multi-Agent intelligent dispatcher that sits above all three agents as a unified natural language entry point. The Copilot's Python Flask intent classifier implements a three-tier classification pipeline --- security blocklist, keyword greeting match, and LLM-based six-category classification (CODE, TOOL, RAG, CHAT, CLARIFY, SETTINGS) --- complemented by multi-turn clarification, cross-page result delivery via browser custom events, and WebSocket-based progress streaming for long-running agent calls. I unified all AI provider configurations across the platform into a single admin-managed configuration center with AES-256 encryption, eliminating the fragmentation that existed when each agent managed its own LLM settings independently.
 
-1.7 Document management \& MinIO storage
+\textbf{(7) Document management \& MinIO storage}
 
 I worked with Huang Siyuan to build the document storage and management backend, which serves both the document library and her RAG Agent:
 
@@ -166,7 +166,7 @@ I worked with Huang Siyuan to build the document storage and management backend,
 
 \textbf{2. Frontend}
 
-2.1 Layout, navigation \& multi-tab system
+\textbf{(1) Layout, navigation \& multi-tab system}
 
 I rebuilt the frontend shell from the initial scaffold created by Lin Chuanbin into a production-grade application framework:
 
@@ -174,14 +174,14 @@ I rebuilt the frontend shell from the initial scaffold created by Lin Chuanbin i
 - Built a browser-style multi-tab system that preserves page state when users switch between tabs --- form inputs, filters, and scroll positions remain intact --- preventing task interruption, a common issue in enterprise workflows.
 - Implemented a five-layer global navigation guard covering silent refresh recovery, authentication redirect, bounce-back, single-role check, and multi-role check.
 
-2.2 UI design system
+\textbf{(2) UI design system}
 
 I established a minimalist visual design language across the entire platform, replacing the default Element Plus styling inherited from the initial scaffold:
 
 - Globally replaced the default blue theme with a grayscale color system, removing accent strips and unifying border-radius, sizing, and spacing.
 - Redesigned notifications with macOS-style frosted glass and custom cubic-bezier slide-in animation.
 
-2.3 Tool Agent UI rebuild
+\textbf{(3) Tool Agent UI rebuild}
 
 I redesigned all three Tool Agent interfaces originally built by Lin Chuanbin, splitting the monolithic ~600-line file into independent sub-components and removing the fixed AI chat panel in favor of an inline interaction model:
 
@@ -191,9 +191,11 @@ I redesigned all three Tool Agent interfaces originally built by Lin Chuanbin, s
 
 \textbf{3. DevOps}
 
-I set up the full deployment pipeline for the platform, bringing all three Agent services --- Zhang Zhaoming's Code Agent, Huang Siyuan's RAG Agent, and Lin Chuanbin's initial Tool Agent --- onto a single DigitalOcean Droplet:
+\textbf{(1) Containerization \& deployment}
 
-- Wrote the docker-compose.yml that starts all 9 services with proper startup order, health checks, and data persistence.
+I set up the full deployment pipeline for the platform, bringing all Agent services --- Zhang Zhaoming's Code Agent, Huang Siyuan's RAG Agent, and Lin Chuanbin's initial Tool Agent --- onto a single DigitalOcean Droplet:
+
+- Wrote the docker-compose.yml that starts all services with proper startup order, health checks, and data persistence.
 - Created Dockerfiles for each Spring Boot service.
 - Deployed a DigitalOcean Droplet. To keep the Maven build from running out of memory on a small instance, I compiled the JARs locally and copied them over.
 - Set up Nginx as the only public-facing entry point, handling SPA routing, API/WebSocket proxying, and static file caching.
@@ -209,83 +211,83 @@ I served as the RAG Agent lead and independently designed and implemented the pl
 
 \textbf{1. Backend}
 
-\textbf{1.1 RAG microservice and API design}
+\textbf{(1) RAG microservice and API design}
 
 I independently built the \texttt{rag-agent} microservice as a standalone Spring Boot service running on port 8085 and integrated it into the platform through the Gateway route \texttt{/api/rag/**}. I implemented the main controller, service, DTO, entity, mapper, and configuration layers, and exposed the core RAG APIs including \texttt{/rag/query}, \texttt{/rag/health}, \texttt{/rag/health/embedding}, \texttt{/rag/index/rebuild}, \texttt{/rag/index/documents/status}, \texttt{/rag/embedding/profiles}, and \texttt{/rag/embedding/active}. This made the RAG Agent a dedicated intelligent agent module in the platform, rather than a separate experimental component.
 
-\textbf{1.2 RAG retrieval pipeline}
+\textbf{(2) RAG retrieval pipeline}
 
 I implemented the complete RAG retrieval workflow. The service receives a user question, reads user identity from gateway-propagated headers, generates a query embedding, searches Milvus for candidate chunks, applies permission verification, assembles retrieval context, and returns a citation-based answer. The response includes trace ID, status, answer, citations, chunks, retrieved document IDs, blocked document IDs, topK, latency, and diagnostic message, so that both users and developers can inspect how an answer was produced.
 
-\textbf{1.3 RAG database and metadata model}
+\textbf{(3) RAG database and metadata model}
 
 I designed and implemented the RAG metadata model around \texttt{rag\_document\_chunk}, \texttt{rag\_query\_log}, \texttt{sys\_document}, and \texttt{sys\_config}. I added and maintained fields such as \texttt{vector\_id}, \texttt{embedding\_profile}, \texttt{embedding\_model}, \texttt{vector\_collection}, \texttt{content\_hash}, \texttt{chunk\_index}, \texttt{index\_status}, and \texttt{last\_indexed\_at}. These fields allow each retrieved chunk to be traced back to its source document, embedding model, active profile, and Milvus collection, and they also support index rebuilds, profile switching, and document index status inspection.
 
-\textbf{1.4 Permission-aware retrieval}
+\textbf{(4) Permission-aware retrieval}
 
 I aligned the RAG Agent with the platform’s RBAC, department, and clearance-level security model. The service uses identity headers such as \texttt{X-User-Name} and \texttt{X-User-Roles} propagated by the Gateway, then checks the user’s department and clearance level before allowing document content into the retrieval context. I also implemented blocked-document tracking and controlled \texttt{NO\_CONTEXT} responses, preventing unauthorized or cross-department documents from appearing in generated answers and citations.
 
 \textbf{2. Vector Store and Embedding}
 
-\textbf{2.1 Milvus integration}
+\textbf{(1) Milvus integration}
 
 I integrated Milvus as the vector database for the RAG Agent and configured it with etcd and MinIO in Docker Compose. I implemented collection initialization, vector insertion, vector search, vector ID generation, and similarity retrieval using COSINE distance. I verified that Milvus search results could be matched back to MySQL chunk records and source documents.
 
-\textbf{2.2 Local embedding worker}
+\textbf{(2) Local embedding worker}
 
 I built and tested a local Python \texttt{rag-worker} using the BGE-M3 embedding model. The worker exposes an HTTP \texttt{/embed} endpoint and returns 1024-dimensional embeddings. The Java RAG Agent calls this worker through HTTP, keeping the Spring Boot service independent from Python model runtime details. I also handled local worker setup, including virtual environment creation, dependency installation, model download, Hugging Face cache behavior, startup delay, health checks, and embedding dimension verification.
 
-\textbf{2.3 Qwen cloud embedding API support}
+\textbf{(3) Qwen cloud embedding API support}
 
 I extended the embedding layer to support Qwen \texttt{text-embedding-v4} through a cloud API. I added configuration for provider type, endpoint, API key, model name, vector dimension, timeout, and collection name. This allows the RAG Agent to support both local BGE-M3 embeddings and cloud-based Qwen embeddings.
 
-\textbf{2.4 Embedding profile isolation}
+\textbf{(4) Embedding profile isolation}
 
 I designed the embedding profile mechanism to keep different embedding models isolated. Each profile has its own provider, model, dimension, endpoint, active status, index status, and Milvus collection. For example, \texttt{local-bge-m3} stores vectors in \texttt{rag\_document\_chunks\_bge\_m3}, while \texttt{qwen-v4} stores vectors in \texttt{rag\_document\_chunks\_qwen\_v4\_1024}. I implemented APIs for listing profiles, checking the active profile, testing providers, activating profiles, and rebuilding the index after switching profiles. This avoids mixing incompatible vector spaces and keeps retrieval results technically valid.
 
 \textbf{3. Knowledge Base and Document Management}
 
-\textbf{3.1 Document storage collaboration}
+\textbf{(1) Document storage collaboration}
 
 I worked with Yao Jiacheng on aligning the document management backend with the RAG Agent. The shared design uses MinIO for uploaded files such as PDF, DOCX, PPT, Markdown, and text files, while MySQL stores metadata such as file type, storage object key, parse status, department ID, security level, content hash, and index status. My work focused on defining and using the metadata needed by RAG so documents can be parsed, indexed, retrieved, and permission-filtered through the same knowledge base source.
 
-\textbf{3.2 Document chunking and indexing}
+\textbf{(2) Document chunking and indexing}
 
 I implemented and tested the document chunking and indexing workflow. The RAG Agent reads document content, splits it into chunks, assigns chunk indexes, records content hashes, generates embeddings, inserts vectors into Milvus, and saves chunk metadata into MySQL. This enables chunk-level retrieval instead of whole-document matching, improving answer relevance and supporting citation display.
 
-\textbf{3.3 Index rebuild workflow}
+\textbf{(3) Index rebuild workflow}
 
 I implemented the active-profile index rebuild workflow. When documents are added or changed, or when the administrator switches embedding providers, the RAG Agent can rebuild the index so that MySQL chunk metadata and Milvus vectors match the current embedding profile. I verified the rebuild process through \texttt{/rag/health}, \texttt{/rag/index/documents/status}, direct MySQL checks, and actual RAG queries.
 
 \textbf{4. Frontend and Integration}
 
-\textbf{4.1 RAG frontend interface alignment}
+\textbf{(1) RAG frontend interface alignment}
 
 I coordinated with Xia Xin and Yao Jiacheng on frontend-facing RAG functions. I defined the backend response fields and interaction requirements needed for RAG answer display, citation panels, retrieved chunks, document IDs, similarity scores, snippets, blocked documents, index status, and embedding profile status. This helped the frontend present RAG answers with supporting evidence instead of only generated text.
 
-\textbf{4.2 Administrator embedding provider switch}
+\textbf{(2) Administrator embedding provider switch}
 
 I proposed and helped design the administrator-side embedding provider switch. The frontend can expose local BGE-M3 and Qwen \texttt{text-embedding-v4} as selectable options, while sensitive information such as API keys remains on the backend side. I also clarified the rule that switching providers requires rebuilding the index because each embedding profile uses a separate vector collection.
 
-\textbf{4.3 Cross-service integration}
+\textbf{(3) Cross-service integration}
 
 After completing the RAG backend and database design, I coordinated with Yao Jiacheng to integrate RAG with the shared backend architecture. This included Gateway routing, propagated user headers, document metadata compatibility, database patching, Docker Compose dependencies, and deployment configuration. These integration steps ensured that the RAG Agent could work with the existing authentication system, document library, frontend pages, and deployment pipeline.
 
 \textbf{5. Testing, Debugging, and Documentation}
 
-\textbf{5.1 Local environment and service verification}
+\textbf{(1) Local environment and service verification}
 
 I configured and tested the local RAG development environment, including MySQL, Redis, Milvus, etcd, MinIO, the RAG Agent, and the Python embedding worker. I verified Docker container health, Milvus ports, RAG service health, embedding worker health, database schema patches, and environment variables for vector storage, embedding providers, LLM configuration, and document storage.
 
-\textbf{5.2 Backend debugging}
+\textbf{(2) Backend debugging}
 
 I debugged integration issues across the RAG stack, including Docker daemon startup failures, port conflicts, Maven dependency download failures, MySQL schema mismatches, Milvus connection problems, embedding worker startup delay, Hugging Face model download problems, user identity mismatch, missing users, empty retrieval context, failed embedding calls, and index status inconsistency. These debugging tasks were necessary to make the RAG Agent run reliably inside the full platform.
 
-\textbf{5.3 End-to-end RAG testing}
+\textbf{(3) End-to-end RAG testing}
 
 I tested the complete RAG workflow through \texttt{/rag/health}, \texttt{/rag/health/embedding}, \texttt{/rag/index/rebuild}, \texttt{/rag/index/documents/status}, \texttt{/rag/embedding/active}, and \texttt{/rag/query}. I also checked MySQL directly to confirm that chunk metadata, vector IDs, embedding profiles, embedding models, and collection names were stored correctly. After rebuilding the active profile, I confirmed that RAG queries returned successful results with citations and permission-safe retrieved chunks.
 
-\textbf{5.4 Documentation and team communication}
+\textbf{(4) Documentation and team communication}
 
 I wrote and maintained RAG-related documentation, including progress reports, interface alignment notes, environment variable explanations, startup steps, embedding provider configuration, local worker setup, and index rebuild guidance. These documents helped other team members understand how to run, test, and integrate the RAG Agent.
 
@@ -301,24 +303,24 @@ I contributed across backend security, frontend internationalization, documentat
 
 \textbf{1. Backend}
 
-1.1 Authentication
+\textbf{(1) Authentication}
 
 I built the platform's initial Spring Security layer with stateless JWT tokens (HMAC-SHA256) and BCrypt password encoding to separate admin and regular user access. I configured the security filter chain to expose only the login and registration endpoints publicly while requiring authentication for all other routes, and defined the foundational Result<T> response wrapper and DTOs to ensure consistent error handling and data exchange across the codebase. This part was upgraded by Yao Jiacheng.
 
-1.2 Email Verification Integration
+\textbf{(2) Email Verification Integration}
 Building on the existing team codebase, I integrated the QQ Mail SMTP service to deliver verification codes during registration. I stored codes in Redis with a 5-minute TTL, enforced a 60-second per-email send rate limit to prevent abuse, and wired the code verification step directly into the registration flow, completing the end-to-end sign-up process. This part has been upgraded into Resend HTTP API by Yao Jiacheng.
 
 \textbf{2. Frontend \& Internationalization}
 
-2.1 Multi-Language i18n Support
+\textbf{(1) Multi-Language i18n Support}
 I adapted all business and UI components to support three languages (Simplified Chinese, Traditional Chinese, and English) with dynamic switching through Vue3 and Element Plus i18n. This required systematically reorganizing component-level text, validation messages, and document metadata into structured locale files, ensuring the entire frontend remained maintainable and language-agnostic. Also, I designed a initial version of Code Agent's frontend, which has been upgraded into a better version by Yao Jiacheng.
 
 \textbf{3. Documentation \& Visualization Standardization}
 
-3.1 System Diagrams Redesign
+\textbf{(1) System Diagrams Redesign}
 I designed the first version of all figures, and after team discussion, I redrew the original dense, small-font diagrams into clean, wide-format vector graphics with a unified visual style. Every diagram maintained readability and visual hierarchy, ensuring clear communication of complex architectural concepts. A total of 12 figures were created and refined.
 
-3.2 Final Report \& Table Standardization
+\textbf{(2) Final Report \& Table Standardization}
 
 I was responsible for synchronizing the final report with the latest codebase. I converted all seven data tables into the three-line table format (1.5 pt top and bottom rules, a 0.75 pt rule below the header, no vertical or interior horizontal lines) and suggested moving long pseudocode blocks to standalone tables—both to maintain formatting consistency and to communicate algorithms more clearly to readers.
 

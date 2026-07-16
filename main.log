@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 14:21
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 14:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1288,13 +1288,13 @@ ces, /app/admin/my-dept).
 
 [94]) (./chapters/contributions.tex [95] [96] [97] [98] [99] [100] [101]
 [102] [103] [104] [105]
-Underfull \hbox (badness 1348) in paragraph at lines 258--259
+Underfull \hbox (badness 1348) in paragraph at lines 260--261
 \TU/TimesNewRoman(0)/m/n/12 can rebuild the index so that MySQL chunk metadata 
 and Milvus vectors match
  []
 
 [106] [107] [108] [109]
-Underfull \hbox (badness 1931) in paragraph at lines 349--350
+Underfull \hbox (badness 1931) in paragraph at lines 351--352
 \TU/TimesNewRoman(0)/m/n/12 (\TU/lmtt/m/n/12 \bDROP\b\TU/TimesNewRoman(0)/m/n/1
 2 , \TU/lmtt/m/n/12 \bDELETE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bI
 NSERT\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bUPDATE\b\TU/TimesNewRoma
@@ -1303,7 +1303,7 @@ n(0)/m/n/12 , \TU/lmtt/m/n/12 \bALTER\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m
  []
 
 
-Underfull \hbox (badness 1681) in paragraph at lines 349--350
+Underfull \hbox (badness 1681) in paragraph at lines 351--352
 \TU/lmtt/m/n/12 \bCREATE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bEXEC\
 b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bUNION\b\TU/TimesNewRoman(0)/m/
 n/12 , \TU/lmtt/m/n/12 \bINTO\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \b
