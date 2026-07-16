@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 10:41
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 10:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -723,62 +723,67 @@ Overfull \hbox (10.229pt too wide) in paragraph at lines 120--120
 [12]
 File: figures/fig01_tool_agent_usecase.png Graphic file (type bmp)
 <figures/fig01_tool_agent_usecase.png>
- [13] [14]) (./chapters/chapter4.tex [15]
+ [13] [14]) (./chapters/chapter4.tex
+Overfull \hbox (69.5639pt too wide) in paragraph at lines 85--86
+ [][] 
+ []
+
+[15]
 File: figures/fig03_data_flow.png Graphic file (type bmp)
 <figures/fig03_data_flow.png>
  [16] [17] [18]
-Underfull \hbox (badness 10000) in paragraph at lines 150--150
+Underfull \hbox (badness 10000) in paragraph at lines 149--149
 []|\TU/TimesNewRoman(0)/m/n/10.95 International-
  []
 
 [19] [20]
-Underfull \hbox (badness 10000) in paragraph at lines 187--187
+Underfull \hbox (badness 10000) in paragraph at lines 186--186
 []|\TU/TimesNewRoman(0)/m/n/10.95 Spring Boot 3.x +
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 188--188
+Underfull \hbox (badness 10000) in paragraph at lines 187--187
 []|\TU/TimesNewRoman(0)/m/n/10.95 Security Frame-
  []
 
 
-Underfull \hbox (badness 1248) in paragraph at lines 189--190
+Underfull \hbox (badness 1248) in paragraph at lines 188--189
 []|\TU/TimesNewRoman(0)/m/n/10.95 Session caching, rate limit counters, metadat
 a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 190--190
+Underfull \hbox (badness 10000) in paragraph at lines 189--189
 []|\TU/TimesNewRoman(0)/m/n/10.95 AI Integration
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 190--190
+Underfull \hbox (badness 10000) in paragraph at lines 189--189
 []|\TU/TimesNewRoman(0)/m/n/10.95 DeepSeek API
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 190--191
+Underfull \hbox (badness 10000) in paragraph at lines 189--190
 []|\TU/TimesNewRoman(0)/m/n/10.95 Intent routing (MEET-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 190--191
+Underfull \hbox (badness 10000) in paragraph at lines 189--190
 \TU/TimesNewRoman(0)/m/n/10.95 ING/SCHEDULE/ROUTE), parameter ex-
  []
 
 
-Underfull \hbox (badness 1490) in paragraph at lines 191--192
+Underfull \hbox (badness 1490) in paragraph at lines 190--191
 []|\TU/TimesNewRoman(0)/m/n/10.95 LLM-based SQL generation from natural lan-
  []
 
 
-Underfull \hbox (badness 1005) in paragraph at lines 193--193
+Underfull \hbox (badness 1005) in paragraph at lines 192--192
 []|\TU/TimesNewRoman(0)/m/n/10.95 Python FastAPI (rag-
  []
 
 
-Underfull \hbox (badness 1009) in paragraph at lines 195--196
+Underfull \hbox (badness 1009) in paragraph at lines 194--195
 []|\TU/TimesNewRoman(0)/m/n/10.95 Semantic ANN search for RAG document re-
  []
 
@@ -786,67 +791,67 @@ Underfull \hbox (badness 1009) in paragraph at lines 195--196
 File: figures/fig04_jwt_auth_flow.png Graphic file (type bmp)
 <figures/fig04_jwt_auth_flow.png>
  [22] [23] [24] [25] [26]
-Underfull \hbox (badness 10000) in paragraph at lines 294--294
+Underfull \hbox (badness 10000) in paragraph at lines 293--293
 []|\TU/TimesNewRoman(0)/m/n/10.95 Operational
  []
 
 
-Underfull \hbox (badness 2689) in paragraph at lines 294--294
+Underfull \hbox (badness 2689) in paragraph at lines 293--293
 []|\TU/TimesNewRoman(0)/m/n/10.95 Users, roles, departments, docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 294--295
+Underfull \hbox (badness 10000) in paragraph at lines 293--294
 []|\TU/TimesNewRoman(0)/m/n/10.95 Transactional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 294--295
+Underfull \hbox (badness 10000) in paragraph at lines 293--294
 \TU/TimesNewRoman(0)/m/n/10.95 ACID-compliant
  []
 
 
-Underfull \hbox (badness 3323) in paragraph at lines 295--295
+Underfull \hbox (badness 3323) in paragraph at lines 294--294
 []|\TU/TimesNewRoman(0)/m/n/10.95 Session tokens, rate limit coun-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 295--296
+Underfull \hbox (badness 10000) in paragraph at lines 294--295
 []|\TU/TimesNewRoman(0)/m/n/10.95 High-concurrency,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 295--296
+Underfull \hbox (badness 10000) in paragraph at lines 294--295
 \TU/TimesNewRoman(0)/m/n/10.95 sub-millisecond
  []
 
 
-Underfull \hbox (badness 2503) in paragraph at lines 296--296
+Underfull \hbox (badness 2503) in paragraph at lines 295--295
 []|\TU/TimesNewRoman(0)/m/n/10.95 PDF, DOCX, PPT files; Milvus
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 296--297
+Underfull \hbox (badness 10000) in paragraph at lines 295--296
 []|\TU/TimesNewRoman(0)/m/n/10.95 Document up-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 296--297
+Underfull \hbox (badness 10000) in paragraph at lines 295--296
 \TU/TimesNewRoman(0)/m/n/10.95 load/download,
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 296--297
+Underfull \hbox (badness 4779) in paragraph at lines 295--296
 \TU/TimesNewRoman(0)/m/n/10.95 RAG source docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 297--298
+Underfull \hbox (badness 10000) in paragraph at lines 296--297
 []|\TU/TimesNewRoman(0)/m/n/10.95 Semantic approx-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 297--298
+Underfull \hbox (badness 10000) in paragraph at lines 296--297
 \TU/TimesNewRoman(0)/m/n/10.95 imate nearest
  []
 
@@ -1499,11 +1504,11 @@ L3 programming layer <2026-01-19>
  ***********
  ) ) 
 Here is how much of TeX's memory you used:
- 18796 strings out of 468168
- 421421 string characters out of 5432816
- 1089080 words of memory out of 5000000
- 47149 multiletter control sequences out of 15000+600000
- 631653 words of font info for 87 fonts, out of 8000000 for 9000
+ 18814 strings out of 468168
+ 421853 string characters out of 5432816
+ 1088199 words of memory out of 5000000
+ 47166 multiletter control sequences out of 15000+600000
+ 631661 words of font info for 88 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  89i,11n,107p,1253b,1189s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

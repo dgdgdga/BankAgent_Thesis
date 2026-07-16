@@ -13,78 +13,77 @@ The five-layer structure is shown in Figure \ref{fig:five-layer}.
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
-  node distance=0.6cm,
-  box/.style={rectangle, draw=black!70, fill=black!5, rounded corners=2pt, minimum width=2.0cm, minimum height=0.7cm, font=\footnotesize, align=center},
-  smallbox/.style={rectangle, draw=black!70, fill=black!5, rounded corners=2pt, minimum width=1.6cm, minimum height=0.6cm, font=\footnotesize\ttfamily, align=center},
-  layer/.style={rectangle, draw=none, font=\footnotesize\bfseries, align=left, minimum width=1.8cm},
-  arrow/.style={->, >=stealth, line width=0.4pt},
-  line/.style={line width=0.3pt, draw=black!50},
+  node distance=0.6cm and 0.5cm,
+  layerlabel/.style={rectangle, draw=none, font=\normalsize\bfseries, align=center, text width=2.5cm, inner sep=0pt},
+  service/.style={rectangle, draw=black!70, fill=black!8, rounded corners=3pt, minimum width=2.2cm, minimum height=0.85cm, font=\small\bfseries, align=center, inner sep=6pt},
+  sub/.style={rectangle, draw=black!50, fill=black!3, rounded corners=2pt, minimum width=2.2cm, minimum height=0.65cm, font=\footnotesize, align=center, inner sep=4pt},
+  port/.style={font=\scriptsize\ttfamily},
+  arrow/.style={->, >=stealth, line width=0.6pt},
+  fainta/.style={->, >=stealth, line width=0.3pt, draw=black!40},
 ]
 
-% === Layer 1: Frontend ===
-\node[layer] (l1) at (0,0) {\small\textbf{Web}\\Presentation};
-\node[box, right=0.3cm of l1] (vue) {Vue 3 SPA\\\scriptsize Nginx :443};
+% === Coordinates ===
+\coordinate (origin) at (0,0);
 
-% Arrow from user
-\node[font=\footnotesize, above=0.2cm of vue] (user) {Browser};
-\draw[arrow] (user) -- (vue);
+% === Layer 1: Web ===
+\node[layerlabel] (L1) at (-0.5,0) {Layer 1\\\textbf{Web}};
+\node[service, right=1.2cm of L1] (web) {Vue 3 SPA\\\scriptsize (Nginx :443)};
+\node[font=\footnotesize, above=0.2cm of web] (user) {Browser};
+\draw[arrow] (user) -- (web);
 
 % === Layer 2: Gateway ===
-\node[layer] (l2) at (0,-1.5) {\small\textbf{Gateway}};
-\node[box, right=0.3cm of l2] (gw) {Spring Cloud\\Gateway :8080\\\scriptsize JWT \textbullet{} Rate Limit};
+\node[layerlabel] (L2) at (-0.5,-2.0) {Layer 2\\\textbf{Gateway}};
+\node[service, right=1.2cm of L2, minimum width=5.0cm] (gw) {Spring Cloud Gateway\\\scriptsize (JWT Auth \textbullet{} Rate Limit \textbullet{} :8080)};
 
-\draw[arrow] (vue.south) -- (gw.north);
+\draw[arrow] (web.south) -- (gw.north);
 
-% === Layer 3: Business Services ===
-\node[layer, minimum height=1.2cm] (l3) at (0,-3.3) {\small\textbf{Business}};
-\node[box, right=0.3cm of l3] (userSvc) {User\\Service\\:8081};
-\node[box, right=0.25cm of userSvc] (taskSvc) {Task\\Service\\:8082};
+% === Layer 3: Business ===
+\node[layerlabel, text height=1.5cm] (L3) at (-0.5,-4.3) {Layer 3\\\textbf{Business}};
+\node[service, right=1.2cm of L3] (userSvc) {User\\Service\\\scriptsize :8081};
+\node[service, right=0.5cm of userSvc] (taskSvc) {Task\\Service\\\scriptsize :8082};
 
-\draw[arrow] (gw.south) -- ++(0,-0.25) -| (userSvc.north);
-\draw[arrow] (gw.south) -- ++(0,-0.25) -| (taskSvc.north);
+\draw[arrow] (gw.south) -- ++(0,-0.3) -| (userSvc.north);
+\draw[arrow] (gw.south) -- ++(0,-0.3) -| (taskSvc.north);
 
-% === Layer 4: AI Services ===
-\node[layer, minimum height=1.2cm] (l4) at (0,-5.3) {\small\textbf{AI}};
-\node[box, right=0.3cm of l4] (toolA) {Tool Agent\\:8083};
-\node[box, right=0.25cm of toolA] (codeA) {Code Agent\\:8084};
-\node[box, right=0.25cm of codeA] (ragA) {RAG Agent\\:8085};
+% === Layer 4: AI ===
+\node[layerlabel, text height=2.0cm] (L4) at (-0.5,-7.0) {Layer 4\\\textbf{AI}};
 
-\draw[arrow] (userSvc.south) -- ++(0,-0.15) -| (toolA.north);
-\draw[arrow] (taskSvc.south) -- ++(0,-0.15) -| (codeA.north);
-\draw[arrow] (taskSvc.south) -- ++(0,-0.15) -| (ragA.north);
+\node[service, right=1.2cm of L4] (toolA) {Tool Agent\\\scriptsize :8083};
+\node[service, right=0.5cm of toolA] (codeA) {Code Agent\\\scriptsize :8084};
+\node[service, right=0.5cm of codeA] (ragA) {RAG Agent\\\scriptsize :8085};
 
-% Python inference boxes below AI agents
-\node[smallbox, below=0.25cm of codeA] (pyCode) {Python LLM\\Inference :8090};
-\node[smallbox, below=0.25cm of ragA] (pyRag) {Python Embed\\Worker :8091};
+% Python sub-services
+\node[sub, below=0.4cm of codeA] (pyCode) {Python LLM Inference\\\scriptsize :8090};
+\node[sub, below=0.4cm of ragA] (pyRag) {Python Embed Worker\\\scriptsize :8091};
+
+\draw[arrow] (userSvc.south) -- ++(0,-0.2) -| (toolA.north);
+\draw[arrow] (taskSvc.south) -- ++(0,-0.2) -| (codeA.north);
+\draw[arrow] (taskSvc.south) -- ++(0,-0.2) -| (ragA.north);
 
 \draw[arrow] (codeA.south) -- (pyCode.north);
 \draw[arrow] (ragA.south) -- (pyRag.north);
 
 % === Layer 5: Data ===
-\node[layer, minimum height=1.0cm] (l5) at (0,-7.8) {\small\textbf{Data}};
+\node[layerlabel, text height=1.0cm] (L5) at (-0.5,-10.2) {Layer 5\\\textbf{Data}};
 
-\pgfmathsetmacro{\dx}{1.75}
-\node[smallbox, right=0.3cm of l5] (mysql) {MySQL\\:3306};
-\node[smallbox, right=0.15cm of mysql] (redis) {Redis\\:6379};
-\node[smallbox, right=0.15cm of redis] (milvus) {Milvus\\:9091};
-\node[smallbox, right=0.15cm of milvus] (minio) {MinIO\\:9000};
-\node[smallbox, right=0.15cm of minio] (etcd) {etcd\\:2379};
+\node[sub, right=1.2cm of L5] (mysql) {MySQL\\\scriptsize :3306};
+\node[sub, right=0.35cm of mysql] (redis) {Redis\\\scriptsize :6379};
+\node[sub, right=0.35cm of redis] (milvus) {Milvus\\\scriptsize :9091};
+\node[sub, right=0.35cm of milvus] (minio) {MinIO\\\scriptsize :9000};
+\node[sub, right=0.35cm of minio] (etcd) {etcd\\\scriptsize :2379};
 
 % Data connections
-\draw[arrow] (pyCode.south) |- (mysql.north);
-\draw[arrow] (pyRag.south) |- (milvus.north);
-\draw[arrow, line width=0.3pt, draw=black!40] (userSvc.south east) -- ++(0,-0.8) -| (mysql.north west);
-\draw[arrow, line width=0.3pt, draw=black!40] (toolA.south) |- (redis.north);
-\draw[arrow, line width=0.3pt, draw=black!40] (ragA.south east) -- ++(0,-0.5) -| (minio.north);
+\draw[fainta] (pyCode.south) |- (mysql.north);
+\draw[fainta] (pyRag.south) |- (milvus.north);
+\draw[fainta] (userSvc.south east) -- ++(0.3,-1.5) -| (mysql.north);
+\draw[fainta] (toolA.south) |- (redis.north);
+\draw[fainta] (ragA.south east) -- ++(0.3,-0.8) -| (minio.north);
 
-% Layer braces on the left
-\draw[line width=0.5pt, draw=black!40] (-0.6,0.35) -- (-0.6,-8.3);
-\foreach \y/\label in {0.35/1, -1.15/2, -2.95/3, -4.95/4, -7.45/5} {
-  \node[font=\footnotesize\bfseries, left=0.05cm] at (-0.6,\y) {\label};
-}
+% Left thick line
+\draw[line width=1pt, draw=black!50] (-3.0,0.3) -- (-3.0,-10.7);
 
 \end{tikzpicture}
-\caption{Five-Layer Architecture --- Web, Gateway, Business, AI, and Data Layers with Internal Ports}
+\caption{Five-Layer Architecture --- All Services with Internal Ports}
 \label{fig:five-layer}
 \end{figure}
 
