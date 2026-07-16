@@ -966,10 +966,10 @@ Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared wi
 \textbf{Stage} & \textbf{Service / Component} & \textbf{Key Operation} & \textbf{Persisted State / Security Result} \\
 \midrule
 1 -- Request Admission & Gateway + RagController & Authenticate JWT; forward user identity, department, role, and clearance headers & Reject unauthenticated requests before they reach retrieval logic \\
-2 -- Permission Snapshot & RagPermissionService & Compute accessible document IDs from department scope, clearance level, admin role, and approved RAG\_APPLY notifications & Produces the allowed document set used for post-retrieval filtering \\
+2 -- Permission Snapshot & RagPermissionService & Compute accessible document IDs from department scope, clearance level, admin role, temporary RAG\_APPLY approvals, and approval expiry & Produces the allowed document set used for scoped vector search and post-retrieval verification \\
 3 -- Query Embedding & EmbeddingClient & Encode the user question with the active embedding profile & Records embedding profile, model, dimension, and collection for audit \\
-4 -- Vector Retrieval & VectorStoreService / \newline REST Milvus adapter & ANN search with COSINE similarity and a 4x over-fetch candidate size & Returns candidate chunks that are not trusted yet \\
-5 -- Secure Filtering & RagQueryService & Remove chunks whose document IDs are outside the permission snapshot & Records retrieved document IDs and blocked document IDs \\
+4 -- Vector Retrieval & VectorStoreService / \newline REST Milvus adapter & ANN search with COSINE similarity, a 4x over-fetch candidate size, and an allowed-document filter in Milvus & Narrows retrieval to documents in the current permission snapshot \\
+5 -- Secure Filtering & RagQueryService & Re-check candidate chunks against the permission snapshot before prompt construction & Records retrieved document IDs and blocked document IDs \\
 6 -- Grounded Generation & Query prompt logic + \newline RagLlmClient & Build evidence-only prompt; call OpenAI-compatible chat-completions endpoint & Produces answer text and citation references from allowed chunks only \\
 7 -- Response + Audit & Query service + \newline query log mapper & Return traceId, answer, citations, scores, and latency; persist query log & Enables later review of evidence, blocked docs, profile, and timing \\
 \bottomrule
@@ -992,7 +992,7 @@ Document upload $\rightarrow$ parser $\rightarrow$ structure-aware chunker $\rig
 rag\_document\_chunk rows + Milvus vectors \\
 \addlinespace[1mm]
 Query &
-JWT headers $\rightarrow$ RagPermissionService $\rightarrow$ query embedding $\rightarrow$ Milvus over-fetch $\rightarrow$ permission filter $\rightarrow$ prompt builder $\rightarrow$ LLM &
+JWT headers $\rightarrow$ RagPermissionService $\rightarrow$ query embedding $\rightarrow$ scoped Milvus over-fetch $\rightarrow$ permission re-check $\rightarrow$ prompt builder $\rightarrow$ LLM &
 answer + citations + rag\_query\_log \\
 \addlinespace[1mm]
 Shared controls &
@@ -1102,9 +1102,9 @@ END FUNCTION
 
 \subhead{5.3.4 Permission-Safe Retrieval and Answer Generation}
 
-The query pipeline deliberately separates semantic relevance from authorization. Milvus is asked for a broader candidate set than the final top-K because some high-similarity chunks may be inaccessible to the current user. The platform then filters candidates using the same document access model used by the normal document library.
+The query pipeline deliberately separates semantic relevance from authorization. Before vector search, RagPermissionService builds the current user's accessible document ID set from department scope, clearance level, admin role, and approved RAG\_APPLY records. The Milvus REST adapter receives this set as an allowed-document filter, so the ANN query is scoped before candidate chunks are returned. RagQueryService still asks for a broader candidate set than the final top-K and repeats the permission check after retrieval. This two-layer design avoids relying on either vector metadata or application filtering as a single security boundary.
 
-Figure \ref{fig:rag-permission-gate} visualizes the security gate inside the query flow. The important point is that vector similarity only proposes candidates. The permission snapshot decides which chunks can become evidence. Blocked chunks are counted and logged, but their text is never copied into the LLM prompt or frontend citation panel.
+Figure \ref{fig:rag-permission-gate} visualizes the security gate inside the query flow. The important point is that vector similarity only proposes candidates within the allowed document scope. The permission snapshot still decides which chunks can become evidence. Blocked chunks are counted and logged, but their text is never copied into the LLM prompt or frontend citation panel.
 
 \begin{figure}[H]
 \centering
@@ -1114,12 +1114,12 @@ Figure \ref{fig:rag-permission-gate} visualizes the security gate inside the que
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}>{\RaggedRight\arraybackslash}X}
 \textbf{Vector candidates} & \textbf{Permission gate} & \textbf{Allowed output} \\
 \midrule
-Milvus returns over-fetched chunks with document IDs, chunk IDs, similarity scores, and security labels. &
-Permission service compares each candidate with department scope, clearance level, admin role, and approved access requests. &
+Milvus receives the allowed document IDs and returns over-fetched chunks with document IDs, chunk IDs, similarity scores, and security labels. &
+RagQueryService re-checks each candidate against department scope, clearance level, admin role, and approved access requests. &
 Allowed chunks become numbered context blocks for the LLM, citation cards for the frontend, and retrieved-document records in the audit log. \\
 \addlinespace[2mm]
 High-similarity chunks can still belong to restricted documents. &
-Unauthorized candidates are removed after retrieval and before prompt construction. &
+Unauthorized or stale candidates are removed after retrieval and before prompt construction. &
 Blocked document IDs and blocked counts are stored for diagnostics, but blocked text is not exposed to the model or user interface. \\
 \end{tabularx}
 \end{minipage}
@@ -1128,7 +1128,7 @@ Blocked document IDs and blocked counts are stored for diagnostics, but blocked 
 \label{fig:rag-permission-gate}
 \end{figure}
 
-Tables \ref{tab:pseudocode-rag-retrieve} and \ref{tab:pseudocode-rag-generate} show the complete query workflow. No retrieved chunk is allowed to enter the LLM prompt unless it passes the permission filter. This is the key difference between a normal RAG demo and an enterprise RAG system.
+Tables \ref{tab:pseudocode-rag-retrieve} and \ref{tab:pseudocode-rag-generate} show the complete query workflow. No retrieved chunk is allowed to enter the LLM prompt unless it passes the permission filter. Approved RAG\_APPLY records are treated as temporary access grants rather than permanent ACL changes: the access-request payload carries \texttt{accessTtlHours}, defaulting to 24 hours, and expired approvals are ignored when the next permission snapshot is built. This is the key difference between a normal RAG demo and an enterprise RAG system.
 
 \vspace{3mm}
 \needspace{0.62\textheight}
@@ -1154,9 +1154,10 @@ FUNCTION retrieveAllowedChunks(request, user): RetrievalResult
     candidateLimit = max(requestedTopK * 4, requestedTopK)
     candidates = vectorStoreService.search(
         profile.collection, queryVector, "COSINE",
-        limit = candidateLimit)
+        limit = candidateLimit,
+        allowedDocumentIds = allowedDocIds)
 
-    // 3. Enforce document permission after retrieval
+    // 3. Re-check document permission after retrieval
     allowedChunks = []
     blockedDocIds = new Set()
     FOR EACH candidate IN candidates:
@@ -1270,10 +1271,10 @@ POST /rag/query & User & Runs permission-safe retrieval and returns traceId, ans
 GET /rag/health, /rag/health/embedding & User / Admin & Reports service status, active Milvus collection, embedding readiness, LLM configuration, chunk size, and overlap \\
 GET /rag/kb, POST /rag/kb & Admin & Lists and creates knowledge bases for RAG-managed source documents \\
 POST /rag/kb/\{kbId\}/documents/ \newline upload & Admin / Document owner & Uploads source files with department and security-level metadata, then triggers indexing \\
-POST /rag/index/rebuild & Admin & Rebuilds all source-document vectors as an auditable index task \\
+POST /rag/index/rebuild & Admin & Queues an asynchronous full rebuild for the active embedding profile and returns an auditable task ID \\
 POST /rag/index/document/\{id\}, /reprocess & Admin / Document owner & Indexes or reprocesses one document with clean delete-and-upsert semantics \\
 DELETE /rag/index/document/\{id\} & Admin / Document owner & Deletes chunk metadata and corresponding vectors for one document \\
-GET /rag/index/tasks, /documents/status, /document/\{id\}/chunks & Admin / Document owner & Shows index task history, per-document index status, and persisted chunk details \\
+GET /rag/index/tasks, /tasks/\{taskId\}, /documents/status, /document/\{id\}/chunks & Admin / Document owner & Shows index task history, single-task progress, per-document index status, and persisted chunk details \\
 GET /rag/permissions/documents & User & Returns the permission snapshot and accessible document list for the current user \\
 GET /rag/embedding/profiles, /active & Admin & Lists configured embedding profiles and the active model, dimension, collection, and index status \\
 POST /rag/embedding/profiles/\{id\}/ \newline test, /activate & Admin & Tests an embedding profile and activates it with rebuild-required status tracking \\
@@ -1286,15 +1287,40 @@ The capability is also integrated into the task-service. When a RAG-type task is
 
 \subhead{5.3.6 Frontend RAG Workbench and Citation Rendering}
 
-The /app/rag page is designed as an operational workbench rather than a simple chatbot. It includes a question input area, topK selector, loading states, answer rendering, citation cards, document metadata badges, and permission-filter diagnostics. Each citation card displays document title, chunk snippet, similarity score, security level, and document link. When candidate documents are retrieved but blocked by permission rules, the page shows the blocked count without exposing blocked content. If the user needs a restricted document, the access-request action creates a RAG\_APPLY notification. After an administrator or department administrator approves it, RagPermissionService includes the approved document in the user's permission snapshot, so later retrieval can use that document as evidence. Copilot intent routing can redirect RAG-like questions to /app/rag?query=..., so a user can begin from the Copilot entry point and continue in the specialized RAG workbench with the question pre-filled.
+The /app/rag page is designed as an operational workbench rather than a simple chatbot. It includes a question input area, topK selector, loading states, answer rendering, citation cards, document metadata badges, and permission-filter diagnostics. Each citation card displays document title, chunk snippet, similarity score, security level, and document link. When candidate documents are retrieved but blocked by permission rules, the page shows the blocked count without exposing blocked content. If the user needs a restricted document, the access-request action creates a RAG\_APPLY notification. After an administrator or department administrator approves it, RagPermissionService includes the approved document in the user's permission snapshot until the temporary access window expires, so later retrieval can use that document as evidence without changing the permanent document ACL. The workbench also polls asynchronous rebuild and reprocess tasks, letting administrators see queued, running, success, or failed states after starting index maintenance. Copilot intent routing can redirect RAG-like questions to /app/rag?query=..., so a user can begin from the Copilot entry point and continue in the specialized RAG workbench with the question pre-filled.
 
 \subhead{5.3.7 Synchronization, Deployment, and Testing}
 
-Document-RAG synchronization follows the same clean lifecycle as the indexing pseudocode: document creation triggers single-document indexing; document update deletes old vectors and re-indexes the changed document; document deletion removes chunk rows and Milvus vectors. Content hashes allow the service to detect unchanged chunks and reduce unnecessary embedding work in rebuild tasks.
+Document-RAG synchronization follows the same clean lifecycle as the indexing pseudocode: document creation triggers single-document indexing; document update deletes old vectors and re-indexes the changed document; document deletion removes chunk rows and Milvus vectors. Full index rebuild is asynchronous. RagIndexService creates a \texttt{rag\_index\_task} in QUEUED state, runs the rebuild on the index task executor, marks the active embedding profile as REBUILDING, and finally updates the profile index status to READY or FAILED. Content hashes allow the service to detect unchanged chunks and reduce unnecessary embedding work in rebuild tasks.
 
 Docker Compose includes rag-agent, Milvus Standalone, etcd, MinIO, and rag-worker. Important environment variables include \texttt{RAG\_SERVICE\_URI}, \texttt{MILVUS\_HOST}, \texttt{MILVUS\_PORT}, \texttt{RAG\_EMBEDDING\_PROVIDER}, \texttt{RAG\_EMBEDDING\_MODEL}, \texttt{RAG\_EMBEDDING\_DIM}, \texttt{RAG\_CHUNK\_SIZE\_TOKENS}, \texttt{RAG\_CHUNK\_OVERLAP\_TOKENS}, \texttt{RAG\_LLM\_API\_KEY}, \texttt{RAG\_LLM\_BASE\_URL}, \texttt{RAG\_LLM\_MODEL}, \texttt{RAG\_MILVUS\_COLLECTION}, \texttt{RAG\_VECTOR\_METRIC}, and \texttt{RAG\_VECTOR\_INDEX}. Service dependency ordering ensures that Milvus, MinIO, etcd, and the embedding worker are available before rag-agent starts accepting queries.
 
-Testing focuses on both quality and leakage prevention: admin users can retrieve high-clearance documents; standard users are restricted to same-department and clearance-allowed documents; low-clearance users cannot see confidential chunks; approved RAG\_APPLY requests expand access; document updates refresh the index; document deletion removes vectors; Milvus or LLM failures return controlled error states; and the frontend citation panel renders evidence without exposing blocked document content. In addition, embedding-profile tests verify that BGE-M3 and Qwen vectors are written to separate collections, that dimension mismatches are caught by health checks, and that index rebuild status is visible before users rely on a newly activated profile.
+Testing focuses on both quality and leakage prevention: admin users can retrieve high-clearance documents; standard users are restricted to same-department and clearance-allowed documents; low-clearance users cannot see confidential chunks; approved RAG\_APPLY requests expand access only within the configured TTL; document updates refresh the index; document deletion removes vectors; Milvus or LLM failures return controlled error states; and the frontend citation panel renders evidence without exposing blocked document content. In addition, embedding-profile tests verify that BGE-M3 and Qwen vectors are written to separate collections, that dimension mismatches are caught by health checks, and that index rebuild status is visible before users rely on a newly activated profile.
+
+The automated RAG evaluation script, \texttt{scripts/test-rag-evaluation.ps1}, turns these checks into a repeatable workflow and writes the latest evidence to \texttt{docs/RAG\_EVALUATION\_RESULTS.md}. It verifies service readiness, active embedding profile isolation, optional asynchronous rebuild completion, indexed-document status, citation consistency, permission leakage, and query latency.
+
+\vspace{3mm}
+
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{RAG Automated Evaluation Coverage and Observed Results}
+\label{tab:rag-evaluation-coverage}
+\vspace{2mm}
+
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.31\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{Area} & \textbf{Automated Check} & \textbf{Observed Result} \\
+\midrule
+Readiness & RAG health and embedding profile readiness & Service status UP; active profile local-bge-m3; collection rag\_document\_chunks\_bge\_m3; 1024-dimensional embeddings \\
+Indexing & Indexed-document status and optional full rebuild polling & Indexed documents are detected; full rebuild returns a task ID and can be followed until SUCCESS or FAIL \\
+Retrieval behavior & Admin, credit-staff, and compliance-staff queries & Controlled statuses are returned; successful cases include retrieved document IDs, citations, chunks, and latency \\
+Citation correctness & Every citation must reference a returned chunk & Citation counts match returned evidence chunks, so the frontend can render source cards deterministically \\
+Permission leakage & Staff queries must stay inside department and clearance scope & Retrieved document IDs remain within the permitted snapshot for credit and compliance test users \\
+Latency & Average and maximum query latency are recorded & Latest sample recorded 419 ms average latency and 460 ms maximum latency across three queries \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \newpage
 

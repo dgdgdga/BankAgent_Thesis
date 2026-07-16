@@ -192,11 +192,12 @@
 /api/rag/health & GET & Service readiness including Milvus, embedding, and LLM status \\
 /api/rag/health/embedding & GET & Active embedding profile readiness and dimension check \\
 /api/rag/permissions/documents & GET & Current user's accessible document snapshot \\
-/api/rag/index/rebuild & POST & Trigger full RAG index rebuild \\
+/api/rag/index/rebuild & POST & Queue asynchronous full RAG index rebuild and return task status \\
 /api/rag/index/document/\{id\} & POST & Index a single document \\
 /api/rag/index/document/\{id\}/reprocess & POST & Reprocess a single document \\
 /api/rag/index/document/\{id\} & DELETE & Delete document chunks and vectors \\
 /api/rag/index/tasks & GET & Recent index task history \\
+/api/rag/index/tasks/\{taskId\} & GET & Single index task progress and terminal status \\
 /api/rag/index/documents/status & GET & Per-document index status \\
 /api/rag/index/document/\{id\}/chunks & GET & Persisted chunk details for a document \\
 /api/rag/embedding/profiles & GET & List available embedding profiles \\
