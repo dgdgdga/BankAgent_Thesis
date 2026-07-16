@@ -44,17 +44,31 @@ FR8 & Admin Resource Management & Role-restricted CRUD endpoints for meeting roo
 
 \subhead{3.3 Non-Functional Requirements}
 
-NFR1 -- Data Sovereignty. All core data tasks run inside our own Docker setup. These tasks include AI model runs,  finding documents and database work. They all happen in a Docker environment on our own machines. External calls (the DeepSeek LLM endpoint at maas-api.cn-huabei-1.xf-yun.com and the Amap geocoding/routing API at restapi.amap.com) transmit only the minimum required parameters (prompts and coordinates), with no payload logging or retention by third-party providers. All external API keys are stored in environment variables, with development fallback defaults.
+Table 3 summarizes the non-functional requirements that govern system quality attributes.
 
-NFR2 -- Performance. The system should meet these latency targets: (a) Code Agent SQL generation ≤3 s; (b) Tool Agent meeting-room and schedule queries ≤500 ms; (c) route-planning responses ≤2 s (limited by the Amap API round-trip); (d) WebSocket progress updates ≤200 ms; and (e) initial page load ≤3 s.
-
-NFR3 -- Security. All API traffic must be encrypted with HTTPS/TLS (and WSS for WebSocket connections). User passwords are hashed with BCrypt (strength factor 10). JWT tokens have configurable expiry (default 24 h) and are signed with HMAC-SHA. Method-level authorization is enforced by Spring Security's @PreAuthorize annotations. SQL injection is prevented through the use of PreparedStatement. MyBatis-Plus supports logical deletion. It uses the @TableLogic annotation for this. This works for all entities. It keeps the data for audit purposes.
-
-NFR4 -- Reliability and Availability. The platform is designed to be up 99.5\% of the time during business hours. The system can keep working at a reduced level when some services fail. When the DeepSeek or Amap services cannot be reached, the Tool Agent uses mock data. If the Code Agent's inference server is not available, the system returns error messages. All task failures are logged. They include details like user ID, request payload, and stack trace. This is used for analysis after an incident.
-
-NFR5 -- Maintainability. The architecture follows microservice principles. It keeps different responsibilities separate. Each service provides RESTful APIs. These are documented in Appendix B. A Result<T> wrapper is used for responses. It has code, message, and data. This gives consistent error handling across the whole stack. MyBatis-Plus provides type-safe CRUD operations. It automatically maps underscores to camelCase. It supports logical deletion. It also logs SQL for debugging.
-
-NFR6 -- Deployability. The system is deployed with one Docker Compose command. The MySQL container starts on its own. It uses a file from docker/init/agent\_platform\_backup\_utf8.sql. This file creates all 11 tables with seed data. Service URIs are set through environment variables. Examples are USER\_SERVICE\_URI, TOOL\_SERVICE\_URI, and CODE\_SERVICE\_URI. The default for development is localhost. Health-check probes test if a service is ready. They run before dependent containers start.
+\begin{table}[H]
+\centering
+\small\singlespacing
+\caption{Non-Functional Requirements}
+\label{tab:nfr}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.14\textwidth}>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{ID} & \textbf{Requirement} & \textbf{Description} \\
+\midrule
+NFR1 & Data Sovereignty & All core data processing must run within the on-premise Docker environment. External API calls transmit only the minimum necessary parameters with no payload logging or retention by third-party providers. \\
+\midrule
+NFR2 & Performance & SQL generation must complete within 3 seconds. Meeting-room and schedule queries must respond within 500 ms. Route planning must return within 2 seconds. WebSocket progress updates must be delivered within 200 ms. Initial page load must not exceed 3 seconds. \\
+\midrule
+NFR3 & Security & All traffic must use HTTPS (WSS for WebSocket). Passwords must be hashed with BCrypt. Authentication must be stateless via signed JWT tokens with configurable expiry. Access must be enforced at the method level. SQL injection must be prevented through parameterized queries. Data deletion must be logical rather than physical for auditability. \\
+\midrule
+NFR4 & Reliability & The platform must achieve 99.5\% uptime during business hours. External service failures must trigger graceful degradation using mock fallbacks rather than hard failures. All task failures must be logged with user context for post-incident analysis. \\
+\midrule
+NFR5 & Maintainability & Services must be independently deployable with clearly separated responsibilities. All APIs must return a consistent response wrapper for uniform error handling. Database operations must use type-safe abstractions with SQL logging for debugging. \\
+\midrule
+NFR6 & Deployability & The entire platform must start with a single command. Database schema and seed data must be initialized automatically. Service dependencies must be resolved through health-check probes before dependent containers start. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subhead{3.4 Use Case Analysis}
 
