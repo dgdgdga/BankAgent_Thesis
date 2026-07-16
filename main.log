@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 22:10
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 22:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -927,9 +927,19 @@ Underfull \hbox (badness 1629) in paragraph at lines 150--151
 [73] [74] [75]
 File: figures/fig10_docker_topology.png Graphic file (type bmp)
 <figures/fig10_docker_topology.png>
- [76] [77]) (./chapters/chapter7.tex [78] [79] [80] [81])
-(./chapters/chapter8.tex [82] [83]) (./chapters/references.tex [84] [85])
-(./chapters/appendix_a.tex
+ [76] [77]) (./chapters/chapter7.tex [78]
+Missing character: There is no 天 (U+5929) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no 安 (U+5B89) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no 门 (U+95E8) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no 广 (U+5E7F) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+Missing character: There is no 场 (U+573A) in font Times New Roman/OT:script=lat
+n;language=dflt;mapping=tex-text;!
+[79] [80] [81]) (./chapters/chapter8.tex [82] [83]) (./chapters/references.tex
+[84] [85]) (./chapters/appendix_a.tex
 Underfull \hbox (badness 10000) in paragraph at lines 59--59
 []|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
  []
