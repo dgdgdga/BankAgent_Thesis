@@ -123,7 +123,7 @@
 \noindent\textbf{RAG Agent (Port 8085):}
 
 \vspace{1mm}
-\noindent POST /api/rag/query \textrightarrow{} \{question, topK?\} \textrightarrow{} \{answer, citations[], chunks[], retrievedDocumentIds[], blockedDocumentIds[], latencyMs, status\}
+\noindent POST /api/rag/query \textrightarrow{} \{question, topK?\} \textrightarrow{} \{traceId, answer, citations[], chunks[], retrievedDocumentIds[], blockedDocumentIds[], topK, latencyMs, status\}
 
 \noindent GET /api/rag/health \textrightarrow{} RAG service, Milvus, embedding, and LLM readiness summary
 
@@ -139,9 +139,17 @@
 
 \noindent GET /api/rag/index/tasks \textrightarrow{} Recent index tasks; GET /api/rag/index/documents/status \textrightarrow{} Per-document index status
 
-\noindent GET /api/rag/embedding/profiles \textrightarrow{} Available embedding profiles; POST /api/rag/embedding/profiles/\{profileId\}/activate \textrightarrow{} Switch active embedding profile
+\noindent GET /api/rag/index/document/\{documentId\}/chunks \textrightarrow{} Persisted chunk text, vectorId, embedding profile, and index status
 
-\noindent CRUD /api/rag/kb \textrightarrow{} Knowledge-base management and document upload endpoints
+\noindent GET /api/rag/embedding/active \textrightarrow{} Active embedding profile, model, dimension, collection, and rebuild status
+
+\noindent GET /api/rag/embedding/profiles \textrightarrow{} Available embedding profiles
+
+\noindent POST /api/rag/embedding/profiles/\{profileId\}/test \textrightarrow{} Readiness probe
+
+\noindent POST /api/rag/embedding/profiles/\{profileId\}/activate \textrightarrow{} Switch active embedding profile
+
+\noindent GET/POST/PUT/DELETE /api/rag/kb \textrightarrow{} Knowledge-base management; POST /api/rag/kb/\{kbId\}/documents/upload \textrightarrow{} Upload and index source documents
 
 \noindent POST /api/rag/access-request \textrightarrow{} Submit a RAG document access request
 

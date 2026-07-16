@@ -125,7 +125,7 @@ Inference Engine     & Python FastAPI (port 8090)  & LLM-based SQL generation fr
 RAG Agent            & Spring Boot 3.x (port 8085) & Document Q\&A, vector retrieval, source citation, access workflow \\
 Embedding Worker     & Python FastAPI (rag-worker) & bge-m3 embedding generation, Markdown chunking \\
 Document Parsing     & Apache Tika                 & Multi-format document parsing for RAG ingestion pipeline \\
-Vector Retrieval     & Milvus Java SDK 2.3+        & Semantic ANN search for RAG document retrieval \\
+Vector Retrieval     & Milvus REST API + VectorStoreService & Semantic ANN search for RAG document retrieval \\
 Object Storage       & MinIO                       & Document file storage (PDF/DOCX/PPT), Milvus backend \\
 Email Service        & Resend API                  & Email verification code delivery, three-tier rate limiting \\
 Map Services         & Amap API (HTTPS)            & Geocoding (multi-level fallback), direction calculation, polyline coordinate parsing \\
@@ -232,7 +232,7 @@ Table \ref{tab:data-storage} summarizes the data storage strategy.
 Operational Layer & MySQL 8.0   & Users, roles, departments, documents, meeting rooms, schedules, notifications & Transactional, ACID-compliant read/write \\
 Caching Layer     & Redis 5.0+  & Session tokens, rate limit counters, metadata cache (hash), schedule conflicts (sorted sets) & High-concurrency, sub-millisecond reads \\
 Object Storage    & MinIO       & PDF, DOCX, PPT files; Milvus backend objects & Document upload/download, RAG source document storage \\
-Vector Layer      & Milvus 2.3+ & Document chunk embeddings (bge-small-zh), source metadata & Semantic approximate nearest neighbor search \\
+Vector Layer      & Milvus 2.6.15 & Document chunk embeddings (BGE-M3, 1024 dimensions), source metadata & Semantic approximate nearest neighbor search \\
 \bottomrule
 \end{tabular}
 \end{table}

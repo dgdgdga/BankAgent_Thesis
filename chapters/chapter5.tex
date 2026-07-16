@@ -947,7 +947,7 @@ END FUNCTION
 
 \subhead{5.3.1 Architecture Overview}
 
-The RAG Agent is implemented as an independent Spring Boot microservice on port 8085. It is not a thin wrapper around a vector database; it owns the complete enterprise document question answering pipeline: document ingestion, chunking, embedding, vector indexing, permission-safe retrieval, grounded answer generation, citation construction, and query audit logging. The service is exposed through Spring Cloud Gateway under /api/rag/**. Gateway authentication is still the first security boundary: JwtAuthGlobalFilter validates the JWT token and forwards X-User-Id, X-Username, X-User-Dept-Id, X-User-Roles, and X-User-Security-Level headers to rag-agent.
+The RAG Agent is implemented as an independent Spring Boot microservice on port 8085. It is not a thin wrapper around a vector database; it owns the complete enterprise document question answering pipeline: document ingestion, chunking, embedding, vector indexing, permission-safe retrieval, grounded answer generation, citation construction, and query audit logging. The service is exposed through Spring Cloud Gateway under /api/rag/**. Gateway authentication is still the first security boundary: JwtAuthGlobalFilter validates the JWT token and forwards X-User-Id, X-User-Name, X-User-Dept-Id, X-User-Roles, and X-User-Security-Level headers to rag-agent.
 
 Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared with the Code Agent, whose main risk is unsafe SQL execution, the RAG Agent's main risk is unauthorized knowledge leakage. Therefore, permission calculation and audit logging are first-class stages rather than auxiliary checks.
 
@@ -968,10 +968,10 @@ Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared wi
 1 -- Request Admission & Gateway + RagController & Authenticate JWT; forward user identity, department, role, and clearance headers & Reject unauthenticated requests before they reach retrieval logic \\
 2 -- Permission Snapshot & RagPermissionService & Compute accessible document IDs from department scope, clearance level, admin role, and approved RAG\_APPLY notifications & Produces the allowed document set used for post-retrieval filtering \\
 3 -- Query Embedding & EmbeddingClient & Encode the user question with the active embedding profile & Records embedding profile, model, dimension, and collection for audit \\
-4 -- Vector Retrieval & MilvusClient / RagVectorStore & ANN search with COSINE similarity and an over-fetch candidate size & Returns candidate chunks that are not trusted yet \\
+4 -- Vector Retrieval & VectorStoreService / \newline REST Milvus adapter & ANN search with COSINE similarity and a 4x over-fetch candidate size & Returns candidate chunks that are not trusted yet \\
 5 -- Secure Filtering & RagQueryService & Remove chunks whose document IDs are outside the permission snapshot & Records retrieved document IDs and blocked document IDs \\
-6 -- Grounded Generation & RagPromptBuilder + LLM Client & Build evidence-only prompt; call OpenAI-compatible chat-completions endpoint & Produces answer text and citation references from allowed chunks only \\
-7 -- Response + Audit & RagQueryLogService & Return answer, citations, scores, and latency; persist query log & Enables later review of evidence, blocked docs, profile, and timing \\
+6 -- Grounded Generation & Query prompt logic + \newline RagLlmClient & Build evidence-only prompt; call OpenAI-compatible chat-completions endpoint & Produces answer text and citation references from allowed chunks only \\
+7 -- Response + Audit & Query service + \newline query log mapper & Return traceId, answer, citations, scores, and latency; persist query log & Enables later review of evidence, blocked docs, profile, and timing \\
 \bottomrule
 \end{tabular}
 }
@@ -1065,7 +1065,7 @@ FUNCTION indexDocument(documentId: Long): IndexResult
         END IF
 
         // Clean rebuild: remove old chunk rows and vectors
-        milvusClient.deleteByVectorIds(
+        vectorStoreService.deleteByVectorIds(
             chunkRepository.findVectorIds(documentId))
         chunkRepository.deleteByDocumentId(documentId)
 
@@ -1081,7 +1081,7 @@ FUNCTION indexDocument(documentId: Long): IndexResult
             chunkRow = chunkRepository.insert(
                 doc.id, i, chunks[i].text, contentHash, profile)
             vectorId = buildVectorId(doc.id, chunkRow.id, profile.name)
-            milvusClient.upsert(
+            vectorStoreService.upsert(
                 collection = profile.collection,
                 vectorId = vectorId,
                 embedding = vectors[i],
@@ -1130,10 +1130,11 @@ FUNCTION retrieveAllowedChunks(request, user): RetrievalResult
 
     profile = embeddingProfileService.getActiveProfile()
     queryVector = embeddingClient.embed(request.question, profile)
-    requestedTopK = clamp(request.topK, min = 1, max = 10)
-    candidates = milvusClient.search(
+    requestedTopK = clamp(request.topK, default = 5, max = 20)
+    candidateLimit = max(requestedTopK * 4, requestedTopK)
+    candidates = vectorStoreService.search(
         profile.collection, queryVector, "COSINE",
-        limit = requestedTopK * config.overFetchFactor)
+        limit = candidateLimit)
 
     // 3. Enforce document permission after retrieval
     allowedChunks = []
@@ -1200,7 +1201,9 @@ END FUNCTION
 \end{lstlisting}
 \end{table}
 
-The answer generation step uses an OpenAI-compatible chat-completions endpoint configured by RAG\_LLM\_API\_KEY, RAG\_LLM\_BASE\_URL, and RAG\_LLM\_MODEL. The prompt has three parts: the user question, a numbered context block containing permission-safe chunks, and answer rules. The answer rules require the model to answer only from the provided context, cite chunk identifiers, and state that no evidence was found when the context is insufficient. The response returned to the frontend contains answer text, citations, retrieved chunks, retrieved document IDs, blocked document IDs, status, and latency.
+The answer generation step uses an OpenAI-compatible chat-completions endpoint configured by RAG\_LLM\_API\_KEY, RAG\_LLM\_BASE\_URL, and RAG\_LLM\_MODEL. The prompt has three parts: the user question, a numbered context block containing permission-safe chunks, and answer rules. The answer rules require the model to answer only from the provided context, cite chunk identifiers, state that no evidence was found when the context is insufficient, and never infer content from blocked documents. The response returned to the frontend contains traceId, answer text, citations, retrieved chunks, retrieved document IDs, blocked document IDs, topK, status, and latency.
+
+Failure handling is part of the query contract rather than an unhandled exception path. If the user has no accessible documents, the service returns an empty evidence response with a controlled status and message. If Milvus, the embedding endpoint, or the LLM endpoint fails, RagQueryServiceImpl catches the exception, preserves the traceId, writes the status and message into rag\_query\_log, and returns a frontend-renderable failure response. This keeps the RAG workbench debuggable without exposing inaccessible document content.
 
 \subhead{5.3.5 API Surface and Orchestration Integration}
 
@@ -1219,7 +1222,7 @@ The RAG Agent exposes user-facing query endpoints, knowledge-base management end
 \toprule
 \textbf{Endpoint} & \textbf{Role} & \textbf{Behavior} \\
 \midrule
-POST /rag/query & User & Runs permission-safe retrieval and returns answer, citations, chunks, blocked document IDs, traceId, and latency \\
+POST /rag/query & User & Runs permission-safe retrieval and returns traceId, answer, citations, chunks, blocked document IDs, topK, status, and latency \\
 GET /rag/health, /rag/health/embedding & User / Admin & Reports service status, active Milvus collection, embedding readiness, LLM configuration, chunk size, and overlap \\
 GET /rag/kb, POST /rag/kb & Admin & Lists and creates knowledge bases for RAG-managed source documents \\
 POST /rag/kb/\{kbId\}/documents/ \newline upload & Admin / Document owner & Uploads source files with department and security-level metadata, then triggers indexing \\
@@ -1235,11 +1238,11 @@ POST /rag/access-request & User & Creates a RAG\_APPLY notification for document
 \end{tabularx}
 \end{table}
 
-The capability is also integrated into the task-service. When a RAG-type task is submitted, the task-service calls POST /rag/query and pushes progress through WebSocket: accepted, permission snapshot built, retrieval finished, answer generated, and completed. The final RAG response is stored in task\_record.output, allowing the Task Center and Copilot to reuse the same evidence-grounded answer flow.
+The capability is also integrated into the task-service. When a RAG-type task is submitted, the task-service calls POST /rag/query with topK=5 and pushes progress through WebSocket: accepted, permission snapshot built, retrieval finished, answer generated, and completed. The final RAG response is stored in task\_record.output, allowing the Task Center and Copilot to reuse the same evidence-grounded answer flow.
 
 \subhead{5.3.6 Frontend RAG Workbench and Citation Rendering}
 
-The /app/rag page is designed as an operational workbench rather than a simple chatbot. It includes a question input area, loading states, answer rendering, citation cards, document metadata badges, and permission-filter diagnostics. Each citation card displays document title, chunk snippet, similarity score, security level, and document link. When candidate documents are retrieved but blocked by permission rules, the page shows the blocked count without exposing blocked content. Copilot intent routing can redirect RAG-like questions to /app/rag?query=..., so a user can begin from the Copilot entry point and continue in the specialized RAG workbench with the question pre-filled.
+The /app/rag page is designed as an operational workbench rather than a simple chatbot. It includes a question input area, topK selector, loading states, answer rendering, citation cards, document metadata badges, and permission-filter diagnostics. Each citation card displays document title, chunk snippet, similarity score, security level, and document link. When candidate documents are retrieved but blocked by permission rules, the page shows the blocked count without exposing blocked content. If the user needs a restricted document, the access-request action creates a RAG\_APPLY notification. After an administrator or department administrator approves it, RagPermissionService includes the approved document in the user's permission snapshot, so later retrieval can use that document as evidence. Copilot intent routing can redirect RAG-like questions to /app/rag?query=..., so a user can begin from the Copilot entry point and continue in the specialized RAG workbench with the question pre-filled.
 
 \subhead{5.3.7 Synchronization, Deployment, and Testing}
 
