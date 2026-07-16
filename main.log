@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:25
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1189,67 +1189,84 @@ Overfull \vbox (1101.41306pt too high) has occurred while \output is active []
 
 
 [92]) (./chapters/appendix_b.tex
-Underfull \hbox (badness 1297) in paragraph at lines 42--43
-\TU/TimesNewRoman(0)/m/n/12 GET /api/admin/users → [UserResponse[]]; POST /api/
-admin/user/role → {userId,
- []
-
-
-Overfull \hbox (8.85526pt too wide) in paragraph at lines 44--45
-\TU/TimesNewRoman(0)/m/n/12 PUT /api/admin/user/status → {userId, status} → Ena
-ble/disable; PUT /api/admin/user/dept
+Underfull \hbox (badness 2846) in paragraph at lines 64--64
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/dept- 
  []
 
 [93]
-Underfull \hbox (badness 1694) in paragraph at lines 66--67
-\TU/TimesNewRoman(0)/m/n/12 POST /api/user/document/create → {title, content, d
-eptId, securityLevel} → AD-
+Overfull \hbox (15.0287pt too wide) in paragraph at lines 101--101
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/notification/approve/{id}|  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 80--81
-\TU/TimesNewRoman(0)/m/n/12 GET /api/user/notification/unread-count → Integer c
-ount (status=0); POST
+Overfull \hbox (1.04713pt too wide) in paragraph at lines 101--101
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/notification/deny/{id}|  
+ []
+
+
+Underfull \hbox (badness 1092) in paragraph at lines 118--118
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/config/ai- 
+ []
+
+
+Overfull \hbox (3.47453pt too wide) in paragraph at lines 141--141
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/tool/schedule/user/{userId}|  
+ []
+
+
+Overfull \hbox (5.32925pt too wide) in paragraph at lines 141--141
+[]|\TU/TimesNewRoman(0)/m/n/10.95 PUT/DELETE|  
  []
 
 [94]
-Overfull \hbox (3.25876pt too wide) in paragraph at lines 120--121
-\TU/TimesNewRoman(0)/m/n/12 GET /api/code/metadata → Cached schema {tables: {}}
-; POST /api/code/metadata/refresh
- []
-
-[95]
-Underfull \hbox (badness 10000) in paragraph at lines 136--137
-\TU/TimesNewRoman(0)/m/n/12 POST /api/rag/index/document/{documentId} → Index o
-ne document; POST
+Overfull \hbox (2.70996pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/permissions/documents|  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 152--153
-\TU/TimesNewRoman(0)/m/n/12 GET/POST/PUT/DELETE /api/rag/kb → Knowledge-base ma
-nagement; POST
+Overfull \hbox (36.918pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/document/{id}/reprocess|  
  []
 
 
-Overfull \hbox (19.70346pt too wide) in paragraph at lines 160--161
-\TU/TimesNewRoman(0)/m/n/12 Routes: /api/user/**→user-service:8081; /api/tool/*
-*→tool-agent:8083; /api/code/**→code-
+Overfull \hbox (2.7046pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/documents/status|  
  []
 
-[96]) (./chapters/appendix_c.tex [97]
+
+Overfull \hbox (26.59357pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/document/{id}/chunks|  
+ []
+
+
+Overfull \hbox (25.37453pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/embedding/profiles/{id}/test|  
+ []
+
+
+Overfull \hbox (44.21088pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/embedding/profiles/{id}/activate|  
+ []
+
+
+Overfull \hbox (27.8126pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/kb/{kbId}/documents/upload|  
+ []
+
+[95] [96] [97]) (./chapters/appendix_c.tex [98]
 Underfull \hbox (badness 4366) in paragraph at lines 34--35
 \TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/resour
 ces, /app/admin/my-dept).
  []
 
-[98]) (./chapters/contributions.tex [99] [100] [101] [102] [103] [104] [105]
-[106] [107] [108] [109] [110] [111]
+[99]) (./chapters/contributions.tex [100] [101] [102] [103] [104] [105]
+[106] [107] [108] [109] [110] [111] [112]
 Underfull \hbox (badness 1348) in paragraph at lines 290--291
 \TU/TimesNewRoman(0)/m/n/12 can rebuild the index so that MySQL chunk metadata 
 and Milvus vectors match
  []
 
-[112] [113] [114] [115]
+[113] [114] [115] [116]
 Underfull \hbox (badness 1931) in paragraph at lines 381--382
 \TU/TimesNewRoman(0)/m/n/12 (\TU/lmtt/m/n/12 \bDROP\b\TU/TimesNewRoman(0)/m/n/1
 2 , \TU/lmtt/m/n/12 \bDELETE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bI
@@ -1267,19 +1284,19 @@ LOAD_- FILE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bOUTFILE\b\TU/Times
 NewRoman(0)/m/n/12 ,
  []
 
-[116] [117] [118] (./main.aux)
+[117] [118] [119] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) ) 
 Here is how much of TeX's memory you used:
- 8425 strings out of 468168
- 191799 string characters out of 5432816
- 936575 words of memory out of 5000000
- 36981 multiletter control sequences out of 15000+600000
+ 8437 strings out of 468168
+ 191998 string characters out of 5432816
+ 936863 words of memory out of 5000000
+ 36993 multiletter control sequences out of 15000+600000
  631661 words of font info for 88 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  78i,14n,96p,1284b,1182s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (123 pages).
+Output written on main.pdf (124 pages).
