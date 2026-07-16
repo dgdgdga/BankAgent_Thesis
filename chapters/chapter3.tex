@@ -46,15 +46,21 @@ FR8 & Admin Resource Management & Role-restricted CRUD endpoints for meeting roo
 
 Table 3 summarizes the non-functional requirements that govern system quality attributes.
 
-\begin{table}[H]
-\centering
-\small\singlespacing
+\begin{longtable}{p{0.14\textwidth}p{0.28\textwidth}p{0.48\textwidth}}
 \caption{Non-Functional Requirements}
 \label{tab:nfr}
-\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.14\textwidth}>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}X}
+\\
 \toprule
 \textbf{ID} & \textbf{Requirement} & \textbf{Description} \\
 \midrule
+\endfirsthead
+\caption[]{Non-Functional Requirements (continued)} \\
+\toprule
+\textbf{ID} & \textbf{Requirement} & \textbf{Description} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
 NFR1 & Data Sovereignty & All core relational storage, vector storage, document indexing, and access-control checks run within the on-premise environment. Administrators can configure whether AI inference and embedding use local models or external APIs. When external APIs are used, only the minimum permission-filtered payload is transmitted. \\
 \addlinespace
 NFR2 & Performance & SQL generation must complete within 3 seconds. Meeting-room and schedule queries must respond within 500 ms. Route planning must return within 2 seconds. RAG vector retrieval should complete within 1 second after the index is ready, while full answer generation depends on the configured LLM endpoint. WebSocket progress updates must be delivered within 200 ms. Initial page load must not exceed 3 seconds. \\
@@ -67,8 +73,7 @@ NFR5 & Maintainability & Services must be independently deployable with clearly 
 \addlinespace
 NFR6 & Deployability & The entire platform must start with a single command. Database schema, seed data, and RAG metadata tables must be initialized automatically. Service dependencies must be resolved through health-check probes before dependent containers start. \\
 \bottomrule
-\end{tabularx}
-\end{table}
+\end{longtable}
 
 \subhead{3.4 Use Case Analysis}
 
