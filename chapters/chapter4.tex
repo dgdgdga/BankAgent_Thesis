@@ -8,12 +8,12 @@
 
 This platform adopts a five-layer architecture with high cohesion and low coupling, implementing one-way dependencies between layers: data is transmitted downwards via RESTful APIs, and long-lived connections are established upwards via WebSockets to proactively push events. This meets the requirements of banking systems for ``modularity,'' ``testability,'' and ``independent scalability.''
 
-The five-layer structure described above is shown in the diagram below.
+The five-layer structure is shown in Figure \ref{fig:five-layer}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig02_five_layer_arch.png}
-\caption{Five-Layer Logical System Architecture --- Web, Gateway, Business Service, AI Service, and Data Layers}
+\includegraphics[width=\textwidth]{figures/fig02_five_layer_arch_new.pdf}
+\caption{Five-Layer Architecture --- All Services with Internal Ports}
 \label{fig:five-layer}
 \end{figure}
 
