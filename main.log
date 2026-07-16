@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 11:13
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 11:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -494,68 +494,81 @@ Underfull \hbox (badness 1009) in paragraph at lines 120--121
 [21]
 File: figures/fig04_jwt_auth_flow.png Graphic file (type bmp)
 <figures/fig04_jwt_auth_flow.png>
- [22] [23] [24] [25] [26]
-Underfull \hbox (badness 10000) in paragraph at lines 219--219
+ [22]
+Underfull \hbox (badness 1609) in paragraph at lines 143--144
+[]\TU/TimesNewRoman(0)/m/n/12 After the user submits their email address on the
+ front end, the request reaches
+ []
+
+[23]
+Overfull \hbox (45.35764pt too wide) in paragraph at lines 145--146
+[]\TU/TimesNewRoman(0)/m/n/12 These architectural changes are formally document
+ed in \TU/lmtt/m/n/12 docs/email-verification-design.md\TU/TimesNewRoman(0)/m/n
+/12 ,
+ []
+
+[24] [25] [26]
+Underfull \hbox (badness 10000) in paragraph at lines 224--224
 []|\TU/TimesNewRoman(0)/m/n/10.95 Operational
  []
 
 
-Underfull \hbox (badness 2689) in paragraph at lines 219--219
+Underfull \hbox (badness 2689) in paragraph at lines 224--224
 []|\TU/TimesNewRoman(0)/m/n/10.95 Users, roles, departments, docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 219--220
+Underfull \hbox (badness 10000) in paragraph at lines 224--225
 []|\TU/TimesNewRoman(0)/m/n/10.95 Transactional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 219--220
+Underfull \hbox (badness 10000) in paragraph at lines 224--225
 \TU/TimesNewRoman(0)/m/n/10.95 ACID-compliant
  []
 
 
-Underfull \hbox (badness 3323) in paragraph at lines 220--220
+Underfull \hbox (badness 3323) in paragraph at lines 225--225
 []|\TU/TimesNewRoman(0)/m/n/10.95 Session tokens, rate limit coun-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 220--221
+Underfull \hbox (badness 10000) in paragraph at lines 225--226
 []|\TU/TimesNewRoman(0)/m/n/10.95 High-concurrency,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 220--221
+Underfull \hbox (badness 10000) in paragraph at lines 225--226
 \TU/TimesNewRoman(0)/m/n/10.95 sub-millisecond
  []
 
 
-Underfull \hbox (badness 2503) in paragraph at lines 221--221
+Underfull \hbox (badness 2503) in paragraph at lines 226--226
 []|\TU/TimesNewRoman(0)/m/n/10.95 PDF, DOCX, PPT files; Milvus
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 221--222
+Underfull \hbox (badness 10000) in paragraph at lines 226--227
 []|\TU/TimesNewRoman(0)/m/n/10.95 Document up-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 221--222
+Underfull \hbox (badness 10000) in paragraph at lines 226--227
 \TU/TimesNewRoman(0)/m/n/10.95 load/download,
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 221--222
+Underfull \hbox (badness 4779) in paragraph at lines 226--227
 \TU/TimesNewRoman(0)/m/n/10.95 RAG source docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 222--223
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
 []|\TU/TimesNewRoman(0)/m/n/10.95 Semantic approx-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 222--223
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
 \TU/TimesNewRoman(0)/m/n/10.95 imate nearest
  []
 
@@ -1214,6 +1227,6 @@ Here is how much of TeX's memory you used:
  36808 multiletter control sequences out of 15000+600000
  631653 words of font info for 87 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 78i,11n,96p,1253b,1190s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,11n,96p,1433b,1190s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on main.pdf (114 pages).
