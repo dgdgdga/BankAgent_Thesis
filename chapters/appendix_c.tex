@@ -1,40 +1,53 @@
-% APPENDIX C: USER MANUAL
+% APPENDIX C: USER MANUAL AND DEPLOYMENT GUIDE
 % ======================================================================
 \newpage
 \begin{center}
-{\fontsize{16}{19}\selectfont\textbf{Appendix C: User Manual (Summary)}}
+{\fontsize{16}{19}\selectfont\textbf{Appendix C: User Manual and Deployment Guide}}
 \end{center}
 
 \vspace{3mm}
 
-\noindent\textbf{Access and Login.} Navigate to http://167.172.82.161 and log in with your assigned credentials. Default test accounts: - admin / 123456 (System Administrator, full access, clearance Level 3) - credit\_mgr / 123456 (Credit Department Manager, clearance Level 2) - credit\_staff / 123456 (Credit Department Staff, clearance Level 1) - compliance\_mgr / 123456 (Compliance Department Manager, clearance Level 2) - compliance\_staff / 123456 (Compliance Staff, clearance Level 1). New users can register via the Register page with an email-format username and a 6-digit email verification code.
+\subhead{C.1 Online Demo}
 
-\vspace{2mm}
-\noindent\textbf{Main Dashboard.} The dashboard displays a welcome message with your username, a pending approval alert banner (for ROLE\_ADMIN and ROLE\_DEPT\_ADMIN, showing the count of pending HITL requests with a ``Review'' button), and a statistics overview with four cards: total users, online users (WebSocket connections), today's agent tasks processed, and pending approval requests.
+A live deployment of the platform is accessible at \texttt{https://bankagent.online}. This instance runs on a DigitalOcean Droplet with 2 vCPUs and 8 GB RAM. Given the resource constraints of a single shared server, the following limitations apply. The RAG embedding worker and Milvus vector database may respond more slowly than in a production environment, particularly during concurrent queries or full index rebuilds. The frontend build is served from a single Nginx instance without a CDN. The server may occasionally become unavailable during maintenance or if resource limits are reached. These limitations are inherent to a project demonstration deployment. In an enterprise production setting, each service would run on dedicated hardware with Kubernetes orchestration, autoscaling, and redundant storage, and the platform would comfortably handle its designed concurrency targets.
 
-\vspace{2mm}
-\noindent\textbf{Tool Agent (/app/tool).} The left panel has three tabs: Meeting (room search with date and capacity filters, and booking), Schedule (conflict detection by attendee with a visual timeline grid), and Route (origin/destination input with map rendering via Amap, showing a route polyline and step-by-step guidance). The right panel is the AI Assistant Copilot, a global chat panel.
+\subhead{C.2 Local Deployment}
 
-\vspace{2mm}
-\noindent\textbf{Code Agent (/app/code).} A three-step workflow: (1) enter a natural language query or select a quick template, (2) review the generated SQL in a code editor with model information, and (3) execute and view results in a data table with pagination. The result table shows columns, row count, the generated SQL, and execution time. A security rejection message is displayed if the SQL fails any validation layer.
+For the most responsive experience, evaluators may deploy the platform locally using Docker Compose. Full instructions are provided in the repository at \texttt{DEPLOYMENT\_GUIDE.md}. A summary follows.
 
-\vspace{2mm}
-\noindent\textbf{RAG Workbench (/app/rag).} Users can ask policy and document questions in natural language. The page sends the query to the RAG Agent, displays the generated answer, and lists citations with document/chunk identifiers, snippets, and similarity scores. The sidebar shows RAG readiness, embedding status, accessible documents, and recent index tasks. Users can inspect the documents they are allowed to retrieve from, open cited documents in the document reader, and submit an access request when a required document is outside their clearance scope. Administrators can rebuild the full RAG index or reprocess individual documents after document updates; the page polls the returned task ID until the maintenance job reaches success or failure.
+\textbf{Prerequisites.} Docker Desktop and Node.js must be installed. 16 GB RAM is recommended; the full stack runs 15 containers including Milvus, five Java microservices, two Python workers, Nginx, and supporting infrastructure. On machines with less RAM, the RAG Agent and embedding worker can be disabled by commenting out the corresponding services in \texttt{docker-compose.yml}; the remaining platform will operate normally.
 
-\vspace{2mm}
-\noindent\textbf{Documents (/app/dept-docs).} Two tabs: System Manuals (global documents) and Department Assets (clearance-controlled). Click a document to open a Zen Reader with markdown rendering and an auto-generated table of contents. Documents beyond your clearance level show ``Access Restricted'' with an ``Apply for Access'' button that submits a RAG\_APPLY notification. The document detail dialog also exposes RAG index status, chunk count, vectorId, embedding profile, and chunk text so administrators can verify whether a document has been correctly parsed and indexed.
+\textbf{Startup.} Build the frontend with \texttt{npm install \&\& npm run build} in the \texttt{web-ui} directory, then run \texttt{docker compose up --build -d} from the project root. The first build takes 15--30 minutes. Once all containers show \texttt{healthy} or \texttt{Up} status in \texttt{docker compose ps}, open \texttt{http://localhost} in a browser.
 
-\vspace{2mm}
-\noindent\textbf{Messages (/app/notification).} A three-column layout: left sidebar with filters (All, Unread, Pending Approvals, Sent), middle message list, and right detail panel. Type-specific renderers handle RAG\_APPLY approvals (with approve/deny buttons), SQL\_AUDIT records (with SQL code blocks), and BUG\_REPORT feedback.
+\textbf{Test accounts.} The following accounts are pre-seeded in the database:
 
-\vspace{2mm}
-\noindent\textbf{Register (/register).} New users can create an account with an email-format username and a 6-digit email verification code. The registration form requires the user to enter their email address, request a verification code (sent to their inbox, valid for 5 minutes), set a password, and confirm the code. Server-side rate limiting enforces a 60-second cooldown between code requests and a maximum of 5 code requests per email address per day.
+\begin{itemize}
+  \item \texttt{admin / 123456} --- System Administrator (clearance Level 3)
+  \item \texttt{credit\_mgr / 123456} --- Credit Department Manager (Level 2)
+  \item \texttt{credit\_staff / 123456} --- Credit Department Staff (Level 1)
+  \item \texttt{compliance\_mgr / 123456} --- Compliance Department Manager (Level 2)
+  \item \texttt{compliance\_staff / 123456} --- Compliance Department Staff (Level 1)
+\end{itemize}
 
-\vspace{2mm}
-\noindent\textbf{Administration (/app/admin/users, /app/admin/resources, /app/admin/my-dept).} User Management provides a searchable table of all users with filters for department, clearance level, and role. Admins can assign roles, toggle account status, set clearance levels, and manage department membership. Resource Management lets admins manage meeting rooms and view all schedules. My Department (for ROLE\_DEPT\_ADMIN) shows members within their own department with the ability to view and manage membership.
+\subhead{C.3 Navigating the Platform}
 
-\vspace{2mm}
-\noindent\textbf{Settings (/app/settings).} Two configuration dialogs: Profile (update your display name through PUT /user/profile) and Security (change your password with current password verification, a new password must be at least 3 characters via PUT /user/password).
+\textbf{Main Dashboard.} Displays a welcome message, a pending approval alert banner for administrators, and a statistics overview. The \textbf{Copilot} floating widget (blue icon, bottom-right corner) is accessible from every page and serves as the unified natural language interface. Users can type a question into the Copilot to query databases, search policies, book meeting rooms, or plan routes without navigating to a specific agent page.
+
+\textbf{Tool Agent (/app/tool).} Three tabs: Meeting (room search with date and capacity filters, and booking), Schedule (conflict detection by attendee with a visual timeline), and Route (origin and destination input with Amap map rendering and step-by-step guidance).
+
+\textbf{Code Agent (/app/code).} A three-step workflow: enter a natural language query, review the generated SQL in a code editor, then execute and view results in a paginated data table. If the SQL fails any validation layer, a security rejection message is displayed.
+
+\textbf{RAG Workbench (/app/rag).} Users can ask policy and document questions. The page displays generated answers with citations showing document identifiers, snippets, and similarity scores. Administrators can rebuild the full RAG index or reprocess individual documents. Users can submit access requests for documents outside their clearance scope.
+
+\textbf{Documents (/app/dept-docs).} Two tabs: System Manuals (global documents) and Department Assets (clearance-controlled). Documents beyond the user's clearance level show ``Access Restricted'' with an option to apply for access via the HITL escalation workflow.
+
+\textbf{Messages (/app/notification).} A three-column layout with filters (All, Unread, Pending Approvals, Sent). Type-specific renderers handle RAG\_APPLY approvals with approve/deny buttons, SQL\_AUDIT records with SQL code blocks, and BUG\_REPORT feedback.
+
+\textbf{Registration (/register).} New users register with an email-format username and a 6-digit verification code delivered via the Resend API. Rate limiting enforces a 60-second cooldown between code requests and a daily cap per email address.
+
+\textbf{Administration (/app/admin/users, /app/admin/resources, /app/admin/my-dept).} User Management provides a searchable table with role assignment, account status toggling, clearance level adjustment, and department assignment. Resource Management lets administrators manage meeting rooms and view all schedules. My Department (for ROLE\_DEPT\_ADMIN) shows members within the administrator's own department.
+
+\textbf{Settings (/app/settings).} Profile editing and password change dialogs.
 
 \newpage
 
