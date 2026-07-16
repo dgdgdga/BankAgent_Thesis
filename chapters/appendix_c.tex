@@ -17,21 +17,30 @@ For the most responsive experience, evaluators may deploy the platform locally u
 
 \textbf{Prerequisites.} Docker Desktop and Node.js must be installed. 16 GB RAM is recommended; the full stack runs 15 containers including Milvus, five Java microservices, two Python workers, Nginx, and supporting infrastructure. On machines with less RAM, the RAG Agent and embedding worker can be disabled by commenting out the corresponding services in \texttt{docker-compose.yml}; the remaining platform will operate normally.
 
-\textbf{Startup.} Build the frontend with \texttt{npm install \&\& npm run build} in the \texttt{web-ui} directory, then run \texttt{docker compose up --build -d} from the project root. The first build takes 15--30 minutes. Once all containers show \texttt{healthy} or \texttt{Up} status in \texttt{docker compose ps}, open \texttt{http://localhost} in a browser.
+\textbf{Startup.} The following commands build and start the platform:
+
+\begin{lstlisting}
+cd web-ui
+npm install && npm run build
+cd ..
+docker compose up --build -d
+\end{lstlisting}
+
+The first build takes 15--30 minutes. Once all containers show \texttt{healthy} or \texttt{Up} status in \texttt{docker compose ps}, open \texttt{http://localhost} in a browser.
 
 \textbf{Test accounts.} The following accounts are pre-seeded in the database:
 
-\begin{itemize}
-  \item \texttt{admin / 123456} --- System Administrator (clearance Level 3)
-  \item \texttt{credit\_mgr / 123456} --- Credit Department Manager (Level 2)
-  \item \texttt{credit\_staff / 123456} --- Credit Department Staff (Level 1)
-  \item \texttt{compliance\_mgr / 123456} --- Compliance Department Manager (Level 2)
-  \item \texttt{compliance\_staff / 123456} --- Compliance Department Staff (Level 1)
-\end{itemize}
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,aboveskip=2pt,belowskip=2pt]
+admin           / 123456    System Administrator (clearance Level 3)
+credit_mgr      / 123456    Credit Department Manager (Level 2)
+credit_staff    / 123456    Credit Department Staff (Level 1)
+compliance_mgr  / 123456    Compliance Department Manager (Level 2)
+compliance_staff / 123456   Compliance Department Staff (Level 1)
+\end{lstlisting}
 
 \subhead{C.3 Navigating the Platform}
 
-\textbf{Main Dashboard.} Displays a welcome message, a pending approval alert banner for administrators, and a statistics overview. The \textbf{Copilot} floating widget (blue icon, bottom-right corner) is accessible from every page and serves as the unified natural language interface. Users can type a question into the Copilot to query databases, search policies, book meeting rooms, or plan routes without navigating to a specific agent page.
+\textbf{Main Dashboard.} Displays a welcome message, a pending approval alert banner for administrators, and a statistics overview. The Copilot floating widget (blue icon, bottom-right corner) is accessible from every page and serves as the unified natural language interface. Users can type a question into the Copilot to query databases, search policies, book meeting rooms, or plan routes without navigating to a specific agent page.
 
 \textbf{Tool Agent (/app/tool).} Three tabs: Meeting (room search with date and capacity filters, and booking), Schedule (conflict detection by attendee with a visual timeline), and Route (origin and destination input with Amap map rendering and step-by-step guidance).
 
