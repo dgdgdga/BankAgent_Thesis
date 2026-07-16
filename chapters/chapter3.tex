@@ -46,12 +46,13 @@ NFR6 -- Deployability. The system is deployed with one Docker Compose command. T
 
 \subhead{3.4 Use Case Analysis}
 
-Use case analysis captures how users interact with the multi-agent platform. Figure 1 shows the use cases for the Tool Agent module. Three main actors interact with the system. The first group is end users. They have the role ROLE\_USER. They can book meeting rooms, check schedule conflicts and plan routes. The second group is administrators. They have the role ROLE\_ADMIN. They can also manage meeting room and schedule resources. Besides, they can use dedicated admin controllers to do this. There are also two external system actors. One is the DeepSeek LLM. It classifies what the user wants and pulls out parameters from natural language requests. The other is the Amap API. It converts addresses into coordinate and can also calculate routes.
+Use case analysis captures how users interact with the multi-agent platform. Figure \ref{fig:tool-agent-usecase} shows the use cases for the Tool Agent module. Three main actors interact with the system. The first group is end users. They have the role ROLE\_USER. They can book meeting rooms, check schedule conflicts and plan routes. The second group is administrators. They have the role ROLE\_ADMIN. They can also manage meeting room and schedule resources. Besides, they can use dedicated admin controllers to do this. There are also two external system actors. One is the DeepSeek LLM. It classifies what the user wants and pulls out parameters from natural language requests. The other is the Amap API. It converts addresses into coordinate and can also calculate routes.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig01_tool_agent_usecase.png}
 \caption{Tool Agent Use Case Diagram --- Meeting Room, Schedule Conflict, and Route Planning}
+\label{fig:tool-agent-usecase}
 \end{figure}
 
 There are three agent modules. Their use cases are as following.
@@ -62,9 +63,9 @@ UC2 -- Policy Compliance Query (RAG Agent). A compliance officer asks a question
 
 UC3 -- Meeting Room Booking (Tool Agent). An administrative staff member types a request into the AI Assistant panel. The request is: "Book a meeting room on the 3rd floor for 10 people tomorrow morning at 10 AM." The frontend opens a WebSocket connection. It sends the query. It displays progress. The DeepSeekService classifies the request as MEETING\_QUERY. It extracts the parameters. The parameters are floor 3, capacity 10, and time tomorrow 10:00 AM. The result is sent to the MeetingAgent component. MeetingAgent queries MySQL for rooms that match. It checks the floor and capacity, and then cross-references Redis for time availability. The available options are displayed.
 
-UC4 -- Schedule Conflict Detection (Tool Agent). A user enters a request: "Check if Zhang and Li are free next Tuesday 2-4 PM." The AI identifies the user's intent and then extracts the attendees’ names and time range. The ScheduleAgent component calls API and sends the attendee list. The ToolController will check each attendee's schedule. The response shows if conflicts exist, identifies the conflicting users and gives the conflict type with suggested alternatives.
+UC4 -- Schedule Conflict Detection (Tool Agent). A user enters a request: "Check if Zhang and Li are free next Tuesday 2-4 PM." The AI identifies the user's intent and then extracts the attendees' names and time range. The ScheduleAgent component calls API and sends the attendee list. The ToolController will check each attendee's schedule. The response shows if conflicts exist, identifies the conflicting users and gives the conflict type with suggested alternatives.
 
-UC5 -- Document Access Escalation (User Center). A Credit Department staff member has clearance Level 1. They try to access a Level-3 confidential risk evaluation document. The method SysDocumentServiceImpl.listDocumentsForUser() checks the access rule. The document’s department matches the user's department. But the user's clearance level is 1. This is lower than the document's clearance which is 3. So the document is not accessible. The user can then submit an escalation request, which will create a notification. The notification status starts as Pending and goes to a department administrator for review. The status can be changed to Approved. The approval creates a record that can be audited. Then the user can access the document.
+UC5 -- Document Access Escalation (User Center). A Credit Department staff member has clearance Level 1. They try to access a Level-3 confidential risk evaluation document. The method SysDocumentServiceImpl.listDocumentsForUser() checks the access rule. The document's department matches the user's department. But the user's clearance level is 1. This is lower than the document's clearance which is 3. So the document is not accessible. The user can then submit an escalation request, which will create a notification. The notification status starts as Pending and goes to a department administrator for review. The status can be changed to Approved. The approval creates a record that can be audited. Then the user can access the document.
 
 \newpage
 

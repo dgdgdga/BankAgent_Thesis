@@ -18,9 +18,10 @@ This appendix documents the complete database schema for the agent\_platform dat
 }
 
 % --- Table A1 ---
-\begin{center}
-\textbf{Table A1: meeting\_room --- Meeting room resources}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{meeting\_room --- Meeting room resources}
+\label{tab:schema-meeting-room}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -37,13 +38,15 @@ update\_time & DATETIME                  & Auto-updated on modification \\
 deleted     & INT, DEFAULT 0             & Logical delete flag \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A2 ---
-\begin{center}
-\textbf{Table A2: meeting\_schedule --- Booking and schedule records}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{meeting\_schedule --- Booking and schedule records}
+\label{tab:schema-meeting-schedule}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -60,13 +63,15 @@ update\_time & DATETIME                  & Auto-updated on modification \\
 deleted     & INT, DEFAULT 0             & Logical delete flag \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A3 ---
-\begin{center}
-\textbf{Table A3: sys\_user --- User accounts}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_user --- User accounts}
+\label{tab:schema-sys-user}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -84,6 +89,7 @@ update\_time     & DATETIME                       & Auto-updated on modification
 deleted         & TINYINT, NOT NULL, DEFAULT 0    & Logical delete (0=normal, 1=deleted) \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{1mm}
 \noindent\textit{Seed accounts (all passwords: 123456):} admin (ROLE\_ADMIN, clearance L3); credit\_mgr (ROLE\_DEPT\_ADMIN, L2, dept\_id=1); credit\_staff (ROLE\_USER, L1, dept\_id=1); compliance\_mgr (ROLE\_DEPT\_ADMIN, L2, dept\_id=2); compliance\_staff (ROLE\_USER, L1, dept\_id=2).
@@ -91,9 +97,10 @@ deleted         & TINYINT, NOT NULL, DEFAULT 0    & Logical delete (0=normal, 1=
 \vspace{4mm}
 
 % --- Table A4 ---
-\begin{center}
-\textbf{Table A4: sys\_role --- System roles}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_role --- System roles}
+\label{tab:schema-sys-role}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -108,13 +115,15 @@ update\_time & DATETIME                    & Auto-updated on modification \\
 deleted     & TINYINT, NOT NULL, DEFAULT 0 & Logical delete flag \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A5 ---
-\begin{center}
-\textbf{Table A5: sys\_permission --- Granular permissions}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_permission --- Granular permissions}
+\label{tab:schema-sys-permission}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -131,6 +140,7 @@ update\_time   & DATETIME                      & Auto-updated on modification \\
 deleted       & TINYINT, NOT NULL, DEFAULT 0   & Logical delete flag \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{1mm}
 \noindent\textit{Seed (6):} user:view, user:role, user:status, role:view, task:submit, task:query.
@@ -138,9 +148,10 @@ deleted       & TINYINT, NOT NULL, DEFAULT 0   & Logical delete flag \\
 \vspace{4mm}
 
 % --- Table A6 ---
-\begin{center}
-\textbf{Table A6: sys\_user\_role \& sys\_role\_permission --- Association tables}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_user\_role \& sys\_role\_permission --- Association tables}
+\label{tab:schema-association}
 \vspace{2mm}
 
 \noindent\textit{sys\_user\_role}
@@ -166,13 +177,15 @@ perm\_id & BIGINT, NOT NULL & FK to sys\_permission.id \\
 \multicolumn{2}{@{}l}{\textbf{PRIMARY KEY}} & (role\_id, perm\_id) \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A7 ---
-\begin{center}
-\textbf{Table A7: sys\_department --- Organizational structure}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_department --- Organizational structure}
+\label{tab:schema-sys-department}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -185,6 +198,7 @@ status      & INT, DEFAULT 1               & 1=enabled, 0=disabled \\
 create\_time & DATETIME                    & Record creation timestamp \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{1mm}
 \noindent\textit{Seed (6):} Credit Department, Compliance Department, Asset Management Department, Retail Banking Department, Investment Banking Department, Risk Control Department.
@@ -192,9 +206,10 @@ create\_time & DATETIME                    & Record creation timestamp \\
 \vspace{4mm}
 
 % --- Table A8 ---
-\begin{center}
-\textbf{Table A8: sys\_document --- Knowledge base documents}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_document --- Knowledge base documents}
+\label{tab:schema-sys-document}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -211,13 +226,15 @@ parse\_status   & VARCHAR(20)                     & PENDING / DONE / FAILED \\
 create\_time     & DATETIME                       & Record creation timestamp \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A9 ---
-\begin{center}
-\textbf{Table A9: sys\_notification --- Multi-type notification system}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_notification --- Multi-type notification system}
+\label{tab:schema-sys-notification}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -238,13 +255,15 @@ update\_time & DATETIME                     & Auto-updated on modification \\
 deleted     & TINYINT, NOT NULL, DEFAULT 0  & Logical delete flag \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A10 ---
-\begin{center}
-\textbf{Table A10: sys\_config --- System configuration}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{sys\_config --- System configuration}
+\label{tab:schema-sys-config}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -256,13 +275,15 @@ description & VARCHAR(250)                & Human-readable description \\
 update\_time & DATETIME                   & Auto-updated on modification \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A11 ---
-\begin{center}
-\textbf{Table A11: task\_record --- Agent task lifecycle tracking}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{task\_record --- Agent task lifecycle tracking}
+\label{tab:schema-task-record}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -280,13 +301,15 @@ created\_at   & DATETIME                           & Record creation timestamp \
 updated\_at   & DATETIME                           & Auto-updated on modification \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \vspace{4mm}
 
 % --- Table A12: RAG tables ---
-\begin{center}
-\textbf{Table A12: RAG knowledge base tables}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{RAG knowledge base tables}
+\label{tab:schema-rag}
 \vspace{2mm}
 
 \noindent\textit{rag\_knowledge\_base}
@@ -402,5 +425,6 @@ create\_time & DATETIME                           & Record creation timestamp \\
 update\_time & DATETIME                           & Auto-updated on modification \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 \newpage

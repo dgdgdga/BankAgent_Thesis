@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 09:50
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 10:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -430,678 +430,1107 @@ File: figures/fig02_five_layer_arch.png Graphic file (type bmp)
  [13]
 File: figures/fig03_data_flow.png Graphic file (type bmp)
 <figures/fig03_data_flow.png>
- [14] [15]
-Underfull \hbox (badness 10000) in paragraph at lines 77--77
-[]|\TU/TimesNewRoman(0)/m/n/10.95 International-
- []
+ [14]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 67.
 
-[16]
-Underfull \hbox (badness 10000) in paragraph at lines 113--113
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Spring Boot 3.x +
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 114--114
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Security Frame-
+Underfull \hbox (badness 10000) in paragraph at lines 72--72
+[]|\TU/TimesNewRoman(0)/m/n/12 State Manage-
  []
 
 
-Underfull \hbox (badness 1248) in paragraph at lines 115--116
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Session caching, rate limit counters, metadat
-a
+Underfull \hbox (badness 10000) in paragraph at lines 75--76
+[]|\TU/TimesNewRoman(0)/m/n/12 Sub-second HMR during development,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 116--116
-[]|\TU/TimesNewRoman(0)/m/n/10.95 AI Integration
+Underfull \hbox (badness 10000) in paragraph at lines 78--78
+[]|\TU/TimesNewRoman(0)/m/n/12 International-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 116--116
-[]|\TU/TimesNewRoman(0)/m/n/10.95 DeepSeek API
+Underfull \hbox (badness 10000) in paragraph at lines 79--79
+[]|\TU/TimesNewRoman(0)/m/n/12 Map Visualiza-
+ []
+
+[15] [16]
+Underfull \hbox (badness 2680) in paragraph at lines 114--114
+[]|\TU/TimesNewRoman(0)/m/n/12 Spring Boot 3.x +
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 116--117
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Intent routing (MEET-
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+[]|\TU/TimesNewRoman(0)/m/n/12 Security Frame-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 116--117
-\TU/TimesNewRoman(0)/m/n/10.95 ING/SCHEDULE/ROUTE), parameter ex-
+Underfull \hbox (badness 1057) in paragraph at lines 115--115
+[]|\TU/TimesNewRoman(0)/m/n/12 Spring Security 6.x
  []
 
 
-Underfull \hbox (badness 1490) in paragraph at lines 117--118
-[]|\TU/TimesNewRoman(0)/m/n/10.95 LLM-based SQL generation from natural lan-
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
+[]|\TU/TimesNewRoman(0)/m/n/12 Stateless authentication, RBAC with
  []
 
 
-Underfull \hbox (badness 1005) in paragraph at lines 119--119
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Python FastAPI (rag-
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
+\TU/TimesNewRoman(0)/m/n/12 @PreAuthorize, BCrypt password hash-
  []
 
 
-Underfull \hbox (badness 1009) in paragraph at lines 121--122
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Semantic ANN search for RAG document re-
+Underfull \hbox (badness 10000) in paragraph at lines 117--117
+[]|\TU/TimesNewRoman(0)/m/n/12 AI Integration
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 117--117
+[]|\TU/TimesNewRoman(0)/m/n/12 DeepSeek API
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 117--118
+[]|\TU/TimesNewRoman(0)/m/n/12 Intent routing (MEET-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 117--118
+\TU/TimesNewRoman(0)/m/n/12 ING/SCHEDULE/ROUTE), parameter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
+[]|\TU/TimesNewRoman(0)/m/n/12 Python FastAPI
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 119--119
+[]|\TU/TimesNewRoman(0)/m/n/12 Spring Boot 3.x
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 120--120
+[]|\TU/TimesNewRoman(0)/m/n/12 Embedding
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 120--120
+[]|\TU/TimesNewRoman(0)/m/n/12 Python FastAPI
+ []
+
+
+Underfull \hbox (badness 1708) in paragraph at lines 120--121
+[]|\TU/TimesNewRoman(0)/m/n/12 bge-m3 embedding generation, Markdown
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 121--121
+[]|\TU/TimesNewRoman(0)/m/n/12 Document Pars-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 122--122
+[]|\TU/TimesNewRoman(0)/m/n/12 Milvus Java SDK
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 123--124
+[]|\TU/TimesNewRoman(0)/m/n/12 Document file storage (PDF/DOCX/PPT),
+ []
+
+
+Underfull \hbox (badness 1226) in paragraph at lines 125--126
+[]|\TU/TimesNewRoman(0)/m/n/12 Geocoding (multi-level fallback), direction
  []
 
 [17]
 File: figures/fig04_jwt_auth_flow.png Graphic file (type bmp)
 <figures/fig04_jwt_auth_flow.png>
- [18] [19] [20] [21]
-Underfull \hbox (badness 10000) in paragraph at lines 217--217
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Operational
- []
-
-
-Underfull \hbox (badness 2689) in paragraph at lines 217--217
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Users, roles, departments, docu-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 217--218
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Transactional,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 217--218
-\TU/TimesNewRoman(0)/m/n/10.95 ACID-compliant
- []
-
-
-Underfull \hbox (badness 3323) in paragraph at lines 218--218
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Session tokens, rate limit coun-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 218--219
-[]|\TU/TimesNewRoman(0)/m/n/10.95 High-concurrency,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 218--219
-\TU/TimesNewRoman(0)/m/n/10.95 sub-millisecond
- []
-
-
-Underfull \hbox (badness 2503) in paragraph at lines 219--219
-[]|\TU/TimesNewRoman(0)/m/n/10.95 PDF, DOCX, PPT files; Milvus
+ [18] [19] [20]
+Underfull \hbox (badness 10000) in paragraph at lines 219--219
+[]|\TU/TimesNewRoman(0)/m/n/12 Operational
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 219--220
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Document up-
+[]|\TU/TimesNewRoman(0)/m/n/12 Transactional,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 219--220
-\TU/TimesNewRoman(0)/m/n/10.95 load/download,
+\TU/TimesNewRoman(0)/m/n/12 ACID-compliant
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 219--220
-\TU/TimesNewRoman(0)/m/n/10.95 RAG source docu-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 220--221
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Semantic approx-
+Underfull \hbox (badness 10000) in paragraph at lines 220--220
+\TU/TimesNewRoman(0)/m/n/12 ters, metadata cache (hash),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 220--221
-\TU/TimesNewRoman(0)/m/n/10.95 imate nearest
+[]|\TU/TimesNewRoman(0)/m/n/12 High-concurrency,
  []
 
-[22] [23]) (./chapters/chapter5.tex
+
+Underfull \hbox (badness 10000) in paragraph at lines 220--221
+\TU/TimesNewRoman(0)/m/n/12 sub-millisecond
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--222
+[]|\TU/TimesNewRoman(0)/m/n/12 Document up-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--222
+\TU/TimesNewRoman(0)/m/n/12 load/download,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--222
+[]|\TU/TimesNewRoman(0)/m/n/12 Document chunk embeddings
+ []
+
+
+Underfull \hbox (badness 1533) in paragraph at lines 222--223
+[]|\TU/TimesNewRoman(0)/m/n/12 Semantic approxi-
+ []
+
+[21] [22] [23]) (./chapters/chapter5.tex
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
  [24] [25] [26] [27] [28]
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
+Underfull \hbox (badness 10000) in paragraph at lines 241--241
 []|\TU/TimesNewRoman(0)/m/n/10.95 toolType, naturalLan-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 241--242
 []|\TU/TimesNewRoman(0)/m/n/10.95 Unified AI execution —
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 241--242
 \TU/TimesNewRoman(0)/m/n/10.95 DeepSeek LLM classifies
  []
 
 
-Underfull \hbox (badness 2057) in paragraph at lines 234--234
+Underfull \hbox (badness 2057) in paragraph at lines 242--242
 []|\TU/TimesNewRoman(0)/m/n/10.95 startTime, endTime, ca-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--235
+Underfull \hbox (badness 10000) in paragraph at lines 243--243
 []|\TU/TimesNewRoman(0)/m/n/10.95 /tool/meeting-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--235
+Underfull \hbox (badness 10000) in paragraph at lines 243--243
 []|\TU/TimesNewRoman(0)/m/n/10.95 roomId, booker, start-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--236
+Underfull \hbox (badness 10000) in paragraph at lines 243--244
 []|\TU/TimesNewRoman(0)/m/n/10.95 Atomic check-then-insert
  []
 
 
-Underfull \hbox (badness 4479) in paragraph at lines 235--236
+Underfull \hbox (badness 4479) in paragraph at lines 243--244
 \TU/TimesNewRoman(0)/m/n/10.95 room booking with conflict
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 236--236
+Underfull \hbox (badness 10000) in paragraph at lines 244--244
 []|\TU/TimesNewRoman(0)/m/n/10.95 attendees[], startTime,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 236--237
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
 []|\TU/TimesNewRoman(0)/m/n/10.95 Check schedule conflicts
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 236--237
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
 \TU/TimesNewRoman(0)/m/n/10.95 by attendee list via Redis
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--238
+Underfull \hbox (badness 10000) in paragraph at lines 245--246
 []|\TU/TimesNewRoman(0)/m/n/10.95 Create personal schedule
  []
 
 
-Underfull \hbox (badness 2591) in paragraph at lines 237--238
+Underfull \hbox (badness 2591) in paragraph at lines 245--246
 \TU/TimesNewRoman(0)/m/n/10.95 (dual-write: MySQL room_-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 238--238
+Underfull \hbox (badness 10000) in paragraph at lines 246--246
 []|\TU/TimesNewRoman(0)/m/n/10.95 userId, eventId, start-
  []
 
 
-Underfull \hbox (badness 2088) in paragraph at lines 240--241
+Underfull \hbox (badness 2088) in paragraph at lines 248--249
 \TU/TimesNewRoman(0)/m/n/10.95 users on a given date from
  []
 
 
-Underfull \hbox (badness 3000) in paragraph at lines 241--242
+Underfull \hbox (badness 3000) in paragraph at lines 249--250
 \TU/TimesNewRoman(0)/m/n/10.95 ings and personal schedules
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 242--242
+Underfull \hbox (badness 10000) in paragraph at lines 250--250
 []|\TU/TimesNewRoman(0)/m/n/10.95 /tool/my-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 242--242
+Underfull \hbox (badness 10000) in paragraph at lines 250--250
 []|\TU/TimesNewRoman(0)/m/n/10.95 X-User-Name header,
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 243--243
+Underfull \hbox (badness 1546) in paragraph at lines 251--251
 []|\TU/TimesNewRoman(0)/m/n/10.95 from, to, mode (default
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 229--247
-[][]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 229--247
-
  []
 
 [29]
 File: figures/fig06_schedule_conflict.png Graphic file (type bmp)
 <figures/fig06_schedule_conflict.png>
- [30] [31]
+ [30] [31] [32] [33]
 File: figures/fig07_route_planning.png Graphic file (type bmp)
 <figures/fig07_route_planning.png>
- [32]
+ [34]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 403.
+(Font)              <7> on input line 419.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 403.
+(Font)              <5> on input line 419.
 
-Overfull \hbox (6.54675pt too wide) in paragraph at lines 403--413
-[][]
+Overfull \hbox (6.54675pt too wide) in paragraph at lines 419--429
+ [][] 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 403--413
-
- []
-
-[33] [34]
-Underfull \hbox (badness 3138) in paragraph at lines 485--485
+[35] [36]
+Underfull \hbox (badness 3138) in paragraph at lines 503--503
 []|\TU/TimesNewRoman(0)/m/n/10.95 1 – Meta-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 485--485
+Underfull \hbox (badness 10000) in paragraph at lines 503--503
 \TU/TimesNewRoman(0)/m/n/10.95 data Ex-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 485--485
+Underfull \hbox (badness 10000) in paragraph at lines 503--503
 \TU/TimesNewRoman(0)/m/n/10.95 for table/column defi-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 485--485
+Underfull \hbox (badness 10000) in paragraph at lines 503--503
 \TU/TimesNewRoman(0)/m/n/10.95 nitions; cache as JSON
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 485--485
+Underfull \hbox (badness 10000) in paragraph at lines 503--503
 \TU/TimesNewRoman(0)/m/n/10.95 in Redis (key: code_-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 486--486
+Underfull \hbox (badness 10000) in paragraph at lines 504--504
 []|\TU/TimesNewRoman(0)/m/n/10.95 2 – SQL
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 486--486
+Underfull \hbox (badness 10000) in paragraph at lines 504--504
 []|\TU/TimesNewRoman(0)/m/n/10.95 HTTP POST {question}
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 487--487
+Underfull \hbox (badness 10000) in paragraph at lines 505--505
 []|\TU/TimesNewRoman(0)/m/n/10.95 3 – SQL
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 487--487
+Underfull \hbox (badness 10000) in paragraph at lines 505--505
 \TU/TimesNewRoman(0)/m/n/10.95 whitelist, (5) complexity
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 488--488
+Underfull \hbox (badness 10000) in paragraph at lines 506--506
 []|\TU/TimesNewRoman(0)/m/n/10.95 4 – SQL
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 488--488
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Re-validate (defense
+Underfull \hbox (badness 10000) in paragraph at lines 506--506
+[]|\TU/TimesNewRoman(0)/m/n/10.95 Re-validate (defense in
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 488--488
-\TU/TimesNewRoman(0)/m/n/10.95 in depth) $\OMS/cmsy/m/n/10.95 !$ \TU/TimesNewRo
-man(0)/m/n/10.95 execute
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 488--488
-\TU/TimesNewRoman(0)/m/n/10.95 via JdbcTemplate with
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 481--492
-
+Underfull \hbox (badness 10000) in paragraph at lines 506--506
+\TU/TimesNewRoman(0)/m/n/10.95 Template with Prepared-
  []
 
 File: figures/fig08_code_agent_usecase.png Graphic file (type bmp)
 <figures/fig08_code_agent_usecase.png>
-[35]
+[37] [38]
 File: figures/fig09_sql_validation.png Graphic file (type bmp)
 <figures/fig09_sql_validation.png>
- [36] [37] [38] [39]
-Underfull \hbox (badness 1629) in paragraph at lines 732--732
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Word-boundary regex
+ [39] [40] [41] [42]
+Underfull \hbox (badness 2253) in paragraph at lines 761--762
+[]|\TU/TimesNewRoman(0)/b/n/12 Action on Viola-
  []
 
 
-Underfull \hbox (badness 3713) in paragraph at lines 732--732
-\TU/TimesNewRoman(0)/m/n/10.95 DATE, ALTER, TRUNCATE,
+Underfull \hbox (badness 1303) in paragraph at lines 763--763
+[]|\TU/TimesNewRoman(0)/m/n/12 1. Opera-
  []
 
 
-Underfull \hbox (badness 3250) in paragraph at lines 732--732
-\TU/TimesNewRoman(0)/m/n/10.95 CREATE, EXEC, EXECUTE,
+Underfull \hbox (badness 10000) in paragraph at lines 763--764
+[]|\TU/TimesNewRoman(0)/m/n/12 Block execution,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 732--733
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Block execution,
+Underfull \hbox (badness 7631) in paragraph at lines 763--764
+\TU/TimesNewRoman(0)/m/n/12 return error with
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 732--733
-\TU/TimesNewRoman(0)/m/n/10.95 identify forbidden
+Underfull \hbox (badness 10000) in paragraph at lines 763--764
+\TU/TimesNewRoman(0)/m/n/12 permitted opera-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 733--733
-[]|\TU/TimesNewRoman(0)/m/n/10.95 3. Table
+Underfull \hbox (badness 10000) in paragraph at lines 764--764
+[]|\TU/TimesNewRoman(0)/m/n/12 2. Key-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 733--734
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Block execution,
+Underfull \hbox (badness 10000) in paragraph at lines 764--764
+[]|\TU/TimesNewRoman(0)/m/n/12 Word-boundary
  []
 
 
-Underfull \hbox (badness 2050) in paragraph at lines 733--734
-\TU/TimesNewRoman(0)/m/n/10.95 show allowed table
+Underfull \hbox (badness 4765) in paragraph at lines 764--764
+[]|\TU/TimesNewRoman(0)/m/n/12 DROP, DELETE, INSERT,
  []
 
 
-Underfull \hbox (badness 1337) in paragraph at lines 734--734
-[]|\TU/TimesNewRoman(0)/m/n/10.95 4. Column
+Underfull \hbox (badness 3746) in paragraph at lines 764--764
+\TU/TimesNewRoman(0)/m/n/12 UPDATE, ALTER, TRUN-
  []
 
 
-Underfull \hbox (badness 6125) in paragraph at lines 734--734
-\TU/TimesNewRoman(0)/m/n/10.95 table column defini-
+Underfull \hbox (badness 10000) in paragraph at lines 764--764
+\TU/TimesNewRoman(0)/m/n/12 CATE, CREATE, EXEC,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 734--735
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Block execution,
+Underfull \hbox (badness 10000) in paragraph at lines 764--764
+\TU/TimesNewRoman(0)/m/n/12 LOAD_- FILE, OUTFILE,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 734--735
-\TU/TimesNewRoman(0)/m/n/10.95 identify invalid
+Underfull \hbox (badness 10000) in paragraph at lines 764--765
+[]|\TU/TimesNewRoman(0)/m/n/12 Block execution,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 735--736
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Block execution,
+Underfull \hbox (badness 3838) in paragraph at lines 764--765
+\TU/TimesNewRoman(0)/m/n/12 identify forbidden
  []
 
-[40] [41] [42] [43] [44] [45] [46]) (./chapters/chapter5bis_copilot.tex
+
+Underfull \hbox (badness 5802) in paragraph at lines 765--765
+[]|\TU/TimesNewRoman(0)/m/n/12 3. Table
+ []
+
+
+Underfull \hbox (badness 4291) in paragraph at lines 765--765
+[]|\TU/TimesNewRoman(0)/m/n/12 FROM/JOIN tables
+ []
+
+
+Underfull \hbox (badness 3895) in paragraph at lines 765--765
+\TU/TimesNewRoman(0)/m/n/12 vs. information_-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 765--766
+[]|\TU/TimesNewRoman(0)/m/n/12 Block execution,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 766--766
+[]|\TU/TimesNewRoman(0)/m/n/12 SELECT columns
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 766--766
+\TU/TimesNewRoman(0)/m/n/12 vs. table column
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 766--766
+[]|\TU/TimesNewRoman(0)/m/n/12 Per referenced table from
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 766--766
+\TU/TimesNewRoman(0)/m/n/12 metadata cache; skip on
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 766--767
+[]|\TU/TimesNewRoman(0)/m/n/12 Block execution,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 766--767
+\TU/TimesNewRoman(0)/m/n/12 identify invalid
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 767--767
+[]|\TU/TimesNewRoman(0)/m/n/12 5. Com-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 767--768
+[]|\TU/TimesNewRoman(0)/m/n/12 Block execution,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 767--768
+\TU/TimesNewRoman(0)/m/n/12 show actual vs.
+ []
+
+[43] [44] [45] [46] [47] [48] [49] [50]) (./chapters/chapter5bis_copilot.tex
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
 
-[47]
-Overfull \hbox (47.99997pt too wide) in alignment at lines 60--60
+[51]
+Overfull \hbox (47.99997pt too wide) in alignment at lines 62--62
 [][][][] 
  []
 
-[48] [49] [50]
-Overfull \hbox (18.43506pt too wide) in paragraph at lines 136--137
+[52] [53] [54]
+Overfull \hbox (18.43506pt too wide) in paragraph at lines 140--141
 []\TU/TimesNewRoman(0)/m/n/10.95 The Copilot unified all AI provider configurat
 ion under the user-service’s \TU/lmtt/m/n/10.95 SystemConfigController\TU/Times
 NewRoman(0)/m/n/10.95 .
  []
 
-[51]) (./chapters/chapter6.tex
+[55]) (./chapters/chapter6.tex
 Underfull \hbox (badness 1571) in paragraph at lines 9--10
 []\TU/TimesNewRoman(0)/m/n/10.95 The user center (user service, port 8081) inte
 grates identity management, access control,
  []
 
-[52]
-Underfull \hbox (badness 5374) in paragraph at lines 94--94
+[56]
+Overfull \vbox (107.3069pt too high) has occurred while \output is active []
+
+
+[57]
+Underfull \hbox (badness 5374) in paragraph at lines 96--96
 []|\TU/TimesNewRoman(0)/m/n/10.95 Agent error, timeout, or 
  []
 
-[53] [54]
-Overfull \hbox (11.94124pt too wide) in paragraph at lines 137--137
+[58]
+Overfull \hbox (11.94124pt too wide) in paragraph at lines 143--143
 \TU/lmtt/m/n/10.95 naturalLanguage: 
  []
 
-[55] [56]
+[59] [60] [61] [62]
 File: figures/fig10_docker_topology.png Graphic file (type bmp)
 <figures/fig10_docker_topology.png>
- [57] [58]) (./chapters/chapter7.tex [59] [60])
-(./chapters/chapter8.tex [61]) (./chapters/references.tex [62])
+ [63]) (./chapters/chapter7.tex [64] [65])
+(./chapters/chapter8.tex [66]) (./chapters/references.tex [67])
 (./chapters/appendix_a.tex
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 32--32
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 54--54
-[]|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--54
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 55--55
-[]|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 75--75
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
+Underfull \hbox (badness 10000) in paragraph at lines 56--56
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 75--75
-\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 57--57
+[]|\TU/TimesNewRoman(0)/m/n/12 DATETIME, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--76
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
+Underfull \hbox (badness 10000) in paragraph at lines 58--58
+[]|\TU/TimesNewRoman(0)/m/n/12 DATETIME, NOT
  []
 
 
-Underfull \hbox (badness 3302) in paragraph at lines 78--78
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(20), DE-
+Underfull \hbox (badness 10000) in paragraph at lines 79--79
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--79
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 80--80
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 80--80
+\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--81
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 84--84
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
- []
-
-[63]
-Underfull \hbox (badness 10000) in paragraph at lines 102--102
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 102--102
-\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 86--86
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+ []
+
+[68]
+Underfull \hbox (badness 10000) in paragraph at lines 108--108
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 108--108
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--123
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
+Underfull \hbox (badness 10000) in paragraph at lines 109--109
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--123
-\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 109--109
+\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 124--124
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
+Underfull \hbox (badness 10000) in paragraph at lines 110--110
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
  []
 
 
-Underfull \hbox (badness 3302) in paragraph at lines 126--126
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(10), DE-
+Underfull \hbox (badness 10000) in paragraph at lines 115--115
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 131--131
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
- []
-
-[64]
-Underfull \hbox (badness 10000) in paragraph at lines 181--181
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
- []
-
-[65]
-Underfull \hbox (badness 10000) in paragraph at lines 203--203
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 206--206
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 131--131
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 207--207
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(20),
+Underfull \hbox (badness 10000) in paragraph at lines 132--132
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 207--207
-\TU/TimesNewRoman(0)/m/n/10.95 DEFAULT ‘MARK-
+Underfull \hbox (badness 10000) in paragraph at lines 132--132
+\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 228--228
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(150),
+Underfull \hbox (badness 10000) in paragraph at lines 133--133
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
  []
 
 
-Underfull \hbox (badness 3302) in paragraph at lines 230--230
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50), DE-
+Underfull \hbox (badness 10000) in paragraph at lines 135--135
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(10),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 238--238
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 135--136
+[]|\TU/TimesNewRoman(0)/m/n/12 HTTP method
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 253--253
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
+Underfull \hbox (badness 10000) in paragraph at lines 136--136
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, DE-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 253--253
-\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 140--140
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+ []
+
+[69]
+Underfull \hbox (badness 10000) in paragraph at lines 162--162
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 254--254
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(500),
+Underfull \hbox (badness 10000) in paragraph at lines 163--163
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
  []
 
-[66]
+
+Underfull \hbox (badness 10000) in paragraph at lines 175--175
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--176
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--193
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--193
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 194--194
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
+ []
+
+[70]
+Underfull \hbox (badness 10000) in paragraph at lines 217--217
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--217
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--218
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--221
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--222
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 224--224
+[]|\TU/TimesNewRoman(0)/m/n/12 minio_- object_-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 242--242
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 242--242
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 243--243
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--244
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 245--245
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(150),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--247
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(50),
+ []
+
+
+Underfull \hbox (badness 1348) in paragraph at lines 247--248
+[]|\TU/TimesNewRoman(0)/m/n/12 CHAT / RAG_- APPLY / SQL_- AUDIT /
+ []
+
+
+Underfull \hbox (badness 5105) in paragraph at lines 248--249
+[]|\TU/TimesNewRoman(0)/m/n/12 1=Unread, 2=Read/Pending, 3=Approved,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 255--255
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+ []
+
+[71]
+Underfull \hbox (badness 10000) in paragraph at lines 271--271
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 271--271
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 272--272
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 298--298
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(120),
+Underfull \hbox (badness 10000) in paragraph at lines 272--272
+\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 302--302
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+Underfull \hbox (badness 10000) in paragraph at lines 273--273
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(500),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 303--303
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 291--291
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 304--304
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
- []
-
-[67]
-Underfull \hbox (badness 10000) in paragraph at lines 322--322
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(200),
+Underfull \hbox (badness 10000) in paragraph at lines 291--291
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 323--323
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(255),
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--293
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(20),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--293
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 294--294
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+ []
+
+
+Underfull \hbox (badness 6125) in paragraph at lines 298--298
+[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
+ []
+
+[72]
+Underfull \hbox (badness 10000) in paragraph at lines 320--320
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 320--320
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--321
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(120),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 325--325
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 325--325
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 325--325
+\TU/TimesNewRoman(0)/m/n/12 DEFAULT ‘DE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 326--326
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 327--327
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 332--332
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+Underfull \hbox (badness 10000) in paragraph at lines 327--327
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 333--333
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+Underfull \hbox (badness 6125) in paragraph at lines 328--328
+[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 334--334
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+Underfull \hbox (badness 6125) in paragraph at lines 329--329
+[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 336--336
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
  []
 
-[68]
+
+Underfull \hbox (badness 10000) in paragraph at lines 342--342
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 343--343
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 345--345
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(200),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 346--346
+[]|\TU/TimesNewRoman(0)/m/n/12 original_- file_-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 346--346
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(255),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 350--350
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 350--350
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
+ []
+
+
+Underfull \hbox (badness 1953) in paragraph at lines 352--352
+[]|\TU/TimesNewRoman(0)/m/n/12 storage_- object_-
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 355--355
-[]|\TU/TimesNewRoman(0)/m/n/10.95 MEDIUMTEXT,
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--355
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 356--356
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 356--356
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 356--356
+\TU/TimesNewRoman(0)/m/n/12 DEFAULT ‘UP-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 357--357
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(128),
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 357--357
-\TU/TimesNewRoman(0)/m/n/10.95 UNIQUE, NOT
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 358--358
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+Underfull \hbox (badness 6125) in paragraph at lines 358--358
+[]|\TU/TimesNewRoman(0)/m/n/12 INT, NOT NULL,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--363
-[]|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
+Underfull \hbox (badness 10000) in paragraph at lines 359--359
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
  []
 
-[69]
+
+Underfull \hbox (badness 10000) in paragraph at lines 375--375
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 375--375
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 376--376
-[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 383--383
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+Underfull \hbox (badness 10000) in paragraph at lines 378--378
+[]|\TU/TimesNewRoman(0)/m/n/12 MEDIUMTEXT,
  []
 
 
-Underfull \hbox (badness 4013) in paragraph at lines 398--399
-[]|\TU/TimesNewRoman(0)/m/n/10.95 REBUILD_- ALL / INDEX_- DOCUMENT /
+Underfull \hbox (badness 10000) in paragraph at lines 380--380
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(128),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 380--380
+\TU/TimesNewRoman(0)/m/n/12 UNIQUE, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 381--381
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 386--386
+[]|\TU/TimesNewRoman(0)/m/n/12 TINYINT, NOT
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 397--397
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 397--397
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--398
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, NOT
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 399--399
-\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(100),
  []
 
-[70] [71]) (./chapters/appendix_b.tex [72]
+
+Underfull \hbox (badness 10000) in paragraph at lines 402--402
+[]|\TU/TimesNewRoman(0)/m/n/12 retrieved_- doc_-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 406--406
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 406--406
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 419--419
+[]|\TU/TimesNewRoman(0)/m/n/12 BIGINT, PK,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 419--419
+\TU/TimesNewRoman(0)/m/n/12 AUTO_- INCRE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 421--421
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 422--422
+[]|\TU/TimesNewRoman(0)/m/n/12 VARCHAR(30),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 422--422
+\TU/TimesNewRoman(0)/m/n/12 NOT NULL, DE-
+ []
+
+[73]
+Overfull \vbox (1226.89073pt too high) has occurred while \output is active []
+
+
+[74]) (./chapters/appendix_b.tex [75]
 Overfull \hbox (20.0033pt too wide) in paragraph at lines 80--81
 \TU/TimesNewRoman(0)/m/n/10.95 GET /api/user/notification/unread-count → Intege
 r count (status=0); POST /api/user/notification/mark-
@@ -1125,8 +1554,8 @@ Underfull \hbox (badness 1721) in paragraph at lines 126--127
 l/**→tool-agent:8083; /api/code/**→code-
  []
 
-[73]) (./chapters/appendix_c.tex [74]) (./chapters/contributions.tex [75]
-[76] [77] [78] [79] [80] [81]
+[76]) (./chapters/appendix_c.tex [77]) (./chapters/contributions.tex [78]
+[79] [80] [81] [82] [83] [84]
 Underfull \hbox (badness 10000) in paragraph at lines 265--266
 \TU/lmtt/m/n/10.95 \bDELETE\b\TU/TimesNewRoman(0)/m/n/10.95 , \TU/lmtt/m/n/10.9
 5 \bINSERT\b\TU/TimesNewRoman(0)/m/n/10.95 , \TU/lmtt/m/n/10.95 \bUPDATE\b\TU/T
@@ -1141,19 +1570,19 @@ Underfull \hbox (badness 1097) in paragraph at lines 283--284
 catching edge cases where SQL might have
  []
 
-[82] [83] (./main.aux)
+[85] [86] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) ) 
 Here is how much of TeX's memory you used:
- 8184 strings out of 468168
- 187063 string characters out of 5432816
- 830140 words of memory out of 5000000
- 36753 multiletter control sequences out of 15000+600000
- 630724 words of font info for 82 fonts, out of 8000000 for 9000
+ 8251 strings out of 468168
+ 188646 string characters out of 5432816
+ 885530 words of memory out of 5000000
+ 36817 multiletter control sequences out of 15000+600000
+ 631645 words of font info for 86 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 78i,11n,96p,1253b,1532s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,11n,96p,1253b,1192s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (88 pages).
+Output written on main.pdf (91 pages).

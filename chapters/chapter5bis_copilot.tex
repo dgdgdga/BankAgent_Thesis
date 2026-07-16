@@ -8,7 +8,7 @@ The three agents described in Sections 5.1--5.3 each solve a specific domain pro
 
 The Copilot is not a fourth agent with its own domain capability. It is a \textbf{dispatcher} --- its only job is to understand the user's intent, route the request to the right agent, and present the result back in a unified chat interface. This design follows a simple principle: the platform has exactly one text box the user needs to care about, and it works across every page.
 
-Table 28 summarizes the Copilot's position relative to the three agents.
+Table \ref{tab:copilot-vs-agents} summarizes the Copilot's position relative to the three agents.
 
 \begin{table}[H]
 \centering
@@ -24,26 +24,28 @@ Scope & One agent = one capability & Cross-agent, cross-page \\
 User interaction & Page-specific UI (tables, maps, panels) & Floating chat widget, always accessible \\
 \bottomrule
 \end{tabularx}
-\caption{Table 28: Copilot vs. Three Domain Agents --- Role Comparison}
+\caption{Copilot vs. Three Domain Agents --- Role Comparison}
+\label{tab:copilot-vs-agents}
 \end{table}
 
 \subhead{5.4.2 Architecture Overview}
 
 The Copilot spans three layers of the platform. On the frontend, a Vue 3 floating widget (CopilotWidget.vue) renders inside the global MainLayout, making it accessible from every page. On the backend, a Python Flask intent classifier (port 8090, shared with the Code Agent's inference server) performs the core dispatch logic. Between them, the Task Service provides asynchronous execution and WebSocket-based progress streaming for long-running agent calls.
 
-Figure 11 shows how a user query flows through the Copilot system.
+Figure \ref{fig:copilot-flow} shows how a user query flows through the Copilot system.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig05_tool_agent_sequence.png}
-\caption{Figure 11: Copilot Query Flow --- From Natural Language to Agent Execution}
+\caption{Copilot Query Flow --- From Natural Language to Agent Execution}
+\label{fig:copilot-flow}
 \end{figure}
 
 The flow has four stages. First, the user types a question into the Copilot widget. Second, the widget sends the question to \texttt{POST /api/dashboard/route}, which the Gateway rewrites to \texttt{/route} on the Python Flask server. Third, Flask runs a three-tier classification pipeline and returns an intent label. Fourth, the frontend dispatches based on the label: chat replies are shown inline, while domain tasks (TOOL, RAG) are submitted to the Task Service for asynchronous execution with progress streaming.
 
 \subhead{5.4.3 Three-Tier Intent Classification}
 
-The Python Flask \texttt{/route} endpoint is the Copilot's brain. It implements a three-tier classification strategy that balances cost, latency, and accuracy, shown in Table 29.
+The Python Flask \texttt{/route} endpoint is the Copilot's brain. It implements a three-tier classification strategy that balances cost, latency, and accuracy, shown in Table \ref{tab:three-tier}.
 
 \begin{table}[H]
 \centering
@@ -58,7 +60,8 @@ Tier 3a & LLM classification (temperature=0.1, max\_tokens=10) & CODE, TOOL, RAG
 Tier 3b & Keyword fallback (LLM unavailable) & Same six categories, lower accuracy & Zero \\
 \bottomrule
 \end{tabularx}
-\caption{Table 29: Three-Tier Intent Classification Strategy}
+\caption{Three-Tier Intent Classification Strategy}
+\label{tab:three-tier}
 \end{table}
 
 Tier 1 acts as a pre-screening safety net. Before any LLM call is made, the user's input is checked against a hardcoded list of approximately 40 blocked patterns. These cover jailbreak prompts (e.g., ``ignore previous instructions''), role-play attempts (``pretend you are a hacker''), code injection, and entirely off-topic requests (jokes, recipes, gaming). Blocked queries are caught instantly and receive a polite refusal without consuming any API tokens.
@@ -82,7 +85,7 @@ Tier 3b activates only when the LLM API is unreachable. A pure keyword-matching 
 
 \subhead{5.4.4 Frontend Dispatch and User Experience}
 
-After the intent is classified, the frontend widget takes over with type-specific handling, summarized in Table 30.
+After the intent is classified, the frontend widget takes over with type-specific handling, summarized in Table \ref{tab:intent-dispatch}.
 
 \begin{table}[H]
 \centering
@@ -99,7 +102,8 @@ TOOL & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & 
 RAG & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & A citation card with document titles, similarity scores, and security badges \\
 \bottomrule
 \end{tabularx}
-\caption{Table 30: Intent Dispatch --- Frontend Behavior by Classification Result}
+\caption{Intent Dispatch --- Frontend Behavior by Classification Result}
+\label{tab:intent-dispatch}
 \end{table}
 
 The Copilot widget itself is a floating component: a 52px circular icon button fixed to the bottom-right corner of every page. When clicked, it expands into a 440$\times$620px chat panel with a morphing animation. This design means the user never leaves their current page to ask a question --- the Copilot comes to them.

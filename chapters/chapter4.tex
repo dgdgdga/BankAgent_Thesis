@@ -14,6 +14,7 @@ The five-layer structure described above is shown in the diagram below.
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig02_five_layer_arch.png}
 \caption{Five-Layer Logical System Architecture --- Web, Gateway, Business Service, AI Service, and Data Layers}
+\label{fig:five-layer}
 \end{figure}
 
 The five layers, from top to bottom, are as follows:
@@ -28,12 +29,13 @@ Layer 4 -- AI Service Layer. The AI layer deploys three dedicated agents: the Co
 
 The fifth layer -- the data layer. This is the lowest layer of the platform. We adhere to the principle of adapting to local conditions, using MySQL as the single data source to persistently store user, permission, organizational structure, document, and meeting room data; Redis is responsible for caching hot data (such as table structure metadata and schedule conflict detection); Milvus 2.3+ is deployed independently to handle document vectorization storage and semantic retrieval, providing the RAG Agent with similarity search capabilities.
 
-The request lifecycle shown in Figure 3 varies significantly depending on the ingress type. We assume all external traffic first flows into the gateway layer. JWT authentication and rate limiting policies are strictly implemented upfront---the legitimacy of the request and the access rate are determined before routing decisions are made (otherwise, network security issues could easily arise). Only traffic that passes through this filtering layer is allowed to proceed downstream.
+The request lifecycle shown in Figure \ref{fig:data-flow} varies significantly depending on the ingress type. We assume all external traffic first flows into the gateway layer. JWT authentication and rate limiting policies are strictly implemented upfront---the legitimacy of the request and the access rate are determined before routing decisions are made (otherwise, network security issues could easily arise). Only traffic that passes through this filtering layer is allowed to proceed downstream.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig03_data_flow.png}
 \caption{Data Flow Architecture --- End-to-End Request Processing Across System Layers}
+\label{fig:data-flow}
 \end{figure}
 
 In the Tool agent section, the natural language query (POST /tool/execute) processing path introduces an additional semantic layer. Requests don't directly reach the business logic; instead, they are first sent to DeepSeek for intent ``translation''---the model needs to understand whether the user wants to book a meeting room, check a schedule, or plan a route. Only after the intent is clear is the request routed to the corresponding domain module. Meanwhile, the code generation path (POST /code/query) follows a completely different pipeline. The service layer delegates the task to the backend Python inference server. After the SQL is returned, it undergoes a five-layer security check before the Jdbc Template is finally allowed to execute into the database. This link is significantly longer and more likely to become a bottleneck.
@@ -52,15 +54,14 @@ HTTP requests are uniformly encapsulated in utils/request.ts. The Axios instance
 
 Map rendering is handled by the MapContainer.vue component. This component dynamically injects the Amap JS API v2.0, carrying the API key and security code. The map expands from the starting coordinates, with the route drawn as an indigo (\#4f46e5) polyline, 6 pixel wide. Custom icons in green and red are used for the start and end points respectively (we've compared them, and color differences improve visibility). The easeOutQuad easing function is used for navigation transitions, making highlight transitions smoother. Full-screen loading feedback is implemented by AgentThinking.vue, with a Sparkles icon placed in center of the screen and a carousel displaying the thinking state text below, the content sourced from a configurable array. The progress bar uses a gradient design, and the progress value will never reach 100\% during the loading process. It will fill up instantly when the task is actually completed. This detail is to avoid the user feeling that they are ``stuck in the last little segment''.
 
-Table 1 summarizes the frontend technology stack.
+Table \ref{tab:frontend-tech-stack} summarizes the frontend technology stack.
 
 \vspace{3mm}
 
-\needspace{15\baselineskip}
-\begin{center}
-\textbf{Table 1: Frontend Technology Stack Specifications}
-\end{center}
-
+\begin{table}[H]
+\centering
+\caption{Frontend Technology Stack Specifications}
+\label{tab:frontend-tech-stack}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -78,6 +79,7 @@ Inter\-nation\-al\-ization & Vue I18n            & zh-CN, zh-TW, en locales with
 Map Visualization & Amap JS API v2.0             & Dynamic SDK loading, route polyline, custom markers \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 
 \subhead{4.3 Backend Microservice Architecture}
@@ -94,15 +96,14 @@ Code Agent Service (port 8084). Implements the NL2SQL pipeline. The OnnxCodeGene
 
 Task Service (port 8082). Currently scaffolded with a basic POM configuration and TaskApplication main class. In the current architecture, task orchestration is distributed between the Gateway (request routing) and each agent service (autonomous execution). The separate task service is planned for centralizing asynchronous task tracking, progress management, and cross-agent workflow coordination in future phases.
 
-Table 2 summarizes the backend services.
+Table \ref{tab:backend-services} summarizes the backend services.
 
 \vspace{3mm}
 
-\needspace{19\baselineskip}
-\begin{center}
-\textbf{Table 2: Backend Service Ecosystem and Technical Orchestration}
-\end{center}
-
+\begin{table}[H]
+\centering
+\caption{Backend Service Ecosystem and Technical Orchestration}
+\label{tab:backend-services}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
@@ -124,16 +125,18 @@ Email Service        & Resend API                  & Email verification code del
 Map Services         & Amap API (HTTPS)            & Geocoding (multi-level fallback), direction calculation, polyline coordinate parsing \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 
 Data security is paramount in banking systems. Therefore, our platform's security design does not rely on a single line of defense, but rather incorporates defense in depth across all layers. Each layer is independently verified before a request can pass through, which make it significantly harder for a single component failure to lead to a data breach or security incident.
 
-Figure 4 shows the complete user authentication flow in three stages, including the email verification code mechanism that supports both registration and code-based login.
+Figure \ref{fig:jwt-auth-flow} shows the complete user authentication flow in three stages, including the email verification code mechanism that supports both registration and code-based login.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig04_jwt_auth_flow.png}
 \caption{JWT Authentication and Email Verification Flow}
+\label{fig:jwt-auth-flow}
 \end{figure}
 
 The login process begins with an email verification code. After the user submits their email address on the front end, the request reaches the user service section. The service first checks the 60-seconds sending cooldown (Redis key rate:email:send: \{email\}), then queries the hourly and daily sending limits. After all rate limits are passed, it calls the Resend HTTP API using WebClient. The recipient email address is injected into the HTML template at the \{email\} placeholder, and the generated 6-digit random verification code is stored in Redis with a 5-minute TTL. The front-end receives a success response and the sample email is displayed in an Alert.
@@ -146,12 +149,11 @@ The CAPTCHA itself is also heavily reinforced: the 6-digit random number only la
 
 We adopted RBAC for our permission design, but only implemented a coarse-grained division of roles into three tiers---this ``coarseness'' was intentional. Different banks have vastly different organizational structures and reporting relationships; fine-tuning the details ourselves would inevitably not match a real deployment scenario. So, we chose to provide a clear foundational role framework and leave the detailed permission customization to the bank's own IT administrators.
 
-\vspace{3mm}
-
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 3: Pseudocode --- listDocumentsForUser() Multi-Factor Document Access Rule}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- listDocumentsForUser() Multi-Factor Document Access Rule}
+\label{tab:pseudocode-list-docs}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION listDocumentsForUser(userId, userDeptId, userClearance)
@@ -177,6 +179,7 @@ FUNCTION listDocumentsForUser(userId, userDeptId, userClearance)
     RETURN result
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 The unified exit point for external communication is the REST API, all using HTTPS, with the TLS version locked at 1.3. WebSocket is forcibly upgraded to WSS in the production environment; this switch is handled in the code by checking the protocol in the Nginx X-Forwarded-Proto header, with the backend redirecting HTTP traffic to HTTPS.
@@ -199,15 +202,14 @@ Semantic retrieval for RAG agents requires vector support, so we separately intr
 
 Going forward, we plan to add a security post-filter to the RAG retrieval pipeline. The raw vector results returned by Milvus will not be directly passed through; instead, they will be secondarily filtered against the allowed document list computed during the pre-retrieval phase, guaranteeing enforcement even if the filter expression in the Milvus query itself fails.
 
-Table 4 summarizes the data storage strategy.
+Table \ref{tab:data-storage} summarizes the data storage strategy.
 
 \vspace{3mm}
 
-\needspace{10\baselineskip}
-\begin{center}
-\textbf{Table 4: Multi-Modal Data Storage Strategy and Layered Access Patterns}
-\end{center}
-
+\begin{table}[H]
+\centering
+\caption{Multi-Modal Data Storage Strategy and Layered Access Patterns}
+\label{tab:data-storage}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{2.5cm}p{2.5cm}p{5.5cm}p{\dimexpr\textwidth-10.5cm-6\tabcolsep\relax}@{}}
@@ -220,6 +222,7 @@ Object Storage    & MinIO       & PDF, DOCX, PPT files; Milvus backend objects &
 Vector Layer      & Milvus 2.3+ & Document chunk embeddings (bge-small-zh), source metadata & Semantic approximate nearest neighbor search \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 
 \subhead{4.6 Technology Stack Rationale}

@@ -24,16 +24,18 @@ We ultimately adopted the iFlytek MaaS (Model as a Service) platform, which prov
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig05_tool_agent_sequence.png}
 \caption{Tool Agent Task Sequence --- DeepSeek AI Intent Routing to Specialized Handlers}
+\label{fig:tool-agent-sequence}
 \end{figure}
 
-Table 5-6 shows the AI intent routing pipeline where DeepSeek classifies user input into three intent types and dispatches to the corresponding handler,  with a mock fallback on API failure.
+Tables \ref{tab:pseudocode-ai-intent} and \ref{tab:pseudocode-deepseek-chat} show the AI intent routing pipeline where DeepSeek classifies user input into three intent types and dispatches to the corresponding handler,  with a mock fallback on API failure.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 5: Pseudocode --- handleAiIntent() AI Intent Classification and Routing}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- handleAiIntent() AI Intent Classification and Routing}
+\label{tab:pseudocode-ai-intent}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION handleAiIntent(userInput: String): HandlerResult
@@ -71,14 +73,16 @@ FUNCTION handleAiIntent(userInput: String): HandlerResult
     END SWITCH
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 6: Pseudocode --- DeepSeekService.chat() LLM API Call with Fallback}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- DeepSeekService.chat() LLM API Call with Fallback}
+\label{tab:pseudocode-deepseek-chat}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION chat(system, user, format, temperature, maxTokens): DeepSeekResponse
@@ -112,6 +116,7 @@ FUNCTION chat(system, user, format, temperature, maxTokens): DeepSeekResponse
     END TRY
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 The DeepSeek API configuration in application.yml uses environment variables with development defaults: AI\_DEEPSEEK\_API\_KEY, AI\_DEEPSEEK\_BASE\_URL (defaulting to https://maas-api.cn-huabei-1.xf-yun.com/v1), AI\_DEEPSEEK\_MODEL (defaulting to deepseek-v3), AI\_DEEPSEEK\_TIMEOUT (180s), and AI\_DEEPSEEK\_MAX\_TOKENS (2000).
@@ -120,16 +125,17 @@ The DeepSeek API configuration in application.yml uses environment variables wit
 
 For meeting room management, due to varying user permissions, we designed two sets of interfaces base on user permissions and functions:
 
-The first set is for regular users. Regular users has a simple request: ``Check if there are any available rooms for this time slot.'' Therefore, our ToolController only includes a single GET request: /tool/meeting-rooms. Parameters include startTime, endTime, and capacity. The backend performs a three-phase availability check, as shown in the pseudocode in Table 7.
+The first set is for regular users. Regular users has a simple request: ``Check if there are any available rooms for this time slot.'' Therefore, our ToolController only includes a single GET request: /tool/meeting-rooms. Parameters include startTime, endTime, and capacity. The backend performs a three-phase availability check, as shown in the pseudocode in Table \ref{tab:pseudocode-query-rooms}.
 
 The second set, the management side, uses a completely different logic (although the system administrator and department administrators maintain consistency). Because the Admin class needs to maintain meeting room resources, we provide a complete set of CRUD interfaces through MeetingRoomAdminController. In terms of security, it verifies the X-User-Roles header---this is simple but effective, because the header is injected by the gateway layer, not the client, and therefore cannot be forged.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 7: Pseudocode --- queryRoomsWithStatus() Three-Phase Room Availability Algorithm}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- queryRoomsWithStatus() Three-Phase Room Availability Algorithm}
+\label{tab:pseudocode-query-rooms}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION queryRoomsWithStatus(startTime, endTime, minCapacity): List<Map>
@@ -168,14 +174,16 @@ FUNCTION queryRoomsWithStatus(startTime, endTime, minCapacity): List<Map>
     RETURN result
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 8: Pseudocode --- bookRoom() Atomic Conflict Check-and-Insert}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- bookRoom() Atomic Conflict Check-and-Insert}
+\label{tab:pseudocode-book-room}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION bookRoom(roomId, startTime, endTime, booker, title): Long
@@ -210,19 +218,19 @@ FUNCTION getSchedulesForUsers(userIds, startTime, endTime): List<Schedule>
     )
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 The MeetingRoom entity (@TableName(``meeting\_room'')) maps to the database table with fields: id (Long, @TableId auto-increment), roomName (String), building (String, e.g., ``Building A''), floor (String, e.g., ``3F''), capacity (Integer), hasProjector/hasWhiteboard/hasVideoConf (Boolean), status (Integer, 0=available, 1=maintenance), and createTime (LocalDateTime).
 
-Table 9 lists the Tool Agent REST API endpoints implemented in ToolController.
+Table \ref{tab:tool-agent-api} lists the Tool Agent REST API endpoints implemented in ToolController.
 
 \vspace{3mm}
 
-\needspace{15\baselineskip}
-\begin{center}
-\textbf{Table 9: Tool Agent REST API Endpoints}
-\end{center}
-
+\begin{table}[H]
+\centering
+\caption{Tool Agent REST API Endpoints}
+\label{tab:tool-agent-api}
 \vspace{2mm}
 
 {\small\renewcommand{\arraystretch}{0.92}
@@ -244,30 +252,33 @@ GET    & /tool/route            & from, to, mode (default driving)     & Plan ro
 \bottomrule
 \end{tabular}
 }
+\end{table}
 
 
 \subhead{5.1.3 Schedule Conflict Detection}
 
 Schedule conflict detection uses a dual-layer architecture: MySQL is the persistent store for all schedule data, while Redis serves as a fast query cache for temporal overlap detection. The ScheduleService handles CRUD operations on meeting\_schedule records. Each schedule has a booker (the user who created it), optional room\_id (0 for personal schedules that don't need a room), start\_time/end\_time, and an attendees field stored as a comma-separated list. Each user's schedules are indexed in Redis as a sorted set, where scores represent epoch timestamps and members encode event identifiers plus time ranges---this structure allows O(log N) insertion and O(log N + M) range queries, where N is the number of schedules for that user and M is the number of results in the time window.
 
-Figure 6 shows the schedule conflict detection algorithm.
+Figure \ref{fig:schedule-conflict} shows the schedule conflict detection algorithm.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig06_schedule_conflict.png}
 \caption{Schedule Conflict Detection --- Redis Sorted Set-Based Temporal Overlap Algorithm}
+\label{fig:schedule-conflict}
 \end{figure}
 
 Each user's schedules are stored in a Redis sorted set at key tool:schedule:\{userId\}. Schedule entries are encoded as members with the format ``\{eventId\}|\{startEpoch\}|\{endEpoch\}'', where startEpoch and endEpoch are Unix timestamps. For conflict detection queries, ZRANGEBYSCORE retrieves all schedule entries whose startEpoch is within the specified query window. For each retrieved schedule, the algorithm checks if the stored endEpoch overlaps with the query range to filter out partial overlaps.
 
-Table 10--12 shows the schedule management subsystem including Redis sorted-set operations for temporal conflict detection, attendee-based conflict checking,  and the MySQL-Redis dual-write consistency protocol.
+Tables \ref{tab:pseudocode-redis-schedule}, \ref{tab:pseudocode-check-conflict}, and \ref{tab:pseudocode-dual-write} show the schedule management subsystem including Redis sorted-set operations for temporal conflict detection, attendee-based conflict checking,  and the MySQL-Redis dual-write consistency protocol.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 10: Pseudocode --- Redis Sorted Set Schedule Operations (add / remove / checkConflicts)}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- Redis Sorted Set Schedule Operations (add / remove / checkConflicts)}
+\label{tab:pseudocode-redis-schedule}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION addSchedule(userId, eventId, startTime, endTime)
@@ -306,14 +317,16 @@ FUNCTION checkConflicts(userId, startTime, endTime): List<String>
     RETURN conflicts
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 11: Pseudocode --- POST /tool/check-conflict Attendee-Based Conflict Workflow}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- POST /tool/check-conflict Attendee-Based Conflict Workflow}
+\label{tab:pseudocode-check-conflict}
+\vspace{2mm}
 
 \begin{lstlisting}
 ENDPOINT POST /tool/check-conflict
@@ -336,14 +349,16 @@ FUNCTION checkConflict(attendees, startTime, endTime): ConflictResult
     RETURN {hasConflict: FALSE, conflictUser: NULL}
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 12: Pseudocode --- Schedule Dual-Write Pattern (MySQL + Redis Consistency)}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- Schedule Dual-Write Pattern (MySQL + Redis Consistency)}
+\label{tab:pseudocode-dual-write}
+\vspace{2mm}
 
 \begin{lstlisting}
 // === Schedule Creation (dual-write) ===
@@ -379,6 +394,7 @@ FUNCTION cancelSchedule(scheduleId): void
     scheduleService.removeSchedule(currentUser, "event_" + scheduleId)
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \subhead{5.1.4 Route Planning}
@@ -389,14 +405,14 @@ The route planning feature integrates the Amap Open API through the AmapService 
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig07_route_planning.png}
 \caption{Route Planning Map Visualization --- Interactive Map with Route Polyline and Navigation Steps}
+\label{fig:route-planning}
 \end{figure}
 
 
-\needspace{8\baselineskip}
-\begin{center}
-\textbf{Table 13: Route Planning Three-Stage Geocoding and Navigation Pipeline}
-\end{center}
-
+\begin{table}[H]
+\centering
+\caption{Route Planning Three-Stage Geocoding and Navigation Pipeline}
+\label{tab:route-planning}
 \vspace{2mm}
 
 {\footnotesize\setlength{\tabcolsep}{3.5pt}
@@ -410,16 +426,18 @@ The route planning feature integrates the Amap Open API through the AmapService 
 \bottomrule
 \end{tabular}
 }
+\end{table}
 
 
-Table 14 shows the route geocoding pipeline with a three-level fallback strategy and LLM-based translation of navigation instructions.
+Table \ref{tab:pseudocode-geocode} shows the route geocoding pipeline with a three-level fallback strategy and LLM-based translation of navigation instructions.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 14: Pseudocode --- geocodeWithFallback() Multi-Level Address Resolution}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- geocodeWithFallback() Multi-Level Address Resolution}
+\label{tab:pseudocode-geocode}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION geocodeWithFallback(address: String): Location
@@ -456,6 +474,7 @@ FUNCTION translateRouteToEnglish(routeData): RouteData
     END TRY
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 On the frontend, the MapContainer.vue component loads the Amap JS API v2.0 SDK through script injection with the API key  and security code. The component creates a map instance with zoom level 12, centered on the starting coordinate. An indigo polyline renders the route path. Green and red custom marker icons indicate the start and end points, respectively. Turning instructions are displayed in a scrollable list below the map, with each instruction showing the road name, distance, and a directional icon.
@@ -466,15 +485,14 @@ The Code Agent lets users generate executable SQL queries from natural language 
 
 \subhead{5.2.1 Architecture Overview}
 
-Table 15 shows the four-stage pipeline of Code Agent.
+Table \ref{tab:code-agent-pipeline} shows the four-stage pipeline of Code Agent.
 
 \vspace{3mm}
 
-\needspace{10\baselineskip}
-\begin{center}
-\textbf{Table 15: Code Agent Four-Stage Natural Language to SQL Pipeline}
-\end{center}
-
+\begin{table}[H]
+\centering
+\caption{Code Agent Four-Stage Natural Language to SQL Pipeline}
+\label{tab:code-agent-pipeline}
 \vspace{2mm}
 
 {\small
@@ -489,30 +507,33 @@ Table 15 shows the four-stage pipeline of Code Agent.
 \bottomrule
 \end{tabular}
 }
+\end{table}
 
 
 The CodeAgentController exposes six endpoints: POST /code/query (one-shot generate and execute, returns FullResult with SQL, columns, rows, elapsedMs), POST /code/generate (preview only, generates SQL without execution), POST /code/execute (execute only, runs previously generated SQL), GET /code/metadata (returns cached schema metadata), POST /code/metadata/refresh (manually triggers schema refresh), and GET /code/health (returns service status and LLM connectivity).
 
-Figure 8 shows the Code Agent use case diagram. Business analysts interact with the system by submitting natural language queries through the three-step frontend interface. The system processes requests by encoding database schema information, sending structured prompts to the Python LLM inference server, receiving generated SQL, running it through the five-layer validation pipeline, executing only validated queries via JdbcTemplate against MySQL, and returning results with the generated SQL and execution metadata.
+Figure \ref{fig:code-agent-usecase} shows the Code Agent use case diagram. Business analysts interact with the system by submitting natural language queries through the three-step frontend interface. The system processes requests by encoding database schema information, sending structured prompts to the Python LLM inference server, receiving generated SQL, running it through the five-layer validation pipeline, executing only validated queries via JdbcTemplate against MySQL, and returning results with the generated SQL and execution metadata.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig08_code_agent_usecase.png}
 \caption{Code Agent Use Case Diagram --- Natural Language to Safe SQL Execution}
+\label{fig:code-agent-usecase}
 \end{figure}
 
 The use case covers schema-aware query generation, five-layer security validation, JdbcTemplate-based execution, and result presentation with export capabilities.
 
 \subhead{5.2.2 Python LLM Inference Server Integration}
 
-Table 16 shows the SQL generation HTTP proxy that forwards natural language questions to the Python LLM inference server and parses the returned SQL.
+Table \ref{tab:pseudocode-onnx} shows the SQL generation HTTP proxy that forwards natural language questions to the Python LLM inference server and parses the returned SQL.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 16: Pseudocode --- OnnxCodeGenerationService HTTP Proxy to Python Inference Server}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- OnnxCodeGenerationService HTTP Proxy to Python Inference Server}
+\label{tab:pseudocode-onnx}
+\vspace{2mm}
 
 \begin{lstlisting}
 // @Service, @ConditionalOnProperty(code-agent.onnx.enabled=true)
@@ -546,28 +567,31 @@ END FUNCTION
 // Reference: Python inference server at data/infer_server.py
 // hosts fine-tuned T5 model (data/fine-tuned-t5-banking/).
 \end{lstlisting}
+\end{table}
 
 
 \subhead{5.2.3 Five-Layer SQL Whitelist Validation}
 
 The SqlValidationService uses a defense-in-depth validation pipeline with five sequential layers, each of which can reject SQL that violates its security rule. The validation is configurable through CodeAgentProperties in application.yml.
 
-Figure 9 shows the pipeline from natural language input to safe SQL execution. The five validation layers run in sequence.
+Figure \ref{fig:sql-validation} shows the pipeline from natural language input to safe SQL execution. The five validation layers run in sequence.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig09_sql_validation.png}
 \caption{SQL Generation and Five-Layer Validation Pipeline}
+\label{fig:sql-validation}
 \end{figure}
 
-Table 17--21 shows the five-layer SQL whitelist validation pipeline: operation type restriction, forbidden keyword blacklist, table name whitelist, column  name whitelist, and query complexity limits.
+Tables \ref{tab:pseudocode-validate-op}, \ref{tab:pseudocode-validate-keywords}, \ref{tab:pseudocode-validate-tables}, \ref{tab:pseudocode-validate-cols}, and \ref{tab:pseudocode-validate-complexity} show the five-layer SQL whitelist validation pipeline: operation type restriction, forbidden keyword blacklist, table name whitelist, column  name whitelist, and query complexity limits.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 17: Pseudocode --- validateOperation() SQL Operation Type Check (Layer 1)}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- validateOperation() SQL Operation Type Check (Layer 1)}
+\label{tab:pseudocode-validate-op}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION validateOperation(sql: String): ValidationResult
@@ -581,14 +605,16 @@ FUNCTION validateOperation(sql: String): ValidationResult
     RETURN FAIL("Only SELECT operations are permitted")
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 18: Pseudocode --- validateForbiddenKeywords() Keyword Blacklist Scan (Layer 2)}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- validateForbiddenKeywords() Keyword Blacklist Scan (Layer 2)}
+\label{tab:pseudocode-validate-keywords}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION validateForbiddenKeywords(sql: String): ValidationResult
@@ -605,14 +631,16 @@ FUNCTION validateForbiddenKeywords(sql: String): ValidationResult
     RETURN PASS
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 19: Pseudocode --- validateTableNames() Table Whitelist Verification (Layer 3)}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- validateTableNames() Table Whitelist Verification (Layer 3)}
+\label{tab:pseudocode-validate-tables}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION validateTableNames(sql: String): ValidationResult
@@ -634,14 +662,16 @@ FUNCTION validateTableNames(sql: String): ValidationResult
     RETURN PASS
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 20: Pseudocode --- validateColumnNames() Column Whitelist Verification (Layer 4)}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- validateColumnNames() Column Whitelist Verification (Layer 4)}
+\label{tab:pseudocode-validate-cols}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION validateColumnNames(sql: String): ValidationResult
@@ -678,14 +708,16 @@ FUNCTION validateColumnNames(sql: String): ValidationResult
     RETURN PASS
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 21: Pseudocode --- validateComplexity() Query Complexity Limits (Layer 5)}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- validateComplexity() Query Complexity Limits (Layer 5)}
+\label{tab:pseudocode-validate-complexity}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION validateComplexity(sql: String): ValidationResult
@@ -711,17 +743,17 @@ FUNCTION validateComplexity(sql: String): ValidationResult
     RETURN PASS
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
-Table 22 summarizes the five validation layers with their default configurations.
+Table \ref{tab:sql-validation-rules} summarizes the five validation layers with their default configurations.
 
 \vspace{3mm}
 
-\needspace{11\baselineskip}
-\begin{center}
-\textbf{Table 22: SQL Whitelist Validation Rules (Five-Layer Defense)}
-\end{center}
-
+\begin{table}[H]
+\centering
+\caption{SQL Whitelist Validation Rules (Five-Layer Defense)}
+\label{tab:sql-validation-rules}
 \vspace{2mm}
 
 \begin{tabular}{@{}p{2cm}p{3.5cm}p{5cm}p{\dimexpr\textwidth-10.5cm-6\tabcolsep\relax}@{}}
@@ -735,18 +767,20 @@ Table 22 summarizes the five validation layers with their default configurations
 5. Complexity   & Table count + condition count & Max 3 tables, max 10 conditions (AND/OR count + 1) & Block execution, show actual vs.\ max counts \\
 \bottomrule
 \end{tabular}
+\end{table}
 
 
 \subhead{5.2.4 Metadata Caching and Execution}
 
-Table 23--25 shows the schema metadata cache loading from information\_schema to Redis, the cache lifecycle management with scheduled refresh, and thedefense-in-depth SQL execution flow.
+Tables \ref{tab:pseudocode-refresh-metadata}, \ref{tab:pseudocode-cache-lifecycle}, and \ref{tab:pseudocode-sql-execution} show the schema metadata cache loading from information\_schema to Redis, the cache lifecycle management with scheduled refresh, and thedefense-in-depth SQL execution flow.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 23: Pseudocode --- refreshAllMetadata() Schema Metadata Cache Loading}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- refreshAllMetadata() Schema Metadata Cache Loading}
+\label{tab:pseudocode-refresh-metadata}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION refreshAllMetadata(): Map<String, TableMetadata>
@@ -787,14 +821,16 @@ FUNCTION refreshAllMetadata(): Map<String, TableMetadata>
     RETURN metadataMap
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 24: Pseudocode --- MetadataCacheManager Cache Lifecycle Management}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- MetadataCacheManager Cache Lifecycle Management}
+\label{tab:pseudocode-cache-lifecycle}
+\vspace{2mm}
 
 \begin{lstlisting}
 // @Component - manages metadata cache lifecycle
@@ -834,14 +870,16 @@ FUNCTION getAllTableMetadata(): Map<String, TableMetadata>
     RETURN refreshAllMetadata()
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 25: Pseudocode --- SqlExecutionService Defense-in-Depth SQL Execution}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- SqlExecutionService Defense-in-Depth SQL Execution}
+\label{tab:pseudocode-sql-execution}
+\vspace{2mm}
 
 \begin{lstlisting}
 FUNCTION execute(sql: String): QueryResult
@@ -881,6 +919,7 @@ FUNCTION generateAndExecute(question, generationService): FullResult
     })
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 The test dataset provides three core tables for evaluation and demonstration: bank\_customer (5 rows with customer\_no, name, id\_card, phone, risk\_level LOW/MEDIUM/HIGH, status), bank\_account (5 rows with account\_no, customer\_no FK, account\_type, balance, currency HKD/USD, open\_date, status), and bank\_transaction (5 rows with transaction\_no, account\_no FK, type DEPOSIT/WITHDRAW/TRANSFER, amount, transaction\_date, description). The test data is designed to cover common banking query patterns including customer summaries, balance aggregations, transaction histories, and multi-table joins.

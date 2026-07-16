@@ -6,14 +6,15 @@
 
 \subhead{6.1 User Center and RBAC}
 
-The user center (user service, port 8081) integrates identity management, access control, department-level data isolation, as well as cross-cutting notification and document services. Table 26 shows the dual-mode login and JWT session management flow.
+The user center (user service, port 8081) integrates identity management, access control, department-level data isolation, as well as cross-cutting notification and document services. Table \ref{tab:pseudocode-login} shows the dual-mode login and JWT session management flow.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 26: Pseudocode --- Dual-Mode Login and JWT Session Management}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- Dual-Mode Login and JWT Session Management}
+\label{tab:pseudocode-login}
+\vspace{2mm}
 
 \begin{lstlisting}
 // === Dual-Mode Login ===
@@ -67,6 +68,7 @@ FUNCTION filter(exchange, chain):
     RETURN chain.filter(exchange)
 END FUNCTION
 \end{lstlisting}
+\end{table}
 
 
 Access Control. Three roles (ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, ROLE\_USER) and six granular permissions are used to control access to all protected endpoints. The six departments (Credit Department, Compliance Department, Asset Management Department, Retail Banking Department, Investment Banking Department, and Risk Control Department) provide organizational data scoping. A custom JwtAuthenticationFilter extracts permissions from JWT claims and registers them in Spring Security's SecurityContextHolder. The @PreAuthorize annotation on each controller method can be declared with hasAuthority checks, while the abstraction level's department admin controllers additionally verify that the requested resource's dept\_id matches the accessing user's dept\_id, enabling cross-cutting department-level data isolation.
@@ -77,7 +79,7 @@ The Task Center (task-service, port 8082) is the platform's asynchronous executi
 
 \subsubhead{6.2.1 Task Lifecycle and State Machine}
 
-Every piece of work in the platform is modeled as a task record with a four-state lifecycle, shown in Table 28.
+Every piece of work in the platform is modeled as a task record with a four-state lifecycle, shown in Table \ref{tab:task-lifecycle}.
 
 \begin{table}[H]
 \centering
@@ -92,7 +94,8 @@ SUCCESS & Agent returned a valid result & Downstream agent responds with code 20
 FAIL & Execution failed after all retries, or queue was full & Agent error, timeout, or \texttt{RejectedExecutionException} \\
 \bottomrule
 \end{tabularx}
-\caption{Table 28: Task Lifecycle State Machine}
+\caption{Task Lifecycle State Machine}
+\label{tab:task-lifecycle}
 \end{table}
 
 The state machine is linear by design --- no complex branching or rollback. If a task fails, the retry mechanism re-executes from INIT state; it does not attempt to resume from the failure point. This keeps the implementation simple and predictable, which is appropriate for the current single-instance deployment.
@@ -101,10 +104,13 @@ The state machine is linear by design --- no complex branching or rollback. If a
 
 Tasks enter the system through two channels. The primary channel is \texttt{POST /task/submit}, called by the frontend after the Copilot has classified the user's intent. The Task Controller extracts the user's identity from the \texttt{X-User-Name} and \texttt{X-User-Roles} headers (set by the Gateway's JWT filter) and calls the Task Service. The secondary channel is through the WebSocket handler: when the Copilot widget connects to \texttt{/progress?taskId=\{id\}}, it sends a JSON command with the task type and query, which triggers the same submission logic.
 
-Table 29 shows the asynchronous task submission and queuing mechanism.
+Table \ref{tab:task-submit} shows the asynchronous task submission and queuing mechanism.
 
 \vspace{3mm}
-\noindent\textbf{Table 29: Pseudocode --- submitTask() Asynchronous Task Submission and Queuing}
+\begin{table}[H]
+\caption{Pseudocode --- submitTask() Asynchronous Task Submission and Queuing}
+\label{tab:task-submit}
+\end{table}
 
 On submission, a \texttt{TaskRecord} is created in the \texttt{task\_record} table with status INIT and \texttt{attemptCount} set to zero. The record is immediately persisted, so even if the service crashes before execution begins, there is an audit trail of what was requested. The task is then handed to a \texttt{ThreadPoolExecutor} configured as follows:
 
@@ -121,7 +127,7 @@ When a \texttt{RejectedExecutionException} is caught, the task's status is set d
 
 \subsubhead{6.2.3 Agent Routing and Execution}
 
-Once a worker thread picks up a task, the \texttt{executeTaskOnce()} method routes it to the appropriate agent based on \texttt{taskType}, shown in Table 30.
+Once a worker thread picks up a task, the \texttt{executeTaskOnce()} method routes it to the appropriate agent based on \texttt{taskType}, shown in Table \ref{tab:task-routing}.
 
 \begin{table}[H]
 \centering
@@ -135,17 +141,21 @@ TOOL / AI & tool-agent (8083) & \texttt{POST /tool/execute} & \texttt{\{toolType
 RAG & rag-agent (8085) & \texttt{POST /rag/query} & \texttt{\{question: input, topK: 5\}} \\
 \bottomrule
 \end{tabularx}
-\caption{Table 30: Task Type to Agent Routing}
+\caption{Task Type to Agent Routing}
+\label{tab:task-routing}
 \end{table}
 
 All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Name}, \texttt{X-User-Roles}) are forwarded so that each agent can apply its own authorization logic. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
 
 \subsubhead{6.2.4 Retry with Exponential Backoff}
 
-Network calls to downstream agents can fail for transient reasons: a container restarting, a brief network hiccup, an LLM API rate limit. The retry mechanism in Table 31 handles these gracefully.
+Network calls to downstream agents can fail for transient reasons: a container restarting, a brief network hiccup, an LLM API rate limit. The retry mechanism in Table \ref{tab:retry-backoff} handles these gracefully.
 
 \vspace{3mm}
-\noindent\textbf{Table 31: Pseudocode --- executeWithRetry() Exponential Backoff Loop}
+\begin{table}[H]
+\caption{Pseudocode --- executeWithRetry() Exponential Backoff Loop}
+\label{tab:retry-backoff}
+\end{table}
 
 Each task gets up to 3 execution attempts. Between attempts, the worker sleeps for \texttt{1000 $\times$ attempt} milliseconds --- the first retry waits 1 second, the second waits 2 seconds, the third waits 3 seconds. This spacing gives downstream services time to recover from transient failures without hammering them with immediate retries. If all 3 attempts fail, the task is marked FAIL and the error message is stored.
 
@@ -175,23 +185,25 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \texttt{GET /task/list/all} & Admin only & List all tasks in the platform \\
 \bottomrule
 \end{tabularx}
-\caption{Table 32: Task Service REST API Endpoints}
+\caption{Task Service REST API Endpoints}
+\label{tab:task-service-api}
 \end{table}
 
 \subhead{6.3 WebSocket Real-Time Communication}
 
 Long-running AI tasks need progress streaming beyond HTTP request-response. The platform uses WebSocket connections to push task progress from backend to frontend.
 
-Figure 10 shows the WebSocket task progress architecture, illustrating how long-running AI task progress is pushed from the backend TaskProgressWebSocketHandler to the frontend in real time via WebSocket connections proxied through the Spring Cloud Gateway.
+The WebSocket task progress architecture, illustrated in the Task Center section above, shows how long-running AI task progress is pushed from the backend TaskProgressWebSocketHandler to the frontend in real time via WebSocket connections proxied through the Spring Cloud Gateway.
 
-Table 27 shows the WebSocket-based task progress streaming mechanism with step-by-step JSON push and frontend rendering.
+Table \ref{tab:pseudocode-websocket} shows the WebSocket-based task progress streaming mechanism with step-by-step JSON push and frontend rendering.
 
 \vspace{3mm}
 
-\needspace{6\baselineskip}
-\begin{center}
-\textbf{Table 27: Pseudocode --- TaskProgressWebSocketHandler Real-Time Progress Streaming}
-\end{center}
+\begin{table}[H]
+\centering
+\caption{Pseudocode --- TaskProgressWebSocketHandler Real-Time Progress Streaming}
+\label{tab:pseudocode-websocket}
+\vspace{2mm}
 
 \begin{lstlisting}
 // === Backend: TaskProgressWebSocketHandler ===
@@ -233,16 +245,18 @@ END FUNCTION
 // Gateway proxy: /ws/** -> tool-agent:8083/tool/ws
 // JWT passed as query parameter; upgrade requests whitelisted
 \end{lstlisting}
+\end{table}
 
 
 \subhead{6.4 Containerized Deployment}
 
-Figure 10 shows the Docker Compose service topology, illustrating how each service (Gateway, four backend microservices, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal Docker network, with only the Gateway port exposed externally.
+Figure \ref{fig:docker-topology} shows the Docker Compose service topology, illustrating how each service (Gateway, four backend microservices, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal Docker network, with only the Gateway port exposed externally.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig10_docker_topology.png}
 \caption{Docker Compose Service Topology}
+\label{fig:docker-topology}
 \end{figure}
 
 The platform is deployed through Docker Compose. Each service (Gateway, four backend services, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal bridge network. Only the Gateway (port 8080) is exposed. The frontend Nginx (port 80) serves static Vue 3 SPA files and proxies API and WebSocket requests to the Gateway. MySQL initialization is handled via a mounted SQL dump file. The Python inference server for the Code Agent runs in a separate container with FastAPI.
