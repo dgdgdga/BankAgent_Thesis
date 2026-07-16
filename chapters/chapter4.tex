@@ -40,15 +40,19 @@ The request lifecycle involves two distinct interaction patterns, illustrated in
 
 \subhead{4.2 Frontend Architecture}
 
-This project's front-end is based on Vue 3 technology stack, and actual development utilized Composition API and TypeScript. The motivation for introducing TypeScript was straightforward: we wanted to catch type errors during compilation phase, reducing runtime exceptions caused by type mismatches. The logic reuse mechanism provided by Composition API was used simultaneously in Tool, Code, RAG interfaces, and management backend---the same set of interaction logic did not need to be implemented repeatedly, thus significantly reducing maintenance cost. We believe that terminal devices used in banking environment is quite complex (desktops, laptops, tablets, and mobile phones are all used, meaning that responsive layout is not an added feature, but a fundamental constraint that must be met.
+The front end is built on Vue 3 with Composition API and TypeScript. TypeScript catches type errors at compile time. Composition API allows shared interaction logic to be reused across Tool, Code, RAG, and management pages. The interface follows a minimalist design language: a grayscale color system, clean typography, and a collapsible sidebar that saves screen space. Responsive layout supports the range of devices found in a banking environment, from desktops to tablets.
 
-Route management is handled uniformly by Vue Router, divided into public routes and authenticated routes based on access permissions. Navigation guards intercept requests before route switching, preventing unauthorized requests from entering protected pages. AuthLayout handles the login and registration pages, featuring a slide-in animation during page transitions. MainLayout is the main framework after authentication, with a left sidebar that supports both expanded and collapsed states. When expanded, its 230 pixels wide, and when collapsed, its only 56pixels wide, just enough to accommodate a function icon. The main framework is divided into three areas: agent services (tools, code, RAG) for regular users, a management panel accessible only to ROLE\_ADMIN, and system settings. Language switching supports Simplified Chinese, Traditional Chinese, and English(meeting the requirements of Hong Kong banks) .Unread message counts is obtained by polling the /user/notification/unread-count interface every 10 seconds and displayed as badges. The user avatar dropdown menu includes a personal information entry and a logout function.
+\subsubhead{Routing and Layout}
 
-For state management, we chose Pinia and split it into two Store based on their responsibilities. The userStore is responsible for maintaining login state. JWT tokens is persistently stored in localStorage. userInfo records user roles, permissions, departments, and security levels. External call layers interact with it through the login, logout, and getUserInfo methods. The taskStore tracks the agent task lifecycle. The Task structure includes fields for id, type (code/rag/tool), status (pending/running/completed/failed), progress (0--100), result, and createTime. Status changes are handled through addTask and updateTask.
+Vue Router divides routes into public and authenticated groups. Navigation guards block unauthenticated access before route transitions. The authenticated layout has a collapsible sidebar, a multi-tab bar that preserves page state across switches, and role-based menu visibility. Three language options are provided: Simplified Chinese, Traditional Chinese, and English. Unread notification counts are fetched every ten seconds and shown as badges on the sidebar.
 
-HTTP requests are uniformly encapsulated in utils/request.ts. The Axios instance is pre-configured with basic URLs and interceptors. Server-side response are uniformly packaged into a Result structure with the fields code, msg, and data. This structure is convenient for front-end response processing. WebSocket communication is handled within utils/websocket.ts, using the wsClient singleton pattern to manage the connection lifecycle. It automatically reconnects after a connection interruption, attempting a maximum of 3 times with a 2-second interval (otherwise, interaction latency would increase. Messages are handled according to four event categories: open, message, close, and error.
+\subsubhead{State Management and Communication}
 
-Map rendering is handled by the MapContainer.vue component. This component dynamically injects the Amap JS API v2.0, carrying the API key and security code. The map expands from the starting coordinates, with the route drawn as an indigo (\#4f46e5) polyline, 6 pixel wide. Custom icons in green and red are used for the start and end points respectively (we've compared them, and color differences improve visibility). The easeOutQuad easing function is used for navigation transitions, making highlight transitions smoother. Full-screen loading feedback is implemented by AgentThinking.vue, with a Sparkles icon placed in center of the screen and a carousel displaying the thinking state text below, the content sourced from a configurable array. The progress bar uses a gradient design, and the progress value will never reach 100\% during the loading process. It will fill up instantly when the task is actually completed. This detail is to avoid the user feeling that they are ``stuck in the last little segment''.
+Two Pinia stores manage frontend state. The user store holds the JWT token, user roles, permissions, department, and clearance level. The task store tracks agent task lifecycles, recording task type, status, progress, and result. HTTP requests use a shared Axios instance pre-configured with JWT attachment, 401 auto-redirect, and unified error handling. All server responses follow a standard wrapper with code, message, and data fields. WebSocket connections use a singleton client with automatic reconnection, pushing real-time task progress to the UI without polling overhead.
+
+\subsubhead{Map and Loading Feedback}
+
+Map rendering uses the Amap JS API for route display with colored polylines and custom start and end markers. Loading states are handled by a full-screen overlay with a rotating status message. The progress bar uses a gradient design that fills smoothly; it stays below 100 percent until the task actually completes, so the user never feels the interface has stalled.
 
 Table \ref{tab:frontend-tech-stack} summarizes the frontend technology stack.
 
@@ -63,17 +67,17 @@ Table \ref{tab:frontend-tech-stack} summarizes the frontend technology stack.
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \toprule
-\textbf{Component} & \textbf{Technology} & \textbf{Utility \& Responsibility} \\
+\textbf{Component} & \textbf{Technology} & \textbf{Description} \\
 \midrule
-View Layer       & Vue 3 + TypeScript            & Composition API with strict type safety \\
-State Management & Pinia                         & userStore (JWT persistence), taskStore (task lifecycle) \\
-UI Components    & Element-Plus                  & Enterprise forms, tables, dialogs, navigation elements \\
-Visualization    & ECharts 5                     & Rendering of data charts and SQL execution result analytics \\
-Build Tool       & Vite 4                        & Sub-second HMR during development, Rollup-based production bundling \\
-HTTP Client      & Axios + Interceptors          & JWT auto-attach, 401 auto-logout, unified error handling \\
-Real-Time        & WebSocket Client              & Singleton with auto-reconnect (3 attempts, 2s delay) \\
-Inter\-nation\-al\-ization & Vue I18n            & zh-CN, zh-TW, en locales with Element Plus sync \\
-Map Visualization & Amap JS API v2.0             & Dynamic SDK loading, route polyline, custom markers \\
+View Layer       & Vue 3 + TypeScript            & Composition API with type-safe development \\
+State Management & Pinia                         & userStore (JWT, roles, permissions), taskStore (task lifecycle) \\
+UI Components    & Element Plus                  & Enterprise forms, tables, dialogs, and navigation \\
+Visualization    & ECharts 5                     & Dashboard charts and SQL result analytics \\
+Build Tool       & Vite                          & Fast HMR during development, Rollup-based production builds \\
+HTTP Client      & Axios                         & JWT auto-attach, 401 redirect, unified error handling \\
+Real-Time        & WebSocket                     & Singleton client with auto-reconnect and four event categories \\
+Internationalization & Vue I18n                  & zh-CN, zh-TW, en locales \\
+Map              & Amap JS API v2.0              & Dynamic SDK loading, route polyline, custom markers \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -81,11 +85,13 @@ Map Visualization & Amap JS API v2.0             & Dynamic SDK loading, route po
 
 \subhead{4.3 Backend Microservice Architecture}
 
-The backend consists of independent Spring Boot micro service, each handling a specific business capability and communicating through the Gateway layer. This decomposition allows independent development, testing, deployment, and scaling of each service, while the Gateway provides a single API entry point for the frontend.
+The backend consists of independent Spring Boot microservices, each handling a specific business capability and communicating through the Gateway layer. This decomposition allows independent development, testing, deployment, and scaling of each service, while the Gateway provides a single API entry point for the frontend.
 
-Gateway Service (port 8080). Built on Spring Cloud Gateway 3.1.9, this service provides dynamic routing based on URL path predicates. The JwtAuthGlobalFilter (a GlobalFilter with order=-100)validates tokens for non-whitelist paths. It forwards identity information to downstream services through HTTP headers (X-User-Id, X-Username, X-User-Roles, X-User-Permissions, X-User-Dept-Id, X-User-Security-Level). Single-session enforcement is used. This means when someone logs in again, the old token is deleted from Redis. IP-based rate limiting is also configured: requests sent from the same IP address cannot exceed 100 per second (the burst capacity is 200, returning HTTP 429 upon exceeding). The gateway is the only container whose port is exposed to the outside; all other services are only accessible to each other through the internal Docker network.
+\subsubhead{Gateway Service}
 
-User Service (port 8081). This is the largest backend service, covering the complete user lifecycle. Spring Security 6.x is configured with stateless session management, CSRF disabled, and a JwtAuthenticationFilter that extracts the token from the Authorization header as the primary authentication mechanism. A dual-mode login controller accepts either password or verification code credentials, with the token signer using HMAC-SHA256 (the key is injected via environment variable). BCryptPassword Encoder (strength factor 10) handles password storage and verification. Three-tier RBAC is implemented by granting role-specific permissions to an endpoint. The access model to system documents is based on a two-dimensional matrix: clearance level (1-3) and department membership. In the notification subsystem, five state flows support threaded conversations through parent\_id and thread\_id fields. The email verification subsystem uses Resend HTTP API with HTML formatted templates.
+The Gateway runs on port 8080, built on Spring Cloud Gateway. A global JWT filter validates tokens on all non-whitelisted paths and forwards user identity to downstream services through custom HTTP headers. Single-session enforcement invalidates old tokens when a new login occurs. IP-based rate limiting rejects requests exceeding the configured threshold. The Gateway is the only container exposed to the public internet; all other services communicate over the internal Docker network.
+
+\subsubhead{User Service}
 
 Tool Agent Service (port 8083). The most developed AI service, it implements the Tool Agent with two controller groups. The ToolController (/tool/*) exposes 11 endpoints for end-user tool operations including room queries and reservations, CRUD for personal schedules, conflict detection, route planning, and a unified /tool/execute natural language AI entry point. The MeetingRoomAdminController (/tool/admin/*) exposes CRUD endpoints for administrators---room and schedule management. The AI intent routing module integrates with DeepSeek API (via iFlytek MaaS) for intent classification, routing requests to MeetingHandler, ScheduleHandler, or RouteHandler accordingly, with MockDetectFallback providing graceful degradation when the API is unavailable.
 
