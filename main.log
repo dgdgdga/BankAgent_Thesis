@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:19
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -445,28 +445,7 @@ Overfull \hbox (1.3331pt too wide) in paragraph at lines 63--63
  []
 
 [2] [3] [4]) (./chapters/chapter2.tex [5] [6] [7] [8] [9])
-(./chapters/chapter3.tex [10] [11]
-Underfull \hbox (badness 2073) in paragraph at lines 69--70
-\TU/TimesNewRoman(0)/m/n/10.95 Socket). Passwords must be hashed with
- []
-
-
-Underfull \hbox (badness 2229) in paragraph at lines 71--72
-\TU/TimesNewRoman(0)/m/n/10.95 rather than hard failures. RAG readiness
- []
-
-
-Underfull \hbox (badness 2096) in paragraph at lines 73--74
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Services must be independently deployable
- []
-
-
-Underfull \hbox (badness 1308) in paragraph at lines 73--74
-\TU/TimesNewRoman(0)/m/n/10.95 with clearly separated responsibilities. All
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [12]
+(./chapters/chapter3.tex [10] [11] [12]
 Overfull \hbox (10.229pt too wide) in paragraph at lines 127--127
 []|\TU/TimesNewRoman(0)/m/n/10.95 Notification 
  []

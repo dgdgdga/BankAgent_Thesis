@@ -62,17 +62,17 @@ Table 3 summarizes the non-functional requirements that govern system quality at
 \endhead
 \bottomrule
 \endfoot
-NFR1 & Data Sovereignty & All core relational storage, vector storage, document indexing, and access-control checks run within the on-premise environment. Administrators can configure whether AI inference and embedding use local models or external APIs. When external APIs are used, only the minimum permission-filtered payload is transmitted. \\
+NFR1 & Data Sovereignty & All core data processing runs on-premise. Administrators can configure local models or external APIs for AI inference and embedding. External API calls transmit only the minimum necessary parameters. \\
 \addlinespace
-NFR2 & Performance & SQL generation must complete within 3 seconds. Meeting-room and schedule queries must respond within 500 ms. Route planning must return within 2 seconds. RAG vector retrieval should complete within 1 second after the index is ready, while full answer generation depends on the configured LLM endpoint. WebSocket progress updates must be delivered within 200 ms. Initial page load must not exceed 3 seconds. \\
+NFR2 & Performance & SQL generation $\leq$ 3 s. Meeting-room and schedule queries $\leq$ 500 ms. Route planning $\leq$ 2 s. RAG retrieval $\leq$ 1 s. WebSocket progress updates $\leq$ 200 ms. Initial page load $\leq$ 3 s. \\
 \addlinespace
-NFR3 & Security & All traffic must use HTTPS (WSS for WebSocket). Passwords must be hashed with BCrypt. Authentication must be stateless via signed JWT tokens with configurable expiry. Access must be enforced at the method level. SQL injection must be prevented through parameterized queries. RAG retrieval must filter candidate chunks by department, clearance level, and approved access requests before any text is sent to the answer-generation model. Data deletion must be logical rather than physical for auditability. \\
+NFR3 & Security & HTTPS/WSS for all traffic. BCrypt password hashing. Stateless JWT authentication with configurable expiry. Method-level access enforcement. Parameterized queries for SQL injection prevention. Logical deletion for auditability. \\
 \addlinespace
-NFR4 & Reliability & The platform must achieve 99.5\% uptime during business hours. External service failures must trigger graceful degradation using mock fallbacks or permission-safe retrieval context rather than hard failures. RAG readiness checks expose Milvus, embedding, and LLM availability. All task failures must be logged with user context for post-incident analysis. \\
+NFR4 & Reliability & 99.5\% uptime during business hours. Graceful degradation on external service failure via mock fallbacks. All task failures logged with user context for post-incident analysis. \\
 \addlinespace
-NFR5 & Maintainability & Services must be independently deployable with clearly separated responsibilities. All APIs must return a consistent response wrapper for uniform error handling. Database operations must use type-safe abstractions with SQL logging for debugging. \\
+NFR5 & Maintainability & Independently deployable services with clear separation of concerns. Consistent response wrapper across all APIs. Type-safe database operations with SQL logging. \\
 \addlinespace
-NFR6 & Deployability & The entire platform must start with a single command. Database schema, seed data, and RAG metadata tables must be initialized automatically. Service dependencies must be resolved through health-check probes before dependent containers start. \\
+NFR6 & Deployability & Single-command startup. Automatic database schema, seed data, and RAG metadata table initialization. Health-check probes for dependency ordering. \\
 \bottomrule
 \end{longtable}
 }
