@@ -10,11 +10,20 @@
 \usepackage{listings}
 \usepackage{needspace}
 \usepackage[hyphens]{url}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
 \usepackage{caption}
 \usepackage{tabularx}
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{ragged2e}
+
+% Page style: footer with page number
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
 
 \captionsetup[figure]{
   font={bf,small},
