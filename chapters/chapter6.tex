@@ -79,10 +79,6 @@ The Task Center (task-service, port 8082) is the platform's asynchronous executi
 
 Every piece of work in the platform is modeled as a task record with a four-state lifecycle, shown in Table 28.
 
-\vspace{3mm}
-\noindent\textbf{Table 28: Task Lifecycle State Machine}
-\vspace{2mm}
-
 \begin{table}[H]
 \centering
 \small\singlespacing
@@ -96,6 +92,7 @@ SUCCESS & Agent returned a valid result & Downstream agent responds with code 20
 FAIL & Execution failed after all retries, or queue was full & Agent error, timeout, or \texttt{RejectedExecutionException} \\
 \bottomrule
 \end{tabularx}
+\caption{Table 28: Task Lifecycle State Machine}
 \end{table}
 
 The state machine is linear by design --- no complex branching or rollback. If a task fails, the retry mechanism re-executes from INIT state; it does not attempt to resume from the failure point. This keeps the implementation simple and predictable, which is appropriate for the current single-instance deployment.
@@ -126,9 +123,6 @@ When a \texttt{RejectedExecutionException} is caught, the task's status is set d
 
 Once a worker thread picks up a task, the \texttt{executeTaskOnce()} method routes it to the appropriate agent based on \texttt{taskType}, shown in Table 30.
 
-\vspace{3mm}
-\noindent\textbf{Table 30: Task Type to Agent Routing}
-
 \begin{table}[H]
 \centering
 \small\singlespacing
@@ -141,6 +135,7 @@ TOOL / AI & tool-agent (8083) & \texttt{POST /tool/execute} & \texttt{\{toolType
 RAG & rag-agent (8085) & \texttt{POST /rag/query} & \texttt{\{question: input, topK: 5\}} \\
 \bottomrule
 \end{tabularx}
+\caption{Table 30: Task Type to Agent Routing}
 \end{table}
 
 All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Name}, \texttt{X-User-Roles}) are forwarded so that each agent can apply its own authorization logic. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
@@ -167,9 +162,6 @@ These milestones are chosen to reflect what the user actually cares about --- ``
 The Task Center's design reflects a pragmatic trade-off for a single-instance system. Tasks are queued in memory via \texttt{LinkedBlockingQueue}; if the task-service restarts, queued-but-unexecuted tasks are lost (though their INIT records remain in MySQL as orphans). Worker threads block synchronously on downstream HTTP calls via \texttt{RestTemplate}, meaning concurrency is capped at the thread pool size of 10. WebSocket session storage is a local \texttt{ConcurrentHashMap}, which would not work across multiple instances. These are acceptable constraints for the current deployment scale, and replacing the in-memory queue with a message broker (RabbitMQ or Redis Streams) is a natural next step for production hardening.
 
 \vspace{3mm}
-\noindent\textbf{Table 32: Task Service REST API Endpoints}
-\vspace{2mm}
-
 \begin{table}[H]
 \centering
 \small\singlespacing
@@ -183,6 +175,7 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \texttt{GET /task/list/all} & Admin only & List all tasks in the platform \\
 \bottomrule
 \end{tabularx}
+\caption{Table 32: Task Service REST API Endpoints}
 \end{table}
 
 \subhead{6.3 WebSocket Real-Time Communication}

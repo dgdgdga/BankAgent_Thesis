@@ -10,10 +10,6 @@ The Copilot is not a fourth agent with its own domain capability. It is a \textb
 
 Table 28 summarizes the Copilot's position relative to the three agents.
 
-\vspace{3mm}
-\noindent\textbf{Table 28: Copilot vs. Three Domain Agents --- Role Comparison}
-\vspace{2mm}
-
 \begin{table}[H]
 \centering
 \small\singlespacing
@@ -28,6 +24,7 @@ Scope & One agent = one capability & Cross-agent, cross-page \\
 User interaction & Page-specific UI (tables, maps, panels) & Floating chat widget, always accessible \\
 \bottomrule
 \end{tabularx}
+\caption{Table 28: Copilot vs. Three Domain Agents --- Role Comparison}
 \end{table}
 
 \subhead{5.4.2 Architecture Overview}
@@ -48,10 +45,6 @@ The flow has four stages. First, the user types a question into the Copilot widg
 
 The Python Flask \texttt{/route} endpoint is the Copilot's brain. It implements a three-tier classification strategy that balances cost, latency, and accuracy, shown in Table 29.
 
-\vspace{3mm}
-\noindent\textbf{Table 29: Three-Tier Intent Classification Strategy}
-\vspace{2mm}
-
 \begin{table}[H]
 \centering
 \small\singlespacing
@@ -65,6 +58,7 @@ Tier 3a & LLM classification (temperature=0.1, max\_tokens=10) & CODE, TOOL, RAG
 Tier 3b & Keyword fallback (LLM unavailable) & Same six categories, lower accuracy & Zero \\
 \bottomrule
 \end{tabularx}
+\caption{Table 29: Three-Tier Intent Classification Strategy}
 \end{table}
 
 Tier 1 acts as a pre-screening safety net. Before any LLM call is made, the user's input is checked against a hardcoded list of approximately 40 blocked patterns. These cover jailbreak prompts (e.g., ``ignore previous instructions''), role-play attempts (``pretend you are a hacker''), code injection, and entirely off-topic requests (jokes, recipes, gaming). Blocked queries are caught instantly and receive a polite refusal without consuming any API tokens.
@@ -90,10 +84,6 @@ Tier 3b activates only when the LLM API is unreachable. A pure keyword-matching 
 
 After the intent is classified, the frontend widget takes over with type-specific handling, summarized in Table 30.
 
-\vspace{3mm}
-\noindent\textbf{Table 30: Intent Dispatch --- Frontend Behavior by Classification Result}
-\vspace{2mm}
-
 \begin{table}[H]
 \centering
 \small\singlespacing
@@ -109,6 +99,7 @@ TOOL & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & 
 RAG & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & A citation card with document titles, similarity scores, and security badges \\
 \bottomrule
 \end{tabularx}
+\caption{Table 30: Intent Dispatch --- Frontend Behavior by Classification Result}
 \end{table}
 
 The Copilot widget itself is a floating component: a 52px circular icon button fixed to the bottom-right corner of every page. When clicked, it expands into a 440$\times$620px chat panel with a morphing animation. This design means the user never leaves their current page to ask a question --- the Copilot comes to them.

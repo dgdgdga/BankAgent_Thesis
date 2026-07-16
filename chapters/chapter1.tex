@@ -31,11 +31,7 @@ Data Sovereignty And Access Control. Beyond the risks from outside APIs, banking
 
 \subhead{1.3 Project Objectives}
 
-This work presents BankAgent, a multi-agent AI platform built on on-premise infrastructure and designed for banking operations. Table 1 summarizes the project objectives across all layers of the platform.
-
-\vspace{3mm}
-\noindent\textbf{Table 1: Project Objectives by Platform Layer}
-\vspace{2mm}
+This work presents BankAgent, a multi-agent AI platform built on on-premise infrastructure and designed for banking operations. The platform delivers three AI agents under a unified Copilot dispatcher, supported by five platform services and one-command containerized deployment. Table 1 summarizes the project objectives.
 
 \begin{table}[H]
 \centering
@@ -44,27 +40,28 @@ This work presents BankAgent, a multi-agent AI platform built on on-premise infr
 \toprule
 \textbf{Category} & \textbf{Component} & \textbf{Objective} \\
 \midrule
-\multirow{3}{*}{AI Agents} & Code Agent & Convert natural language to SQL through a Python LLM inference server, with five-layer whitelist validation ensuring only safe queries reach the database. \\
+\multirow{3}{*}{AI Agents} & Code Agent & Safely translate natural language questions into executable SQL queries. \\
 \cmidrule{2-3}
- & RAG Agent & Provide citation-backed answers to policy and procedural questions using Milvus vector retrieval and LLM generation, with security-level and department-based permission filtering. \\
+ & RAG Agent & Retrieve policy knowledge with verifiable citations and clearance based permission filtering. \\
 \cmidrule{2-3}
- & Tool Agent & Automate business tasks --- meeting room booking, schedule conflict detection via Redis sorted sets, and route planning via Amap API --- through a unified natural language interface with DeepSeek intent routing. \\
+ & Tool Agent & Automate business tasks such as room booking, schedule conflict detection, and route planning through natural language. \\
 \midrule
-Intelligent Dispatch & Copilot & Sit above all three agents as a cross-page dispatcher, classifying user intent through a three-tier pipeline and routing requests to the appropriate agent. \\
+Intelligent Dispatch & Copilot & Classify user intent from a single interface and dispatch requests to the appropriate agent. \\
 \midrule
-\multirow{5}{*}{Platform Services} & Auth \& RBAC & Provide JWT-based authentication with three-tier role-based access control (Admin, Department Admin, End-User) and department-level data isolation. \\
+\multirow{5}{*}{Platform Services} & Auth \& RBAC & Enforce JWT authentication with three role tiers and department scoped data access. \\
 \cmidrule{2-3}
- & API Gateway & Serve as the single entry point with JWT global filtering, Redis-based rate limiting, and single-session enforcement. \\
+ & API Gateway & Provide a unified entry point with JWT filtering, rate limiting, and session enforcement. \\
 \cmidrule{2-3}
- & Notification System & Handle multi-type notifications (chat, RAG access requests, SQL audit alerts) with a five-state state machine and human-in-the-loop approval workflow. \\
+ & Notification System & Manage multi type messages with a five state approval workflow for sensitive operations. \\
 \cmidrule{2-3}
- & Document Management & Provide MinIO-based document storage with three security clearance levels, HITL escalation for cross-clearance access, and RAG index synchronization. \\
+ & Document Management & Store and serve documents with tiered security clearance and HITL escalation. \\
 \cmidrule{2-3}
- & Task Center & Orchestrate asynchronous agent execution with a four-state lifecycle, exponential-backoff retry, and WebSocket-based real-time progress streaming. \\
+ & Task Center & Orchestrate asynchronous agent execution with retry logic and real time progress streaming. \\
 \midrule
-DevOps & Containerized Deploy & Deploy all 13 services via Docker Compose with a single command, including Nginx reverse proxy, Let's Encrypt HTTPS, and health-check-based startup ordering. \\
+DevOps & Containerized Deploy & Start all 13 services with a single Docker Compose command. \\
 \bottomrule
 \end{tabularx}
+\caption{Table 1: Project Objectives by Platform Layer}
 \end{table}
 
 \subhead{1.4 Scope and Limitations}
