@@ -13,7 +13,7 @@ A live deployment of the platform is accessible at \texttt{https://bankagent.onl
 
 \subhead{C.2 Local Deployment}
 
-For the most responsive experience, evaluators may deploy the platform locally using Docker Compose. Full instructions are provided in the repository at \texttt{DEPLOYMENT\_GUIDE.md}. A summary follows.
+For the most responsive experience, evaluators may deploy the platform locally using Docker Compose. The following steps summarize the process.
 
 \textbf{Prerequisites.} Docker Desktop and Node.js must be installed. 16 GB RAM is recommended; the full stack runs 15 containers including Milvus, five Java microservices, two Python workers, Nginx, and supporting infrastructure. On machines with less RAM, the RAG Agent and embedding worker can be disabled by commenting out the corresponding services in \texttt{docker-compose.yml}; the remaining platform will operate normally.
 
