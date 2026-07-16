@@ -16,6 +16,35 @@
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{ragged2e}
+\usepackage{titlesec}
+
+% Section numbering depth
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+% Section: 18pt bold, same as original chapter headings
+\titleformat{\section}
+  {\fontsize{18}{22}\selectfont\bfseries}
+  {\thesection\ }
+  {0pt}
+  {}
+\titlespacing{\section}{0pt}{0pt}{3mm}
+
+% Subsection: 14pt bold, same as original \subhead
+\titleformat{\subsection}
+  {\fontsize{14}{17}\selectfont\bfseries}
+  {\thesubsection\ }
+  {0pt}
+  {}
+\titlespacing{\subsection}{0pt}{10pt}{6pt}
+
+% Subsubsection: 13pt bold, same as original \subsubhead
+\titleformat{\subsubsection}
+  {\fontsize{13}{16}\selectfont\bfseries}
+  {\thesubsubsection\ }
+  {0pt}
+  {}
+\titlespacing{\subsubsection}{0pt}{8pt}{4pt}
 
 % Page style: footer with page number
 \usepackage{fancyhdr}

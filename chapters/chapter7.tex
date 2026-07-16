@@ -1,10 +1,8 @@
 % CHAPTER 7: DISCUSSION
 % ======================================================================
-{\fontsize{18}{22}\selectfont\textbf{7 Discussion}}\par
+\section{Discussion}
 
-\vspace{3mm}
-
-\subhead{7.1 Challenges and Resolutions}
+\subsection{Challenges and Resolutions}
 
 Frontend-Backend API Contract Alignment. During early integration, there was plenty of mismatching response structure between Vue 3 frontend API and SpringBoot backend, which caused numerous runtime errors and slowed down development iteration speed. The resolution was standardizing on a Result\textless T\textgreater generic wrapper (code, msg, data) for all microservice responses. Frontend Axios interceptors were configured to automatically unwrap the data field, so that component code only needs to handle domain data without manually parsing response layers. Additionally, Mock detect fallback is implemented on the backend so that frontend development could proceed independently through mock data without complete backend.
 
@@ -20,7 +18,7 @@ Five-Layer SQL Validation Design. Designing a whitelist verification system requ
 
 Model Serving Boundary. The completed implementation uses a Python HTTP inference bridge for Code Agent generation and a separate Python embedding worker for the RAG Agent. This boundary was chosen for two reasons: first, model runtime support is not equally smooth across all architectures; second, a separate Python process makes it easier to upgrade or replace models without changing the Java service or Spring context. The cost is additional network latency for HTTP calls, but the design keeps model dependencies isolated from the enterprise microservices.
 
-\subhead{7.2 Comparison with Existing Solutions}
+\subsection{Comparison with Existing Solutions}
 
 Compared with cloud-based LLM API services, our platform minimizes the risk of external data exposure through keeping relational storage, vector storgae, document indices, authentication and SQL execution in our own docker. The team also minimizes the usage of external API call, which is only used in intent classification, SQL and RAG generating, cloud embedding and Amap gecoding. And as for RAG, post-retrieval filtering is applied to ensure that only documents with the correct clearance level are returned to the LLM, preventing accidental leakage of sensitive information. For SQL, the database schema will be transmitted to LLM for prompt constructing. Due to the uncontrollable limitation that the team do not own high-level GPUs to train our own models, we can only use the pre-trained models as a substitute. But in real banking scenarios, the team can use the pre-trained models as a base and fine-tune them with bank-specific data to improve performance.
 
@@ -28,7 +26,7 @@ Compared with general multi-agent frameworks such as AutoGen and MetaGPT, our pl
 
 Compared with independent RAG solutions, our integrated architecture enables unified access to three complementary AI capabilities through a single platform. The RAG component is also integrated with the same JWT, RBAC, document approval, task logging, and WebSocket progress mechanisms as the rest of the system, rather than operating as an isolated chatbot. The trade-off is increased backend complexity; each agent is a separate microservice with its own dependencies, requiring coordinated deployment through Docker Compose and a Gateway for unified entry.
 
-\subhead{7.3 Project Limitations}
+\subsection{Project Limitations}
 
 This platform still has several limitations. The Code agent's Python HTTP server approach adds network latency and requires a separate Python process which will increase memory consumption. The RAG agent is implemented end to end, but retrieval precision remains tied to document quality, chunk granularity, and the selected embedding profile, so administrators must keep the knowledge base curated. The Tool Agent depends on external APIs (DeepSeek, Amap), and the unavailability of these services would degrade functionality to the mock fallback mode. The Task Center uses in-memory queuing via LinkedBlockingQueue rather than a message broker; while adequate for the current scale, this means queued tasks are lost on service restart. The delivered deployment is single-instance and can handle approximately 50 concurrent users; multi-node Kubernetes orchestration is outside the current deployment scope. RBAC is intentionally coarse-grained, so fine-grained custom permission design is left to the adopting institution. The Copilot's intent classifier is prompt-dependent --- a significant change to the underlying LLM's behavior could require prompt adjustments, and the keyword fallback (Tier 3b) has lower accuracy than the LLM path.
 

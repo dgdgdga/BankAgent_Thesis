@@ -3,11 +3,9 @@
 \setstretch{1.5}
 \pagenumbering{arabic}
 \setcounter{page}{1}
-{\fontsize{18}{22}\selectfont\textbf{1 Introduction}}\par
+\section{Introduction}
 
-\vspace{3mm}
-
-\subhead{1.1 Background and Motivation}
+\subsection{Background and Motivation}
 
 LLMs are built on transformer architectures. Through training on large sets of text, these systems can understand almost every language, create runnable code from a text prompt, and give detailed answers about many fields. This is why engineers see them as a key piece of enterprise digital change.
 
@@ -15,7 +13,7 @@ But using LLMs in the banking industry brings several technical and non-technica
 
 The current work is driven by several linked problems. These are technical precision, keeping domain knowledge correct, stable tool calling, and data control. So, a single multi-agent AI system is clearly needed. This system must work on-site and take a defense-in-depth approach. It must combine secure code generation, local knowledge retrieval, and enterprise tool calling.
 
-\subhead{1.2 Problem Statement}
+\subsection{Problem Statement}
 
 The present work is facing four major challenges.
 
@@ -27,7 +25,7 @@ The present work is facing four major challenges.
 
 \textbf{Data Sovereignty And Access Control.} Beyond the risks from outside APIs, banking settings need strict access levels. Different departments handle documents with different security clearances. The rule of least privilege must be enforced at every layer. Small permission models are often too simple for an organization that has many departments and levels of leadership.
 
-\subhead{1.3 Project Objectives}
+\subsection{Project Objectives}
 
 This work presents BankAgent, a multi-agent AI platform built on on-premise infrastructure and designed for banking operations. The platform delivers three AI agents under a unified Copilot dispatcher, supported by five platform services and one-command containerized deployment. Table \ref{tab:objectives} summarizes the project objectives.
 

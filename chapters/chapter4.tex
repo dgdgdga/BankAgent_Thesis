@@ -1,10 +1,8 @@
 % CHAPTER 4: SYSTEM ARCHITECTURE DESIGN
 % ======================================================================
-{\fontsize{18}{22}\selectfont\textbf{4 System Architecture Design}}\par
+\section{System Architecture Design}
 
-\vspace{3mm}
-
-\subhead{4.1 Five-Layer Architecture Overview}
+\subsection{Five-Layer Architecture Overview}
 
 This platform adopts a five-layer architecture with high cohesion and low coupling, implementing one-way dependencies between layers: data is transmitted downwards via RESTful APIs, and long-lived connections are established upwards via WebSockets to proactively push events. This meets the requirements of banking systems for ``modularity,'' ``testability,'' and ``independent scalability.''
 
@@ -38,7 +36,7 @@ The request lifecycle involves two distinct interaction patterns, illustrated in
 \label{fig:request-sequence}
 \end{figure}
 
-\subhead{4.2 Frontend Architecture}
+\subsection{Frontend Architecture}
 
 The front end is built on Vue 3 with Composition API and TypeScript. TypeScript catches type errors at compile time. Composition API allows shared interaction logic to be reused across Tool, Code, RAG, and management pages.
 
@@ -88,7 +86,7 @@ Map              & Amap JS API v2.0              & Dynamic SDK loading, route po
 \end{figure}
 
 
-\subhead{4.3 Backend Microservice Architecture}
+\subsection{Backend Microservice Architecture}
 
 The backend consists of independent Spring Boot microservices, each handling a specific business capability and communicating through the Gateway layer. This decomposition allows independent development, testing, deployment, and scaling of each service, while the Gateway provides a single API entry point for the frontend.
 
@@ -138,11 +136,11 @@ Maps           & Amap API (HTTPS)            & Geocoding, direction calculation,
 \end{tabular}
 \end{table}
 
-\subhead{4.4 Security Architecture}
+\subsection{Security Architecture}
 
 Data security is paramount in banking systems. The platform does not rely on a single line of defense, but rather incorporates defense in depth across four layers: gateway authentication, email verification with rate limiting, role-based access control with department-level data isolation, and transport-layer encryption.
 
-\subsubhead{4.4.1 Gateway Authentication}
+\subsubsection{Gateway Authentication}
 
 Figure \ref{fig:jwt-auth-flow} illustrates the complete authentication flow, from registration through email verification to JWT-based request authentication.
 
@@ -169,7 +167,7 @@ This header-based propagation means downstream services never hold the JWT secre
 
 Sliding-window session renewal refreshes the Redis TTL on each authenticated request, with polling endpoints (such as the notification unread-count endpoint) excluded to avoid unnecessary Redis writes.
 
-\subsubhead{4.4.2 Email Verification and Rate Limiting}
+\subsubsection{Email Verification and Rate Limiting}
 
 Registration and code-based login both require email verification. The platform uses the Resend HTTP API to deliver verification codes, with several hardening measures:
 
@@ -197,7 +195,7 @@ Tier 3 & Per email address & 10 requests per day & Prevent persistent resource e
 
 To ensure accurate IP attribution behind the Gateway and Nginx proxy, the User Service extracts the real client IP from the \texttt{X-Forwarded-For} and \texttt{X-Real-IP} headers rather than using the immediate TCP connection endpoint. The frontend disables the send button for 60 seconds after each request and displays a countdown.
 
-\subsubhead{4.4.3 RBAC and Department-Level Data Isolation}
+\subsubsection{RBAC and Department-Level Data Isolation}
 
 The platform implements a three-tier role-based access control model. Rather than hard-coding fine-grained permissions that would not generalize across institutions, a foundational role framework is provided, leaving detailed permission customization to the adopting bank.
 
@@ -249,11 +247,11 @@ END FUNCTION
 
 \textbf{Notification subsystem.} The notification system supports three message types. Chat notifications follow a simple Unread $\rightarrow$ Read flow. Document access escalation requests follow a Pending $\rightarrow$ Approved / Denied workflow, with the approving administrator's identity recorded for audit. SQL audit alerts carry a JSON payload with the suspicious query and timestamp. The frontend polls for unread counts every ten seconds and displays them as badges.
 
-\subsubhead{4.4.4 Secure Communication}
+\subsubsection{Secure Communication}
 
 All external communication uses HTTPS with TLS 1.3. WebSocket connections are upgraded to WSS in production via Nginx configuration, with the backend checking the \texttt{X-Forwarded-Proto} header to redirect plain HTTP traffic. SQL injection is prevented through exclusive use of parameterized queries via \texttt{PreparedStatement}. User passwords are hashed with BCrypt at strength factor 10 and never stored in plaintext. API keys for external services (DeepSeek, Amap, Resend) are injected via environment variables and never exposed to the frontend.
 
-\subhead{4.5 Data Layer Architecture}
+\subsection{Data Layer Architecture}
 
 The data layer uses a multi-engine approach. Each storage engine was chosen for the type of data it handles best. Table \ref{tab:data-storage} summarizes the four engines and their roles.
 
@@ -300,7 +298,7 @@ RAG Metadata & rag\_document\_chunk, rag\_query\_log & — \\
 \textbf{Milvus.} Milvus stores document chunk embeddings for the RAG Agent. The collection schema is configured at startup to match the active embedding profile. The default BGE-M3 profile produces 1024-dimensional vectors with COSINE similarity and an HNSW index. Retrieval results are filtered against the user's department and clearance level before entering the LLM prompt.
 
 
-\subhead{4.6 Technology Stack Rationale}
+\subsection{Technology Stack Rationale}
 
 After discussion, the technology stack of our system was determined based on four main principles: First, it should be able to be deployed locally to reduce reliance on external cloud services (because banking regulations require data to be stored on local servers); second, all components should work well with container technology (because we wanted the developer environment and the production environment to be as similar as possible); third, the technology stack should match the team's current skill set (backend students are more familiar with Java than Python, so AI services use separate Python modules for LLM and embedding workloads); fourth, we preferred ecosystems that have long-term support and active communities (so we can find an answer on Stack Overflow when hitting a problem).
 

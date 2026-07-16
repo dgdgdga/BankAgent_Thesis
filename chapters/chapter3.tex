@@ -1,16 +1,14 @@
 % CHAPTER 3: REQUIREMENTS ANALYSIS
 % ======================================================================
-{\fontsize{18}{22}\selectfont\textbf{3 Requirements Analysis}}\par
+\section{Requirements Analysis}
 
-\vspace{3mm}
-
-\subhead{3.1 Banking Industry Context}
+\subsection{Banking Industry Context}
 
 The system requirements are derived from banking operations. Banking IT environments share four characteristics that drive the platform's requirements. (i) Large relational databases store client profiles, transaction histories, product catalogs, and compliance records. (ii) Policy and procedure repositories span multiple departments, each document carrying a security classification and subject to frequent regulatory updates. (iii) Administrative workflows such as room booking, calendar coordination, travel planning consume substantial staff hours and remain largely manual. (iv) Security and compliance obligations, including those mandated by the HKMA Supervisory Policy Manual (as discussed in Section 2.6), demand role-based access control, department-scoped data isolation, and auditable escalation processes.
 
 Stakeholder analysis identifies five user groups. Business analysts need to query databases without deep SQL knowledge. Compliance officers need to quickly find relevant regulatory clauses with verifiable references. Administrative staff coordinate meetings and schedules across the organization. Departmental administrators manage team membership, document access rights, and approval workflows in their units. System administrators handle platform configuration, manage user permissions, and allocate resources.
 
-\subhead{3.2 Functional Requirements}
+\subsection{Functional Requirements}
 
 The platform's functional requirements are organized by domain. Table 2 summarizes each requirement with its rationale and priority.
 
@@ -42,7 +40,7 @@ FR8 & Admin Resource Management & Role-restricted CRUD endpoints for meeting roo
 \end{tabularx}
 \end{table}
 
-\subhead{3.3 Non-Functional Requirements}
+\subsection{Non-Functional Requirements}
 
 Table 3 summarizes the non-functional requirements that govern system quality attributes.
 
@@ -76,7 +74,7 @@ NFR6 & Deployability & Single-command startup. Automatic database schema, seed d
 \end{longtable}
 }
 
-\subhead{3.4 Use Case Analysis}
+\subsection{Use Case Analysis}
 
 The platform serves three human actor roles and interfaces with two external systems, summarized in Table \ref{tab:actors}.
 

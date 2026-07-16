@@ -1,10 +1,8 @@
 % CHAPTER 2: LITERATURE REVIEW
 % ======================================================================
-{\fontsize{18}{22}\selectfont\textbf{2 Literature Review}}\par
+\section{Literature Review}
 
-\vspace{3mm}
-
-\subhead{2.1 LLMs in Enterprise Applications}
+\subsection{LLMs in Enterprise Applications}
 
 Transformer-based LLMs have changed AI research and its uses. Vaswani et al. (2017)[9] introduced the transformer architecture. Since then, this field gain a rapid progress, large models, like GPT-4, Claude, DeepSeek has come out. These models performs very well in understanding natural languages and inference tasks. Its core relies on self attention mechanism, which can capture semantic associations within the scope of long texts. Through this, coherent text will be generated.
 
@@ -12,7 +10,7 @@ In some specialized organizions, LLMs are used to automatically manage knowledge
 
 Financial services industry has a strict attitude on using AI. Banks must meet the regulation commands. They need to standardize data confidentiality, transaction audit, and explanatory automate decision. The Basel Committee on Banking Supervision has issued guidelines on AI in the financial industry, requiring transparency, resilience testing, and manual supervision of model outputs.
 
-\subhead{2.2 Multi-Agent Systems and Orchestration}
+\subsection{Multi-Agent Systems and Orchestration}
 
 Multi agent systems (MAS) originated from research focus on distributed artificial intelligence. Early systems used rule-based agents, which had fixed interaction rules. As LLMs are becoming more and more popular, a new architecture design based on intelligent agents has emerged. Under this architecture, each agent relies on language models to complete reasoning, planning, and interactive communication between agents.
 
@@ -20,13 +18,13 @@ Wu et al. (2023) proposed AutoGen [4]. This platform allows different LLM-driven
 
 These frameworks show promising results in research settings. However, there's still a gap between flexible, role-based multi-agent systems and production systems in banking environments. For process standardization, systems must present deterministic behaviors and tight security controls.
 
-\subhead{2.3 Code Generation and Text-to-SQL}
+\subsection{Code Generation and Text-to-SQL}
 
 Converting natural language questions into executable SQL statements has been a major challenge in the field of natural language processing for over 20 years. The early solution adopted a rule-based approach, relying on manually constructed grammar rules and domain specific knowledge systems. This type of method is effective in narrow domain scenarios, but it is difficult to adapt to diverse database structures.
 
 The emergence of the Spider dataset is an important development in this field. Yu et al. (2018) [1] constructed this dataset. Spider is a cross domain large-scale test set that includes 10181 query examples from 138 domains and 200 databases. Its core is used to test the model's ability to handle unfamiliar database architectures. This demand is highly compatible with the banking industry scenario: financial databases will be frequently updated due to new product launches, regulatory reporting requirements, and market data changes.
 
-\subhead{2.4 RAG}
+\subsection{RAG}
 
 Retrieval-Augmented Generation (RAG) addresses an important weakness of large language models: their answers are generated from static parameters and may therefore be outdated, unverifiable, or hallucinated. Lewis et al. (2020) [8] introduced the core RAG idea of retrieving external evidence before generation. Instead of asking the model to answer from memory, a RAG system first searches a knowledge base for relevant passages and then gives those passages to the model as grounded context.
 
@@ -36,13 +34,13 @@ Enterprise RAG differs from a simple demonstration system because retrieved text
 
 RAG technology is highly valuable in the banking sector, as regulatory rules, internal policies, and product documentation are typically stored in vast text repositories. Furthermore, this content is frequently updated, making it impractical to integrate directly into model weights. Pipitone and Alami (2024) introduced LegalBench-RAG [2], a benchmark specifically designed to evaluate RAG systems in the legal and financial domains; this benchmark focuses on clause-level precision rather than document-level recall. This project follows the same principle: the RAG Agent is designed around chunk-level retrieval, permission-safe filtering, and citation-based responses rather than document-level keyword search.
 
-\subhead{2.5 Tool-Augmented Model}
+\subsection{Tool-Augmented Model}
 
 LLMs have inherent limitations that prevent them from directly interacting with external systems or data stores. Tool-augmented language models effectively solve this problem by equipping LLMs with the capability to call APIs, query databases, and perform computational tasks. Yao et al. (2023) [10] introduced the ReAct paradigm, whic combines "Reasoning" and "Acting", demonstrates that integrating reasoning steps with actions enables LLMs to use external tools for tasks involving real-time data, mathmatical calculations, and environmental interactions.
 
 In enterprise applications, the scope of tool usage not only consists of standard web searches, but also specialized tools tailored to specific organizational needs, such as scheduling, resource booking, internal data querying, and process automation. The reliability of tool invocation is a critical performance metric, particularly regarding user intent understanding, precise parameter extraction, and error recovery.
 
-\subhead{2.6 Data Security and Local Deployment}
+\subsection{Data Security and Local Deployment}
 
 Such tool invocation, however, is often realised through external cloud APIs, which raises additional security concerns. Security is core consideration of enterprises adopting AI systems. Currently, a common practice involves accessing LLMs via cloud APIs. That is, external endpoints accepts and processes users' queries and context. This method obeys the data governance policies enforced in regulated sectors. As Karras et al. (2025)[6] noted, sensitive information in prompt payloads may be logged by providers, repurposed for model retraining, or leaked through inversion techniques. 
 

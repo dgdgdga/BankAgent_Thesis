@@ -1,16 +1,14 @@
 % CHAPTER 5: CORE AGENT IMPLEMENTATION
 % ======================================================================
-{\fontsize{18}{22}\selectfont\textbf{5 Core Agent Implementation}}\par
-
-\vspace{3mm}
+\section{Core Agent Implementation}
 
 This chapter covers the three agent modules that form the platform's intelligence layer---tool agent, code agent, and RAG agent. Each section discusses internal architecture, key algorithms, and data flow design. Pseudocode tables and sequence diagrams are included to illustrate the operational logic of each agent.
 
-\subhead{5.1 Tool Agent Implementation}
+\subsection{Tool Agent Implementation}
 
 This agent runs within a separate tool-agent service (Spring Boot, port 8083), providing three capabilities: meeting room management, schedule conflict detection, and route planning. Technically, business logic is divided into REST endpoints and specialized service classes; the AI intent module provides a unified entry point for natural language input.
 
-\subhead{5.1.1 Architecture and AI Intent Routing}
+\subsection{Architecture and AI Intent Routing}
 
 The tool agent employs a dual-path design at the interaction layer: one side retains programmatic calls, while the other open a natural language entry point.
 
@@ -123,7 +121,7 @@ END FUNCTION
 
 The DeepSeek API configuration in application.yml uses environment variables with development defaults: AI\_DEEPSEEK\_API\_KEY, AI\_DEEPSEEK\_BASE\_URL (defaulting to https://maas-api.cn-huabei-1.xf-yun.com/v1), AI\_DEEPSEEK\_MODEL (defaulting to deepseek-v3), AI\_DEEPSEEK\_TIMEOUT (180s), and AI\_DEEPSEEK\_MAX\_TOKENS (2000).
 
-\subhead{5.1.2 Meeting Room Management}
+\subsection{Meeting Room Management}
 
 For meeting room management, due to varying user permissions, we designed two sets of interfaces base on user permissions and functions:
 
@@ -260,7 +258,7 @@ GET    & /tool/route            & from, to, mode (default driving)     & Plan ro
 \end{table}
 
 
-\subhead{5.1.3 Schedule Conflict Detection}
+\subsection{Schedule Conflict Detection}
 
 Schedule conflict detection uses a dual-layer architecture: MySQL is the persistent store for all schedule data, while Redis serves as a fast query cache for temporal overlap detection. The ScheduleService handles CRUD operations on meeting\_schedule records. Each schedule has a booker (the user who created it), optional room\_id (0 for personal schedules that don't need a room), start\_time/end\_time, and an attendees field stored as a comma-separated list. Each user's schedules are indexed in Redis as a sorted set, where scores represent epoch timestamps and members encode event identifiers plus time ranges---this structure allows O(log N) insertion and O(log N + M) range queries, where N is the number of schedules for that user and M is the number of results in the time window.
 
@@ -405,7 +403,7 @@ END FUNCTION
 \end{table}
 
 
-\subhead{5.1.4 Route Planning}
+\subsection{Route Planning}
 
 The route planning feature integrates the Amap Open API through the AmapService class, which provides geocoding, route calculation, and map data for visualization. The GET /tool/route endpoint accepts origin, destination, and optional waypoint parameters, returning a route response containing path coordinates, turn-by-turn instructions, total distance, and estimated duration. geocoding (converting addresses to coordinates) is implemented through Amap's geocoding API, with detailed request parameters and LLM-based route description translation.
 
@@ -489,11 +487,11 @@ END FUNCTION
 
 On the frontend, the MapContainer.vue component loads the Amap JS API v2.0 SDK through script injection with the API key  and security code. The component creates a map instance with zoom level 12, centered on the starting coordinate. An indigo polyline renders the route path. Green and red custom marker icons indicate the start and end points, respectively. Turning instructions are displayed in a scrollable list below the map, with each instruction showing the road name, distance, and a directional icon.
 
-\subhead{5.2 Code Agent Implementation}
+\subsection{Code Agent Implementation}
 
 The Code Agent lets users generate executable SQL queries from natural language descriptions, connecting business users' domain expertise with the SQL knowledge needed for direct database interaction.
 
-\subhead{5.2.1 Architecture Overview}
+\subsection{Architecture Overview}
 
 Table \ref{tab:code-agent-pipeline} shows the four-stage pipeline of Code Agent.
 
@@ -534,7 +532,7 @@ Figure \ref{fig:code-agent-usecase} shows the Code Agent use case diagram. Busin
 
 The use case covers schema-aware query generation, five-layer security validation, JdbcTemplate-based execution, and result presentation with export capabilities.
 
-\subhead{5.2.2 Python LLM Inference Server Integration}
+\subsection{Python LLM Inference Server Integration}
 
 Table \ref{tab:pseudocode-onnx} shows the SQL generation HTTP proxy that forwards natural language questions to the Python LLM inference server and parses the returned SQL.
 
@@ -582,7 +580,7 @@ END FUNCTION
 \end{table}
 
 
-\subhead{5.2.3 Five-Layer SQL Whitelist Validation}
+\subsection{Five-Layer SQL Whitelist Validation}
 
 The SqlValidationService uses a defense-in-depth validation pipeline with five sequential layers, each of which can reject SQL that violates its security rule. The validation is configurable through CodeAgentProperties in application.yml.
 
@@ -788,7 +786,7 @@ Table \ref{tab:sql-validation-rules} summarizes the five validation layers with 
 \end{table}
 
 
-\subhead{5.2.4 Metadata Caching and Execution}
+\subsection{Metadata Caching and Execution}
 
 Tables \ref{tab:pseudocode-refresh-metadata}, \ref{tab:pseudocode-cache-lifecycle}, and \ref{tab:pseudocode-sql-execution} show the schema metadata cache loading from information\_schema to Redis, the cache lifecycle management with scheduled refresh, and thedefense-in-depth SQL execution flow.
 
@@ -943,9 +941,9 @@ END FUNCTION
 \end{table}
 
 
-\subhead{5.3 RAG Agent Implementation}
+\subsection{RAG Agent Implementation}
 
-\subhead{5.3.1 Architecture Overview}
+\subsection{Architecture Overview}
 
 The RAG Agent is implemented as an independent Spring Boot microservice on port 8085. It is not a thin wrapper around a vector database; it owns the complete enterprise document question answering pipeline: document ingestion, chunking, embedding, vector indexing, permission-safe retrieval, grounded answer generation, citation construction, and query audit logging. The service is exposed through Spring Cloud Gateway under /api/rag/**. Gateway authentication is still the first security boundary: JwtAuthGlobalFilter validates the JWT token and forwards X-User-Id, X-User-Name, X-User-Dept-Id, X-User-Roles, and X-User-Security-Level headers to rag-agent.
 
@@ -1005,7 +1003,7 @@ traceable profile and access decision for every query \\
 \label{fig:rag-agent-architecture}
 \end{figure}
 
-\subhead{5.3.2 Data Structure and Storage Ownership}
+\subsection{Data Structure and Storage Ownership}
 
 The existing sys\_document table remains the document master table and stores title, content, dept\_id, security\_level, owner information, and document status. RAG-specific data is deliberately separated into metadata tables so that document management can evolve independently from vector retrieval.
 
@@ -1035,7 +1033,7 @@ Milvus collection & vector\_id, document\_id, chunk\_id, chunk\_index, dept\_id,
 
 Milvus is deployed as a standalone vector database with etcd for metadata coordination and MinIO for object storage. The default local BGE-M3 profile uses 1024-dimensional embeddings, COSINE similarity, and an HNSW index. The collection name and vector dimension are not hard-coded in business logic; they are derived from the active embedding profile, allowing the local BGE-M3 profile and Qwen embedding profile to use independent vector collections without changing the query service.
 
-\subhead{5.3.3 Document Indexing and Chunking Pipeline}
+\subsection{Document Indexing and Chunking Pipeline}
 
 The indexing pipeline converts business documents into searchable semantic units. The important design decision is that chunk metadata is persisted before it is trusted by query-time generation. Each vector can be traced back to a document, a chunk row, an embedding profile, and a content hash.
 
@@ -1100,7 +1098,7 @@ END FUNCTION
 \end{lstlisting}
 \end{table}
 
-\subhead{5.3.4 Permission-Safe Retrieval and Answer Generation}
+\subsection{Permission-Safe Retrieval and Answer Generation}
 
 The query pipeline deliberately separates semantic relevance from authorization. Before vector search, RagPermissionService builds the current user's accessible document ID set from department scope, clearance level, admin role, and approved RAG\_APPLY records. The Milvus REST adapter receives this set as an allowed-document filter, so the ANN query is scoped before candidate chunks are returned. RagQueryService still asks for a broader candidate set than the final top-K and repeats the permission check after retrieval. This two-layer design avoids relying on either vector metadata or application filtering as a single security boundary.
 
@@ -1250,7 +1248,7 @@ latencyMs + status & API response, task output, query log & Supports frontend pr
 \end{tabularx}
 \end{table}
 
-\subhead{5.3.5 API Surface and Orchestration Integration}
+\subsection{API Surface and Orchestration Integration}
 
 The RAG Agent exposes user-facing query endpoints, knowledge-base management endpoints, index maintenance endpoints, permission endpoints, and embedding-profile endpoints. All routes are protected by Gateway-level JWT authentication.
 
@@ -1285,11 +1283,11 @@ POST /rag/access-request & User & Creates a RAG\_APPLY notification for document
 
 The capability is also integrated into the task-service. When a RAG-type task is submitted, the task-service calls \texttt{POST /rag/query} with \texttt{topK=5} and pushes progress through WebSocket: accepted, permission snapshot built, retrieval finished, answer generated, and completed. The final RAG response is stored in \texttt{task\_record.output}, allowing the Task Center and Copilot to reuse the same evidence-grounded answer flow.
 
-\subhead{5.3.6 Frontend RAG Workbench and Citation Rendering}
+\subsection{Frontend RAG Workbench and Citation Rendering}
 
 The /app/rag page is designed as an operational workbench rather than a simple chatbot. It includes a question input area, topK selector, loading states, answer rendering, citation cards, document metadata badges, and permission-filter diagnostics. Each citation card displays document title, chunk snippet, similarity score, security level, and document link. When candidate documents are retrieved but blocked by permission rules, the page shows the blocked count without exposing blocked content. If the user needs a restricted document, the access-request action creates a RAG\_APPLY notification. After an administrator or department administrator approves it, RagPermissionService includes the approved document in the user's permission snapshot until the temporary access window expires, so later retrieval can use that document as evidence without changing the permanent document ACL. The workbench also polls asynchronous rebuild and reprocess tasks, letting administrators see queued, running, success, or failed states after starting index maintenance. Copilot intent routing can redirect RAG-like questions to /app/rag?query=..., so a user can begin from the Copilot entry point and continue in the specialized RAG workbench with the question pre-filled.
 
-\subhead{5.3.7 Synchronization, Deployment, and Testing}
+\subsection{Synchronization, Deployment, and Testing}
 
 Document-RAG synchronization follows the same clean lifecycle as the indexing pseudocode: document creation triggers single-document indexing; document update deletes old vectors and re-indexes the changed document; document deletion removes chunk rows and Milvus vectors. Full index rebuild is asynchronous. RagIndexService creates a \texttt{rag\_index\_task} in QUEUED state, runs the rebuild on the index task executor, marks the active embedding profile as REBUILDING, and finally updates the profile index status to READY or FAILED. Content hashes allow the service to detect unchanged chunks and reduce unnecessary embedding work in rebuild tasks.
 
