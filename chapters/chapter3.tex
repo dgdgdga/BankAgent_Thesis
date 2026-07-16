@@ -55,7 +55,7 @@ Table 3 summarizes the non-functional requirements that govern system quality at
 \toprule
 \textbf{ID} & \textbf{Requirement} & \textbf{Description} \\
 \midrule
-NFR1 & Data Sovereignty & All core data processing must run within the on-premise Docker environment. External API calls transmit only the minimum necessary parameters with no payload logging or retention by third-party providers. \\
+NFR1 & Data Sovereignty & All core data processing must run within the on-premise environment. Administrators must be able to configure whether AI inference and embedding use local models or external APIs. When external APIs are used, only the minimum necessary payload is transmitted, with no logging or retention by third-party providers. \\
 \midrule
 NFR2 & Performance & SQL generation must complete within 3 seconds. Meeting-room and schedule queries must respond within 500 ms. Route planning must return within 2 seconds. WebSocket progress updates must be delivered within 200 ms. Initial page load must not exceed 3 seconds. \\
 \midrule
