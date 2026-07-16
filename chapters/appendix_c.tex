@@ -30,13 +30,23 @@ The first build takes 15--30 minutes. Docker must pull base images, compile the 
 
 \textbf{Test accounts.} The following accounts are pre-seeded in the database:
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,aboveskip=2pt,belowskip=2pt]
-admin           / 123456    System Administrator (clearance Level 3)
-credit_mgr      / 123456    Credit Department Manager (Level 2)
-credit_staff    / 123456    Credit Department Staff (Level 1)
-compliance_mgr  / 123456    Compliance Department Manager (Level 2)
-compliance_staff / 123456   Compliance Department Staff (Level 1)
-\end{lstlisting}
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{Pre-Seeded Test Accounts}
+\label{tab:test-accounts}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.25\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{Username} & \textbf{Password} & \textbf{Role} \\
+\midrule
+admin & 123456 & System Administrator (clearance Level 3) \\
+credit\_mgr & 123456 & Credit Department Manager (Level 2) \\
+credit\_staff & 123456 & Credit Department Staff (Level 1) \\
+compliance\_mgr & 123456 & Compliance Department Manager (Level 2) \\
+compliance\_staff & 123456 & Compliance Department Staff (Level 1) \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subhead{C.3 Navigating the Platform}
 
