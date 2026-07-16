@@ -26,7 +26,7 @@ cd ..
 docker compose up --build -d
 \end{lstlisting}
 
-The first build takes 15--30 minutes. Once all containers show \texttt{healthy} or \texttt{Up} status in \texttt{docker compose ps}, open \texttt{http://localhost} in a browser.
+The first build takes 15--30 minutes. Docker must pull base images, compile the five Java services from source, and download the BGE-M3 embedding model (approximately 2 GB) inside the worker container. Subsequent starts take only a few seconds. Once all containers show \texttt{healthy} or \texttt{Up} status in \texttt{docker compose ps}, open \texttt{http://localhost} in a browser.
 
 \textbf{Test accounts.} The following accounts are pre-seeded in the database:
 
