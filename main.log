@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.20)  16 JUL 2026 16:51
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.20)  16 JUL 2026 16:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -878,7 +878,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1282--1282
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
 
-Overfull \hbox (47.99997pt too wide) in alignment at lines 62--62
+Overfull \hbox (47.99997pt too wide) in alignment at lines 64--64
 [][][][] 
  []
 
@@ -903,12 +903,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 140--141
  []
 
 [69] [70]) (chapters/chapter6.tex [71]
-Underfull \hbox (badness 5374) in paragraph at lines 98--98
+Underfull \hbox (badness 5374) in paragraph at lines 99--99
 []|\TU/TimesNewRoman(0)/m/n/10.95 Agent error, timeout, or 
  []
 
 [72]
-Underfull \hbox (badness 3989) in paragraph at lines 107--108
+Underfull \hbox (badness 3989) in paragraph at lines 106--107
 []\TU/TimesNewRoman(0)/m/n/12 Tasks enter the system through two channels. The 
 primary channel is \TU/lmtt/m/n/12 POST
  []
@@ -919,7 +919,7 @@ Overfull \hbox (11.94124pt too wide) in paragraph at lines 147--147
  []
 
 
-Underfull \hbox (badness 1629) in paragraph at lines 152--153
+Underfull \hbox (badness 1629) in paragraph at lines 150--151
 []\TU/TimesNewRoman(0)/m/n/12 All downstream calls use Spring’s \TU/lmtt/m/n/12
  RestTemplate \TU/TimesNewRoman(0)/m/n/12 with a 5-second connect time-
  []

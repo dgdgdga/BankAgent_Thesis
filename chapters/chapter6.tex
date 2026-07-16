@@ -85,7 +85,8 @@ Every piece of work in the platform is modeled as a task record with a four-stat
 \begin{table}[H]
 \small\singlespacing
 \centering
-\small\singlespacing
+\caption{Task Lifecycle State Machine}
+\label{tab:task-lifecycle}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{State} & \textbf{Meaning} & \textbf{Transition Trigger} \\
@@ -96,8 +97,6 @@ SUCCESS & Agent returned a valid result & Downstream agent responds with code 20
 FAIL & Execution failed after all retries, or queue was full & Agent error, timeout, or \texttt{RejectedExecutionException} \\
 \bottomrule
 \end{tabularx}
-\caption{Task Lifecycle State Machine}
-\label{tab:task-lifecycle}
 \end{table}
 
 The state machine is linear by design --- no complex branching or rollback. If a task fails, the retry mechanism re-executes from INIT state; it does not attempt to resume from the failure point. This keeps the implementation simple and predictable, which is appropriate for the current single-instance deployment.
@@ -135,7 +134,8 @@ Once a worker thread picks up a task, the \texttt{executeTaskOnce()} method rout
 \begin{table}[H]
 \small\singlespacing
 \centering
-\small\singlespacing
+\caption{Task Type to Agent Routing}
+\label{tab:task-routing}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.30\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{taskType} & \textbf{Target Service} & \textbf{Endpoint} & \textbf{Request Body} \\
@@ -145,8 +145,6 @@ TOOL / AI & tool-agent (8083) & \texttt{POST /tool/execute} & \texttt{\{toolType
 RAG & rag-agent (8085) & \texttt{POST /rag/query} & \texttt{\{question: input, topK: 5\}} \\
 \bottomrule
 \end{tabularx}
-\caption{Task Type to Agent Routing}
-\label{tab:task-routing}
 \end{table}
 
 All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Id}, \texttt{X-User-Name}, \texttt{X-User-Dept-Id}, \texttt{X-User-Roles}, and \texttt{X-User-Security-Level}) are forwarded so that each agent can apply its own authorization logic. This is especially important for RAG tasks because the query service uses these headers to build the permission snapshot before vector candidates are allowed into the LLM prompt. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
@@ -180,7 +178,8 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \begin{table}[H]
 \small\singlespacing
 \centering
-\small\singlespacing
+\caption{Task Service REST API Endpoints}
+\label{tab:task-service-api}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}p{0.20\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{Endpoint} & \textbf{Auth} & \textbf{Description} \\
@@ -191,8 +190,6 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \texttt{GET /task/list/all} & Admin only & List all tasks in the platform \\
 \bottomrule
 \end{tabularx}
-\caption{Task Service REST API Endpoints}
-\label{tab:task-service-api}
 \end{table}
 
 RAG tasks use the same orchestration path. When the submitted task type is RAG, the task service forwards the question to rag-agent through \texttt{POST /rag/query}, stores the returned answer, citations, retrieved document IDs, blocked document IDs, trace ID, and latency in \texttt{task\_record.output}, and pushes progress messages back to the frontend. This allows the Copilot, Task Center, and the dedicated RAG workbench to share the same backend capability instead of maintaining separate query implementations.
