@@ -100,7 +100,7 @@ The backend consists of independent Spring Boot microservices, each handling a s
 
 \textbf{(4) Code Agent Service.} The Code Agent runs on port 8084. It converts natural language questions to SQL through a Python LLM inference proxy on port 8090. Generated SQL passes through a multi-layer whitelist validation before execution. Database schema metadata is cached for query generation accuracy. A human-in-the-loop mode lets users review SQL before it reaches the database.
 
-\textbf{(5) RAG Agent Service.} The RAG Agent runs on port 8085. It ingests enterprise documents through parsing and structure-aware chunking, generates embeddings, and stores vectors in Milvus for semantic search. User questions are embedded, matched against the vector store, and answered with source citations. Retrieval is filtered by the user's department and clearance level. A Python embedding worker on port 8091 supports local model inference.
+\textbf{(5) RAG Agent Service.} The RAG Agent runs on port 8085. It owns the complete enterprise knowledge retrieval workflow: document upload alignment, parsing, structure-aware chunking, embedding generation, Milvus vector indexing, permission-safe retrieval, citation construction, and query audit logging. User questions are embedded with the active embedding profile, matched against the corresponding Milvus collection, filtered by department and clearance level, and answered through an OpenAI-compatible LLM endpoint using only allowed chunks. A Python embedding worker on port 8091 supports local BGE-M3 inference, while the same profile abstraction also supports cloud embedding providers such as Qwen.
 
 \textbf{(6) Task Service.} The Task Service runs on port 8082. It is the platform's asynchronous execution backbone. It accepts tasks from the Copilot and agent pages, persists them, queues them for execution in a bounded thread pool, and routes each task to the appropriate agent. Failed tasks are retried up to three times with exponential backoff. Progress is pushed to the frontend in real time via WebSocket.
 
@@ -124,7 +124,7 @@ User Service   & Spring Boot 3.x + MyBatis-Plus & Authentication, RBAC, document
 Task Service   & Spring Boot 3.x             & Async task orchestration, retry with backoff, WebSocket progress streaming \\
 Tool Agent     & Spring Boot 3.x             & Meeting booking, schedule detection, route planning, LLM intent routing \\
 Code Agent     & Spring Boot 3.x + Python FastAPI & NL2SQL generation, multi-layer SQL validation, metadata caching \\
-RAG Agent      & Spring Boot 3.x             & Document Q\&A, vector retrieval, source citation, clearance-filtered access \\
+RAG Agent      & Spring Boot 3.x             & Document Q\&A, chunk indexing, vector retrieval, source citation, clearance-filtered access, query audit \\
 Security       & Spring Security 6.x + JWT   & Stateless authentication, RBAC with @PreAuthorize, BCrypt hashing \\
 Caching        & Redis                       & Session caching, rate limit counters, metadata cache, schedule zsets \\
 LLM Inference  & DeepSeek API (HTTPS)        & Intent routing, SQL generation, RAG answer generation \\

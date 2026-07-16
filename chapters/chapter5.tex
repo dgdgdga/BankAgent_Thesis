@@ -1201,9 +1201,11 @@ END FUNCTION
 \end{lstlisting}
 \end{table}
 
-The answer generation step uses an OpenAI-compatible chat-completions endpoint configured by RAG\_LLM\_API\_KEY, RAG\_LLM\_BASE\_URL, and RAG\_LLM\_MODEL. The prompt has three parts: the user question, a numbered context block containing permission-safe chunks, and answer rules. The answer rules require the model to answer only from the provided context, cite chunk identifiers, state that no evidence was found when the context is insufficient, and never infer content from blocked documents. The response returned to the frontend contains traceId, answer text, citations, retrieved chunks, retrieved document IDs, blocked document IDs, topK, status, and latency.
+The answer generation step uses an OpenAI-compatible chat-completions endpoint configured by \texttt{RAG\_LLM\_API\_KEY}, \texttt{RAG\_LLM\_BASE\_URL}, and \texttt{RAG\_LLM\_MODEL}. The prompt has three parts: the user question, a numbered context block containing permission-safe chunks, and answer rules. The answer rules require the model to answer only from the provided context, cite chunk identifiers, state that no evidence was found when the context is insufficient, and never infer content from blocked documents. The response returned to the frontend contains traceId, answer text, citations, retrieved chunks, retrieved document IDs, blocked document IDs, topK, status, and latency.
 
 Failure handling is part of the query contract rather than an unhandled exception path. If the user has no accessible documents, the service returns an empty evidence response with a controlled status and message. If Milvus, the embedding endpoint, or the LLM endpoint fails, RagQueryServiceImpl catches the exception, preserves the traceId, writes the status and message into rag\_query\_log, and returns a frontend-renderable failure response. This keeps the RAG workbench debuggable without exposing inaccessible document content.
+
+The implementation also separates retrieval diagnostics from answer text. Similarity scores, chunk identifiers, document IDs, embedding profile, vector collection, blocked document IDs, and latency are carried as structured fields. This makes the RAG response inspectable by the frontend and auditable by administrators, while avoiding the common problem where a RAG answer is only a free-form paragraph with no operational trace.
 
 \subhead{5.3.5 API Surface and Orchestration Integration}
 
@@ -1238,7 +1240,7 @@ POST /rag/access-request & User & Creates a RAG\_APPLY notification for document
 \end{tabularx}
 \end{table}
 
-The capability is also integrated into the task-service. When a RAG-type task is submitted, the task-service calls POST /rag/query with topK=5 and pushes progress through WebSocket: accepted, permission snapshot built, retrieval finished, answer generated, and completed. The final RAG response is stored in task\_record.output, allowing the Task Center and Copilot to reuse the same evidence-grounded answer flow.
+The capability is also integrated into the task-service. When a RAG-type task is submitted, the task-service calls \texttt{POST /rag/query} with \texttt{topK=5} and pushes progress through WebSocket: accepted, permission snapshot built, retrieval finished, answer generated, and completed. The final RAG response is stored in \texttt{task\_record.output}, allowing the Task Center and Copilot to reuse the same evidence-grounded answer flow.
 
 \subhead{5.3.6 Frontend RAG Workbench and Citation Rendering}
 
@@ -1250,7 +1252,7 @@ Document-RAG synchronization follows the same clean lifecycle as the indexing ps
 
 Docker Compose includes rag-agent, Milvus Standalone, etcd, MinIO, and rag-worker. Important environment variables include \texttt{RAG\_SERVICE\_URI}, \texttt{MILVUS\_HOST}, \texttt{MILVUS\_PORT}, \texttt{RAG\_EMBEDDING\_PROVIDER}, \texttt{RAG\_EMBEDDING\_MODEL}, \texttt{RAG\_EMBEDDING\_DIM}, \texttt{RAG\_CHUNK\_SIZE\_TOKENS}, \texttt{RAG\_CHUNK\_OVERLAP\_TOKENS}, \texttt{RAG\_LLM\_API\_KEY}, \texttt{RAG\_LLM\_BASE\_URL}, \texttt{RAG\_LLM\_MODEL}, \texttt{RAG\_MILVUS\_COLLECTION}, \texttt{RAG\_VECTOR\_METRIC}, and \texttt{RAG\_VECTOR\_INDEX}. Service dependency ordering ensures that Milvus, MinIO, etcd, and the embedding worker are available before rag-agent starts accepting queries.
 
-Testing focuses on both quality and leakage prevention: admin users can retrieve high-clearance documents; standard users are restricted to same-department and clearance-allowed documents; low-clearance users cannot see confidential chunks; approved RAG\_APPLY requests expand access; document updates refresh the index; document deletion removes vectors; Milvus or LLM failures return controlled error states; and the frontend citation panel renders evidence without exposing blocked document content.
+Testing focuses on both quality and leakage prevention: admin users can retrieve high-clearance documents; standard users are restricted to same-department and clearance-allowed documents; low-clearance users cannot see confidential chunks; approved RAG\_APPLY requests expand access; document updates refresh the index; document deletion removes vectors; Milvus or LLM failures return controlled error states; and the frontend citation panel renders evidence without exposing blocked document content. In addition, embedding-profile tests verify that BGE-M3 and Qwen vectors are written to separate collections, that dimension mismatches are caught by health checks, and that index rebuild status is visible before users rely on a newly activated profile.
 
 \newpage
 
