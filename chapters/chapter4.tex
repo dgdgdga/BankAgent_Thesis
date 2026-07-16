@@ -267,11 +267,8 @@ The data layer uses a multi-engine approach. Each storage engine was chosen for 
 \textbf{Category} & \textbf{Engine} & \textbf{Stored Data} & \textbf{Usage} \\
 \midrule
 Relational & MySQL 8.0 & Users, roles, permissions, departments, documents, meeting rooms, schedules, notifications, RAG metadata & Transactional read/write with ACID guarantees \\
-\midrule
 Cache & Redis 7 & Session tokens, rate limit counters, schema metadata cache, schedule conflict sorted sets & Sub-millisecond reads for hot data and real-time checks \\
-\midrule
 Object & MinIO & Uploaded PDF, DOCX, PPT, and Markdown files; Milvus backend storage & Document file storage and retrieval \\
-\midrule
 Vector & Milvus 2.6 & Document chunk embeddings with source metadata and security labels & Semantic ANN search filtered by department and clearance \\
 \bottomrule
 \end{tabularx}
@@ -289,15 +286,10 @@ Vector & Milvus 2.6 & Document chunk embeddings with source metadata and securit
 \textbf{Group} & \textbf{Tables} & \textbf{Record Count (Seed)} \\
 \midrule
 RBAC & sys\_user, sys\_role, sys\_permission, sys\_user\_role, sys\_role\_permission & 5 users, 3 roles, 6 permissions \\
-\midrule
 Organization & sys\_department & 6 departments \\
-\midrule
 Documents & sys\_document & 11 documents \\
-\midrule
 Meetings & meeting\_room, meeting\_schedule & 4 rooms \\
-\midrule
 Tasks \& Notifications & task\_record, sys\_notification & — \\
-\midrule
 RAG Metadata & rag\_document\_chunk, rag\_query\_log & — \\
 \bottomrule
 \end{tabularx}
