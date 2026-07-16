@@ -76,7 +76,7 @@ Access Control. Three roles (ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, ROLE\_USER) and six
 
 \subhead{6.2 Task Center and Orchestration}
 
-The Task Center (task-service, port 8082) is the platform's asynchronous execution backbone. Its role is to accept work from any entry point --- the Copilot widget, an agent page, or a future API integration --- and ensure that work gets done reliably, with progress visible to the user throughout. Rather than letting each agent manage its own execution lifecycle, the Task Center centralizes queuing, retry, progress reporting, and result persistence.
+The Task Center (task-service, port 8082) is the platform's asynchronous execution backbone. Its role is to accept work from any entry point --- the Copilot widget, an agent page, or an external API integration --- and ensure that work gets done reliably, with progress visible to the user throughout. Rather than letting each agent manage its own execution lifecycle, the Task Center centralizes queuing, retry, progress reporting, and result persistence.
 
 \subsubhead{6.2.1 Task Lifecycle and State Machine}
 
@@ -85,7 +85,8 @@ Every piece of work in the platform is modeled as a task record with a four-stat
 \begin{table}[H]
 \small\singlespacing
 \centering
-\small\singlespacing
+\caption{Task Lifecycle State Machine}
+\label{tab:task-lifecycle}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{State} & \textbf{Meaning} & \textbf{Transition Trigger} \\
@@ -96,8 +97,6 @@ SUCCESS & Agent returned a valid result & Downstream agent responds with code 20
 FAIL & Execution failed after all retries, or queue was full & Agent error, timeout, or \texttt{RejectedExecutionException} \\
 \bottomrule
 \end{tabularx}
-\caption{Task Lifecycle State Machine}
-\label{tab:task-lifecycle}
 \end{table}
 
 The state machine is linear by design --- no complex branching or rollback. If a task fails, the retry mechanism re-executes from INIT state; it does not attempt to resume from the failure point. This keeps the implementation simple and predictable, which is appropriate for the current single-instance deployment.
@@ -135,7 +134,8 @@ Once a worker thread picks up a task, the \texttt{executeTaskOnce()} method rout
 \begin{table}[H]
 \small\singlespacing
 \centering
-\small\singlespacing
+\caption{Task Type to Agent Routing}
+\label{tab:task-routing}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.30\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{taskType} & \textbf{Target Service} & \textbf{Endpoint} & \textbf{Request Body} \\
@@ -145,11 +145,9 @@ TOOL / AI & tool-agent (8083) & \texttt{POST /tool/execute} & \texttt{\{toolType
 RAG & rag-agent (8085) & \texttt{POST /rag/query} & \texttt{\{question: input, topK: 5\}} \\
 \bottomrule
 \end{tabularx}
-\caption{Task Type to Agent Routing}
-\label{tab:task-routing}
 \end{table}
 
-All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Name}, \texttt{X-User-Roles}) are forwarded so that each agent can apply its own authorization logic. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
+All downstream calls use Spring's \texttt{RestTemplate} with a 5-second connect timeout and 30-second read timeout. User identity headers (\texttt{X-User-Id}, \texttt{X-User-Name}, \texttt{X-User-Dept-Id}, \texttt{X-User-Roles}, and \texttt{X-User-Security-Level}) are forwarded so that each agent can apply its own authorization logic. This is especially important for RAG tasks because the query service uses these headers to build the permission snapshot before vector candidates are allowed into the LLM prompt. Service URIs are resolved from environment variables --- \texttt{CODE\_SERVICE\_URI}, \texttt{TOOL\_SERVICE\_URI}, \texttt{RAG\_SERVICE\_URI} --- with localhost fallbacks for development.
 
 \subsubhead{6.2.4 Retry with Exponential Backoff}
 
@@ -174,13 +172,14 @@ These milestones are chosen to reflect what the user actually cares about --- ``
 
 \subsubhead{6.2.6 Current Limitations}
 
-The Task Center's design reflects a pragmatic trade-off for a single-instance system. Tasks are queued in memory via \texttt{LinkedBlockingQueue}; if the task-service restarts, queued-but-unexecuted tasks are lost (though their INIT records remain in MySQL as orphans). Worker threads block synchronously on downstream HTTP calls via \texttt{RestTemplate}, meaning concurrency is capped at the thread pool size of 10. WebSocket session storage is a local \texttt{ConcurrentHashMap}, which would not work across multiple instances. These are acceptable constraints for the current deployment scale, and replacing the in-memory queue with a message broker (RabbitMQ or Redis Streams) is a natural next step for production hardening.
+The Task Center's design reflects a pragmatic trade-off for a single-instance system. Tasks are queued in memory via \texttt{LinkedBlockingQueue}; if the task-service restarts, queued-but-unexecuted tasks are lost (though their INIT records remain in MySQL as orphans). Worker threads block synchronously on downstream HTTP calls via \texttt{RestTemplate}, meaning concurrency is capped at the thread pool size of 10. WebSocket session storage is a local \texttt{ConcurrentHashMap}, which is suitable for the deployed single-instance topology but not for a multi-node cluster. These are acceptable constraints for the current deployment scale; a message broker such as RabbitMQ or Redis Streams belongs to a larger production hardening path rather than an unfinished part of this implementation.
 
 \vspace{3mm}
 \begin{table}[H]
 \small\singlespacing
 \centering
-\small\singlespacing
+\caption{Task Service REST API Endpoints}
+\label{tab:task-service-api}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}p{0.20\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{Endpoint} & \textbf{Auth} & \textbf{Description} \\
@@ -191,9 +190,9 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \texttt{GET /task/list/all} & Admin only & List all tasks in the platform \\
 \bottomrule
 \end{tabularx}
-\caption{Task Service REST API Endpoints}
-\label{tab:task-service-api}
 \end{table}
+
+RAG tasks use the same orchestration path. When the submitted task type is RAG, the task service forwards the question to rag-agent through \texttt{POST /rag/query}, stores the returned answer, citations, retrieved document IDs, blocked document IDs, trace ID, and latency in \texttt{task\_record.output}, and pushes progress messages back to the frontend. This allows the Copilot, Task Center, and the dedicated RAG workbench to share the same backend capability instead of maintaining separate query implementations.
 
 \subhead{6.3 WebSocket Real-Time Communication}
 
@@ -267,6 +266,8 @@ Figure \ref{fig:docker-topology} shows the Docker Compose service topology, illu
 \end{figure}
 
 The platform is deployed through Docker Compose. Each service (Gateway, four backend services, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal bridge network. Only the Gateway (port 8080) is exposed. The frontend Nginx (port 80) serves static Vue 3 SPA files and proxies API and WebSocket requests to the Gateway. MySQL initialization is handled via a mounted SQL dump file. The Python inference server for the Code Agent runs in a separate container with FastAPI.
+
+For RAG deployment, the Gateway maps /api/rag/** to rag-agent:8085. The rag-agent container depends on MySQL for metadata tables, Milvus for vector search, MinIO for document object storage, and rag-worker for local BGE-M3 embedding generation. Environment variables configure the active embedding provider, vector dimension, Milvus collection, chunk size, overlap, and LLM endpoint. This keeps the RAG subsystem deployable through the same Docker Compose command as the rest of the platform.
 
 \newpage
 

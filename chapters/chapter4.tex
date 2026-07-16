@@ -19,36 +19,38 @@ The five-layer structure is shown in Figure \ref{fig:five-layer}.
 
 The five layers, from top to bottom, are as follows.
 
-Layer 1 -- Web Presentation Layer. This is the front end of the architecture, built with Vue 3 SPA, responsible for user interaction, result display (tables, maps, and charts), and real-time progress notifications via WebSocket. It supports three languages: Simplified Chinese, Traditional Chinese, and English.
+\textbf{Layer 1 --- Web Presentation Layer.} This is the front end of the architecture, built with Vue 3 SPA, responsible for user interaction, result display (tables, maps, and charts), and real-time progress notifications via WebSocket. It supports three languages: Simplified Chinese, Traditional Chinese, and English.
 
-Layer 2 -- Gateway Layer. As the system's sole public entry point, the gateway handles request routing and identity verification. Every request not on the whitelist must carry a valid JWT. Once verified, the user's identity, roles, and permissions are extracted and forwarded to downstream services through custom headers.
+\textbf{Layer 2 --- Gateway Layer.} As the system's sole public entry point, the gateway handles request routing and identity verification. Every request not on the whitelist must carry a valid JWT. Once verified, the user's identity, roles, and permissions are extracted and forwarded to downstream services through custom headers.
 
-Layer 3 -- Business Service Layer. This layer contains user services and the task center. The user service manages registration, login, JWT issuance, role-based access control, notifications with a multi-type state machine, and document storage with department-scoped security clearance. The task center orchestrates cross-agent requests: it accepts tasks, queues them for asynchronous execution, tracks their progress, and streams status updates to the frontend via WebSocket.
+\textbf{Layer 3 --- Business Service Layer.} This layer contains user services and the task center. The user service manages registration, login, JWT issuance, role-based access control, notifications with a multi-type state machine, and document storage with department-scoped security clearance. The task center orchestrates cross-agent requests: it accepts tasks, queues them for asynchronous execution, tracks their progress, and streams status updates to the frontend via WebSocket.
 
-Layer 4 -- AI Service Layer. Three specialized agents handle the platform's AI capabilities. The Code Agent converts natural language to SQL and validates it through a multi-layer security check before execution. The Tool Agent handles business tasks such as meeting booking, schedule conflict detection, and route planning, using LLM-based intent routing to classify and dispatch requests. The RAG Agent combines vector retrieval with LLM generation to answer policy questions with verifiable citations, filtered by the user's department and clearance level. Sitting above all three, the Copilot dispatcher classifies user intent from a single natural language interface and routes each request to the appropriate agent. Two Python-based services support these agents: an LLM inference server for the Code Agent, and an embedding worker for the RAG Agent.
+\textbf{Layer 4 --- AI Service Layer.} Three specialized agents handle the platform's AI capabilities. The Code Agent converts natural language to SQL and validates it through a multi-layer security check before execution. The Tool Agent handles business tasks such as meeting booking, schedule conflict detection, and route planning, using LLM-based intent routing to classify and dispatch requests. The RAG Agent combines vector retrieval with LLM generation to answer policy questions with verifiable citations, filtered by the user's department and clearance level. Sitting above all three, the Copilot dispatcher classifies user intent from a single natural language interface and routes each request to the appropriate agent. Two Python-based services support these agents: an LLM inference server for the Code Agent, and an embedding worker for the RAG Agent.
 
-Layer 5 -- Data Layer. This layer uses a mix of storage engines chosen for their specific roles. MySQL stores user accounts, permissions, departments, documents, meeting rooms, and other relational data. Redis caches hot data such as schema metadata and handles schedule conflict detection through sorted sets. Milvus stores document embeddings and serves semantic similarity queries for the RAG Agent. MinIO holds uploaded document files as objects. etcd coordinates Milvus cluster metadata.
+\textbf{Layer 5 --- Data Layer.} This layer uses a mix of storage engines chosen for their specific roles. MySQL stores user accounts, permissions, departments, documents, meeting rooms, and other relational data. Redis caches hot data such as schema metadata and handles schedule conflict detection through sorted sets. Milvus stores document embeddings and serves semantic similarity queries for the RAG Agent. MinIO holds uploaded document files as objects. etcd coordinates Milvus cluster metadata.
 
-The request lifecycle shown in Figure \ref{fig:data-flow} varies significantly depending on the ingress type. We assume all external traffic first flows into the gateway layer. JWT authentication and rate limiting policies are strictly implemented upfront---the legitimacy of the request and the access rate are determined before routing decisions are made (otherwise, network security issues could easily arise). Only traffic that passes through this filtering layer is allowed to proceed downstream.
+The request lifecycle involves two distinct interaction patterns, illustrated in Figure \ref{fig:request-sequence}. For short-running operations such as login, registration, and document CRUD, the browser sends a synchronous HTTP request through the Gateway directly to the relevant business service, which reads or writes to MySQL and returns a response. For AI agent tasks, the flow is asynchronous: the browser submits a task via the Copilot or an agent page, the Task Service queues it for execution and routes it to the appropriate agent, and progress is streamed back to the browser via WebSocket. The Copilot adds a preliminary classification step --- the user's natural language query is sent to the Python Flask classifier to determine which agent should handle it before any task is created.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig03_data_flow.png}
-\caption{Data Flow Architecture --- End-to-End Request Processing Across System Layers}
-\label{fig:data-flow}
+\includegraphics[width=\textwidth]{figures/fig03_request_sequence.pdf}
+\caption{End-to-End Request Sequence --- Copilot Intent Classification and Asynchronous Task Execution with WebSocket Progress Streaming}
+\label{fig:request-sequence}
 \end{figure}
 
 \subhead{4.2 Frontend Architecture}
 
-This project's front-end is based on Vue 3 technology stack, and actual development utilized Composition API and TypeScript. The motivation for introducing TypeScript was straightforward: we wanted to catch type errors during compilation phase, reducing runtime exceptions caused by type mismatches. The logic reuse mechanism provided by Composition API was used simultaneously in Tool, Code, RAG interfaces, and management backend---the same set of interaction logic did not need to be implemented repeatedly, thus significantly reducing maintenance cost. We believe that terminal devices used in banking environment is quite complex (desktops, laptops, tablets, and mobile phones are all used, meaning that responsive layout is not an added feature, but a fundamental constraint that must be met.
+The front end is built on Vue 3 with Composition API and TypeScript. TypeScript catches type errors at compile time. Composition API allows shared interaction logic to be reused across Tool, Code, RAG, and management pages.
 
-Route management is handled uniformly by Vue Router, divided into public routes and authenticated routes based on access permissions. Navigation guards intercept requests before route switching, preventing unauthorized requests from entering protected pages. AuthLayout handles the login and registration pages, featuring a slide-in animation during page transitions. MainLayout is the main framework after authentication, with a left sidebar that supports both expanded and collapsed states. When expanded, its 230 pixels wide, and when collapsed, its only 56pixels wide, just enough to accommodate a function icon. The main framework is divided into three areas: agent services (tools, code, RAG) for regular users, a management panel accessible only to ROLE\_ADMIN, and system settings. Language switching supports Simplified Chinese, Traditional Chinese, and English(meeting the requirements of Hong Kong banks) .Unread message counts is obtained by polling the /user/notification/unread-count interface every 10 seconds and displayed as badges. The user avatar dropdown menu includes a personal information entry and a logout function.
+\textbf{(1) Design Language.} The interface follows a minimalist design language: a grayscale color system, unified spacing, and a collapsible sidebar. The goal is a clean, quiet interface that keeps the user focused on the task.
 
-For state management, we chose Pinia and split it into two Store based on their responsibilities. The userStore is responsible for maintaining login state. JWT tokens is persistently stored in localStorage. userInfo records user roles, permissions, departments, and security levels. External call layers interact with it through the login, logout, and getUserInfo methods. The taskStore tracks the agent task lifecycle. The Task structure includes fields for id, type (code/rag/tool), status (pending/running/completed/failed), progress (0--100), result, and createTime. Status changes are handled through addTask and updateTask.
+\textbf{(2) Role-Based View Control.} The frontend adapts its interface based on the user's role. The sidebar menu shows or hides entries depending on whether the user is an Admin, Department Admin, or regular user. The management panel is only visible to administrators. The Copilot widget is globally available regardless of role. This means a regular user sees agent pages and basic settings, while an admin additionally sees user management, department management, and system configuration entries.
 
-HTTP requests are uniformly encapsulated in utils/request.ts. The Axios instance is pre-configured with basic URLs and interceptors. Server-side response are uniformly packaged into a Result structure with the fields code, msg, and data. This structure is convenient for front-end response processing. WebSocket communication is handled within utils/websocket.ts, using the wsClient singleton pattern to manage the connection lifecycle. It automatically reconnects after a connection interruption, attempting a maximum of 3 times with a 2-second interval (otherwise, interaction latency would increase. Messages are handled according to four event categories: open, message, close, and error.
+\textbf{(3) Multi-Tab Navigation.} A browser-style multi-tab bar sits at the top of the main layout. Users can open multiple agent pages, the management panel, and system settings in parallel tabs. When switching between tabs, each page preserves its full state --- form inputs, filter selections, scroll positions, and in-progress results are not lost. A user can start a SQL query on the Code Agent page, switch to check a meeting room on the Tool Agent page, open the RAG Workbench to verify a policy citation, and return to the original query result without interruption.
 
-Map rendering is handled by the MapContainer.vue component. This component dynamically injects the Amap JS API v2.0, carrying the API key and security code. The map expands from the starting coordinates, with the route drawn as an indigo (\#4f46e5) polyline, 6 pixel wide. Custom icons in green and red are used for the start and end points respectively (we've compared them, and color differences improve visibility). The easeOutQuad easing function is used for navigation transitions, making highlight transitions smoother. Full-screen loading feedback is implemented by AgentThinking.vue, with a Sparkles icon placed in center of the screen and a carousel displaying the thinking state text below, the content sourced from a configurable array. The progress bar uses a gradient design, and the progress value will never reach 100\% during the loading process. It will fill up instantly when the task is actually completed. This detail is to avoid the user feeling that they are ``stuck in the last little segment''.
+\textbf{(4) Routing and Layout.} Vue Router divides routes into public and authenticated groups. Navigation guards block unauthenticated access before route transitions. The authenticated layout has a collapsible sidebar, role-based menu visibility, and a five-layer navigation guard pipeline covering token recovery, authentication redirect, and role checks. Three languages are supported: Simplified Chinese, Traditional Chinese, and English. Unread notification counts are polled every ten seconds and shown as badges.
+
+\textbf{(5) State Management and Communication.} Two Pinia stores manage frontend state: one for user authentication and permissions, the other for task lifecycle tracking. HTTP requests go through a shared Axios instance with JWT attachment, 401 auto-redirect, and unified error handling. All server responses follow a standard wrapper with code, message, and data fields. WebSocket connections use a singleton client with automatic reconnection, pushing real-time task progress to the UI without polling overhead.
 
 Table \ref{tab:frontend-tech-stack} summarizes the frontend technology stack.
 
@@ -63,35 +65,44 @@ Table \ref{tab:frontend-tech-stack} summarizes the frontend technology stack.
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \toprule
-\textbf{Component} & \textbf{Technology} & \textbf{Utility \& Responsibility} \\
+\textbf{Component} & \textbf{Technology} & \textbf{Description} \\
 \midrule
-View Layer       & Vue 3 + TypeScript            & Composition API with strict type safety \\
-State Management & Pinia                         & userStore (JWT persistence), taskStore (task lifecycle) \\
-UI Components    & Element-Plus                  & Enterprise forms, tables, dialogs, navigation elements \\
-Visualization    & ECharts 5                     & Rendering of data charts and SQL execution result analytics \\
-Build Tool       & Vite 4                        & Sub-second HMR during development, Rollup-based production bundling \\
-HTTP Client      & Axios + Interceptors          & JWT auto-attach, 401 auto-logout, unified error handling \\
-Real-Time        & WebSocket Client              & Singleton with auto-reconnect (3 attempts, 2s delay) \\
-Inter\-nation\-al\-ization & Vue I18n            & zh-CN, zh-TW, en locales with Element Plus sync \\
-Map Visualization & Amap JS API v2.0             & Dynamic SDK loading, route polyline, custom markers \\
+View Layer       & Vue 3 + TypeScript            & Composition API with type-safe development \\
+State Management & Pinia                         & userStore (JWT, roles, permissions), taskStore (task lifecycle) \\
+UI Components    & Element Plus                  & Enterprise forms, tables, dialogs, and navigation \\
+Visualization    & ECharts 5                     & Dashboard charts and SQL result analytics \\
+Build Tool       & Vite                          & Fast HMR during development, Rollup-based production builds \\
+HTTP Client      & Axios                         & JWT auto-attach, 401 redirect, unified error handling \\
+Real-Time        & WebSocket                     & Singleton client with auto-reconnect and four event categories \\
+Internationalization & Vue I18n                  & zh-CN, zh-TW, en locales \\
+Map              & Amap JS API v2.0              & Dynamic SDK loading, route polyline, custom markers \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig11_platform_screenshot.png}
+\caption{Platform Interface --- Main Layout with Collapsible Sidebar, Multi-Tab Bar, and Copilot Floating Widget}
+\label{fig:platform-screenshot}
+\end{figure}
+
 
 \subhead{4.3 Backend Microservice Architecture}
 
-The backend consists of independent Spring Boot micro service, each handling a specific business capability and communicating through the Gateway layer. This decomposition allows independent development, testing, deployment, and scaling of each service, while the Gateway provides a single API entry point for the frontend.
+The backend consists of independent Spring Boot microservices, each handling a specific business capability and communicating through the Gateway layer. This decomposition allows independent development, testing, deployment, and scaling of each service, while the Gateway provides a single API entry point for the frontend.
 
-Gateway Service (port 8080). Built on Spring Cloud Gateway 3.1.9, this service provides dynamic routing based on URL path predicates. The JwtAuthGlobalFilter (a GlobalFilter with order=-100)validates tokens for non-whitelist paths. It forwards identity information to downstream services through HTTP headers (X-User-Id, X-Username, X-User-Roles, X-User-Permissions, X-User-Dept-Id, X-User-Security-Level). Single-session enforcement is used. This means when someone logs in again, the old token is deleted from Redis. IP-based rate limiting is also configured: requests sent from the same IP address cannot exceed 100 per second (the burst capacity is 200, returning HTTP 429 upon exceeding). The gateway is the only container whose port is exposed to the outside; all other services are only accessible to each other through the internal Docker network.
+\textbf{(1) Gateway Service.} The Gateway runs on port 8080, built on Spring Cloud Gateway. A global JWT filter validates tokens on all non-whitelisted paths and forwards user identity to downstream services through custom HTTP headers. Single-session enforcement invalidates old tokens when a new login occurs. IP-based rate limiting rejects requests exceeding the configured threshold. The Gateway is the only container exposed to the public internet; all other services communicate over the internal Docker network.
 
-User Service (port 8081). This is the largest backend service, covering the complete user lifecycle. Spring Security 6.x is configured with stateless session management, CSRF disabled, and a JwtAuthenticationFilter that extracts the token from the Authorization header as the primary authentication mechanism. A dual-mode login controller accepts either password or verification code credentials, with the token signer using HMAC-SHA256 (the key is injected via environment variable). BCryptPassword Encoder (strength factor 10) handles password storage and verification. Three-tier RBAC is implemented by granting role-specific permissions to an endpoint. The access model to system documents is based on a two-dimensional matrix: clearance level (1-3) and department membership. In the notification subsystem, five state flows support threaded conversations through parent\_id and thread\_id fields. The email verification subsystem uses Resend HTTP API with HTML formatted templates.
+\textbf{(2) User Service.} The User Service runs on port 8081. It handles registration with email verification, dual-mode login via password or verification code, JWT issuance with roles and permissions embedded in claims, and three-tier RBAC with department-scoped data isolation. It manages documents stored in MinIO with clearance-level access control and HITL escalation for cross-clearance requests. A notification subsystem handles multi-type messages with a five-state state machine for approval workflows. The email verification subsystem uses the Resend HTTP API with three-tier rate limiting.
 
-Tool Agent Service (port 8083). The most developed AI service, it implements the Tool Agent with two controller groups. The ToolController (/tool/*) exposes 11 endpoints for end-user tool operations including room queries and reservations, CRUD for personal schedules, conflict detection, route planning, and a unified /tool/execute natural language AI entry point. The MeetingRoomAdminController (/tool/admin/*) exposes CRUD endpoints for administrators---room and schedule management. The AI intent routing module integrates with DeepSeek API (via iFlytek MaaS) for intent classification, routing requests to MeetingHandler, ScheduleHandler, or RouteHandler accordingly, with MockDetectFallback providing graceful degradation when the API is unavailable.
+\textbf{(3) Tool Agent Service.} The Tool Agent runs on port 8083. It provides three business capabilities: meeting room booking, schedule conflict detection using Redis sorted sets, and route planning via the Amap API. A unified natural language entry point uses LLM intent routing to classify user requests and dispatch them to the appropriate handler. Dedicated admin endpoints support CRUD operations on rooms and schedules for authorized users.
 
-Code Agent Service (port 8084). Implements the NL2SQL pipeline. The OnnxCodeGenerationService (enabled through the code-agent.onnx.enabled=true property) is the sole CodeGenerationService implementation, acting as an HTTP client proxy to the Python inference server. It is responsible for constructing the prompt (including database schema information), forwarding the natural language question, and extracting the generated SQL from the response. The Sql Validation Service performs five-layer whitelist checking. The MetadataCacheManager periodically refreshes the schema metadata cache from information\_schema to Redis, so the LLM always has an up-to-date view of the table structure.
+\textbf{(4) Code Agent Service.} The Code Agent runs on port 8084. It converts natural language questions to SQL through a Python LLM inference proxy on port 8090. Generated SQL passes through a multi-layer whitelist validation before execution. Database schema metadata is cached for query generation accuracy. A human-in-the-loop mode lets users review SQL before it reaches the database.
 
-Task Service (port 8082). Currently scaffolded with a basic POM configuration and TaskApplication main class. In the current architecture, task orchestration is distributed between the Gateway (request routing) and each agent service (autonomous execution). The separate task service is planned for centralizing asynchronous task tracking, progress management, and cross-agent workflow coordination in future phases.
+\textbf{(5) RAG Agent Service.} The RAG Agent runs on port 8085. It owns the complete enterprise knowledge retrieval workflow: document upload alignment, parsing, structure-aware chunking, embedding generation, Milvus vector indexing, permission-safe retrieval, citation construction, and query audit logging. User questions are embedded with the active embedding profile, matched against the corresponding Milvus collection, filtered by department and clearance level, and answered through an OpenAI-compatible LLM endpoint using only allowed chunks. A Python embedding worker on port 8091 supports local BGE-M3 inference, while the same profile abstraction also supports cloud embedding providers such as Qwen.
+
+\textbf{(6) Task Service.} The Task Service runs on port 8082. It is the platform's asynchronous execution backbone. It accepts tasks from the Copilot and agent pages, persists them, queues them for execution in a bounded thread pool, and routes each task to the appropriate agent. Failed tasks are retried up to three times with exponential backoff. Progress is pushed to the frontend in real time via WebSocket.
 
 Table \ref{tab:backend-services} summarizes the backend services.
 
@@ -106,56 +117,112 @@ Table \ref{tab:backend-services} summarizes the backend services.
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \toprule
-\textbf{Component} & \textbf{Technology} & \textbf{Utility \& Responsibility} \\
+\textbf{Component} & \textbf{Technology} & \textbf{Description} \\
 \midrule
-Gateway Layer        & Spring Cloud Gateway 3.1.9  & Dynamic routing, JWT validation, IP rate limiting, WebSocket proxy \\
-Business Logic       & Spring Boot 3.x + MyBatis-Plus & Service orchestration, type-safe CRUD, logical deletion (@TableLogic) \\
-Security Framework   & Spring Security 6.x + JWT   & Stateless authentication, RBAC with @PreAuthorize, BCrypt password hashing \\
-Caching Layer        & Spring Data Redis           & Session caching, rate limit counters, metadata cache \\
-AI Integration (Tool) & DeepSeek API (HTTPS)       & Intent routing (MEETING/SCHEDULE/ROUTE), parameter extraction, route translation \\
-Inference Engine     & Python FastAPI (port 8090)  & LLM-based SQL generation from natural language questions via /infer endpoint \\
-RAG Agent            & Spring Boot 3.x (port 8085) & Document Q\&A, vector retrieval, source citation, access workflow \\
-Embedding Worker     & Python FastAPI (rag-worker) & bge-m3 embedding generation, Markdown chunking \\
-Document Parsing     & Apache Tika                 & Multi-format document parsing for RAG ingestion pipeline \\
-Vector Retrieval     & Milvus Java SDK 2.3+        & Semantic ANN search for RAG document retrieval \\
-Object Storage       & MinIO                       & Document file storage (PDF/DOCX/PPT), Milvus backend \\
-Email Service        & Resend API                  & Email verification code delivery, three-tier rate limiting \\
-Map Services         & Amap API (HTTPS)            & Geocoding (multi-level fallback), direction calculation, polyline coordinate parsing \\
+Gateway        & Spring Cloud Gateway        & Dynamic routing, JWT validation, rate limiting, WebSocket proxy \\
+User Service   & Spring Boot 3.x + MyBatis-Plus & Authentication, RBAC, document management, notifications, email verification \\
+Task Service   & Spring Boot 3.x             & Async task orchestration, retry with backoff, WebSocket progress streaming \\
+Tool Agent     & Spring Boot 3.x             & Meeting booking, schedule detection, route planning, LLM intent routing \\
+Code Agent     & Spring Boot 3.x + Python FastAPI & NL2SQL generation, multi-layer SQL validation, metadata caching \\
+RAG Agent      & Spring Boot 3.x             & Document Q\&A, chunk indexing, vector retrieval, source citation, clearance-filtered access, query audit \\
+Security       & Spring Security 6.x + JWT   & Stateless authentication, RBAC with @PreAuthorize, BCrypt hashing \\
+Caching        & Redis                       & Session caching, rate limit counters, metadata cache, schedule zsets \\
+LLM Inference  & DeepSeek API (HTTPS)        & Intent routing, SQL generation, RAG answer generation \\
+Embedding      & Python FastAPI (port 8091)  & BGE-M3 embedding generation for document indexing and query \\
+Document Parse & Apache Tika                 & Multi-format document parsing for RAG ingestion \\
+Vector DB      & Milvus                      & Semantic ANN search for RAG document retrieval \\
+Object Storage & MinIO                       & Document file storage, Milvus backend \\
+Email          & Resend API                  & Verification code delivery, three-tier rate limiting \\
+Maps           & Amap API (HTTPS)            & Geocoding, direction calculation, route polyline \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subhead{4.4 Gateway and Security Design}
+\subhead{4.4 Security Architecture}
 
-Data security is paramount in banking systems. Therefore, our platform's security design does not rely on a single line of defense, but rather incorporates defense in depth across all layers. Each layer is independently verified before a request can pass through, which make it significantly harder for a single component failure to lead to a data breach or security incident.
+Data security is paramount in banking systems. The platform does not rely on a single line of defense, but rather incorporates defense in depth across four layers: gateway authentication, email verification with rate limiting, role-based access control with department-level data isolation, and transport-layer encryption.
 
-Figure \ref{fig:jwt-auth-flow} shows the complete user authentication flow in three stages, including the email verification code mechanism that supports both registration and code-based login.
+\subsubhead{4.4.1 Gateway Authentication}
+
+Figure \ref{fig:jwt-auth-flow} illustrates the complete authentication flow, from registration through email verification to JWT-based request authentication.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig04_jwt_auth_flow.png}
+\includegraphics[width=\textwidth]{figures/fig04_jwt_auth_flow.png}
 \caption{JWT Authentication and Email Verification Flow}
 \label{fig:jwt-auth-flow}
 \end{figure}
 
-The login process begins with an email verification code. We migrated the email delivery mechanism from QQ Mail SMTP to the \textbf{Resend HTTP API}, eliminating the connection instability and vendor-specific risk controls associated with private SMTP relays while leveraging Resend's managed infrastructure for higher deliverability and operational traceability. The HTML verification email template was redesigned to render the 6-digit code in a \textbf{monospace font}, reducing user misreading errors caused by visually similar character pairs (e.g., ``0'' versus ``O'', ``1'' versus ``l'').
+The authentication model is stateless and token-based. On login, the user service validates credentials and issues a signed JWT containing the user's identity, roles, permissions, department ID, and clearance level. The token has a configurable expiry, and a Redis-based single-session mechanism ensures that a new login invalidates any previously issued token for the same user.
 
-After the user submits their email address on the front end, the request reaches the user service section. The service enforces a \textbf{three-tier rate-limiting strategy} backed by Redis. \textbf{Tier 1} imposes a 60-second cooldown per email address (Redis key \texttt{rate:email:send:\{email\}}), preventing rapid-fire brute-force attempts. \textbf{Tier 2} adds an IP-level hourly quota of maximum 5 requests per IP per hour, mitigating distributed enumeration attacks where the adversary rotates target addresses while sharing a common network egress; to ensure accurate IP attribution behind the gateway layer, the \texttt{UserController} extracts the real client IP from the \texttt{X-Forwarded-For} and \texttt{X-Real-IP} headers rather than using the immediate TCP connection endpoint. \textbf{Tier 3} enforces a daily ceiling of 10 requests per individual email address, preventing persistent resource exhaustion and harassment. Only after all three tiers are passed does the service call the Resend HTTP API using WebClient. The recipient email address is injected into the HTML template at the \{email\} placeholder, and the generated 6-digit random verification code is stored in Redis with a 5-minute TTL. The front-end receives a success response, triggers a 60-second countdown to disable the send button, and displays the sample email in an Alert.
+On every subsequent request, the frontend attaches the JWT as a Bearer Token via an Axios interceptor. The Gateway's global filter intercepts the request before routing and performs the following checks:
 
-These architectural changes are formally documented in \texttt{docs/email-verification-design.md}, which includes a complete system architecture diagram illustrating the end-to-end flow from client request through gateway routing, tiered rate-limiting evaluation, Resend API dispatch, and Redis state management.
+\begin{itemize}
+  \item \textbf{Whitelist bypass.} Login, registration, and verification code endpoints are publicly accessible without a token.
+  \item \textbf{Signature verification.} The token is verified using HMAC-SHA256 with a secret key injected via environment variable.
+  \item \textbf{Expiry check.} Expired tokens are rejected.
+  \item \textbf{Session check.} The token is validated against the active session stored in Redis. If no matching session exists, the request is denied.
+  \item \textbf{Identity propagation.} On success, user identity is extracted from the JWT claims and forwarded to downstream services through custom HTTP headers: \texttt{X-User-Name}, \texttt{X-User-Roles}, \texttt{X-User-Permissions}, \texttt{X-User-Dept-Id}, and \texttt{X-User-Security-Level}.
+\end{itemize}
 
-Specifically, the registration process requires the user to submit their email address, verification code, and password. The backend retrieves the verification code from Redis and compares it. If successful, it creates the user record (with the password hashed by BCrypt), immediately deletes the verification code from Redis, and returns a JWT. Attempts exceeding 5 incorrect verification attempts will cause the verification code to be forcibly invalidated and the user need to request a new one. For the multi-level rate limiting, the code brute-force crack protection is covered in NFR3.
+This header-based propagation means downstream services never hold the JWT secret. They trust the headers because the Gateway is the only entry point and cannot be bypassed from within the internal Docker network.
 
-In subsequent requests, the frontend automatically appends a Bearer Token via an Axios interceptor. the gateway layer's JwtAuthGlobalFilter is responsible for signature verification, checking the validity period and extracting the payload. The whole process is statless---the backend does not keep session state---so the system can be scaled horizontally seamlessly. This approach avoids the common performance and availability issues associated with centralized session storage.
+Sliding-window session renewal refreshes the Redis TTL on each authenticated request, with polling endpoints (such as the notification unread-count endpoint) excluded to avoid unnecessary Redis writes.
 
-The CAPTCHA itself is also heavily reinforced: the 6-digit random number only lasts for 5 minutes and is immediately deleted from Redis after successful verification, ensuring single-use semantics; a maximum of 5 incorrect attempts trigger forced invalidation; the 60-seconds cooldown effectively prevents SMS bombing attacks, so the CAPTCHA security is not something we overlooked.
+\subsubhead{4.4.2 Email Verification and Rate Limiting}
 
-We adopted RBAC for our permission design, but only implemented a coarse-grained division of roles into three tiers---this ``coarseness'' was intentional. Different banks have vastly different organizational structures and reporting relationships; fine-tuning the details ourselves would inevitably not match a real deployment scenario. So, we chose to provide a clear foundational role framework and leave the detailed permission customization to the bank's own IT administrators.
+Registration and code-based login both require email verification. The platform uses the Resend HTTP API to deliver verification codes, with several hardening measures:
+
+\textbf{Code delivery.} A 6-digit random verification code is generated and sent via a styled HTML email. The code is rendered in monospace font to reduce misreading errors between visually similar characters such as ``0'' and ``O''. The code is stored in Redis with a 5-minute TTL and is deleted immediately after successful verification, enforcing single-use semantics.
+
+\textbf{Brute-force protection.} After 5 consecutive incorrect attempts, the code is forcibly invalidated and the user must request a new one.
+
+\textbf{Three-tier rate limiting.} A Redis-backed strategy prevents abuse at three levels, summarized in Table \ref{tab:rate-limiting}.
+
+\begin{table}[H]
+\centering
+\small\singlespacing
+\caption{Three-Tier Email Rate Limiting Strategy}
+\label{tab:rate-limiting}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{Tier} & \textbf{Scope} & \textbf{Limit} & \textbf{Purpose} \\
+\midrule
+Tier 1 & Per email address & 1 request per 60 seconds & Prevent rapid-fire brute-force on a single target \\
+Tier 2 & Per IP address & 5 requests per hour & Mitigate distributed enumeration attacks across multiple targets \\
+Tier 3 & Per email address & 10 requests per day & Prevent persistent resource exhaustion and harassment \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+To ensure accurate IP attribution behind the Gateway and Nginx proxy, the User Service extracts the real client IP from the \texttt{X-Forwarded-For} and \texttt{X-Real-IP} headers rather than using the immediate TCP connection endpoint. The frontend disables the send button for 60 seconds after each request and displays a countdown.
+
+\subsubhead{4.4.3 RBAC and Department-Level Data Isolation}
+
+The platform implements a three-tier role-based access control model. Rather than hard-coding fine-grained permissions that would not generalize across institutions, a foundational role framework is provided, leaving detailed permission customization to the adopting bank.
+
+\textbf{Role definitions.} Three roles govern all access:
+
+\begin{itemize}
+  \item \textbf{ROLE\_ADMIN.} Full system access: manage users, assign roles, configure departments, set clearance levels, adjust system settings including AI provider configuration and session timeout, and view all tasks platform-wide.
+  \item \textbf{ROLE\_DEPT\_ADMIN.} Department-scoped access: manage membership and clearance levels within the administrator's own department; create, edit, and delete department documents; review and approve document access escalation requests.
+  \item \textbf{ROLE\_USER.} Basic access: submit NL2SQL, RAG, and tool tasks via the Copilot or dedicated agent pages; query personal task history; view and request access to documents within the user's department and clearance level.
+\end{itemize}
+
+\textbf{Enforcement.} At the controller level, Spring Security's \texttt{@PreAuthorize} annotations restrict entire classes or individual methods to specific roles. The AdminController is accessible only to ROLE\_ADMIN. The DeptAdminController accepts ROLE\_ADMIN and ROLE\_DEPT\_ADMIN, with programmatic checks further restricting department admins to their own department's data. At the Gateway level, the JWT filter extracts and forwards role claims; downstream services trust these headers because the Gateway is the sole entry point.
+
+\textbf{Document access model.} Documents carry a department identifier and a security clearance level from 1 (Public) to 3 (Confidential). Access is governed by a multi-factor rule, shown in Table \ref{tab:pseudocode-list-docs}:
+
+\begin{itemize}
+  \item \textbf{Global documents} (\texttt{dept\_id IS NULL}): accessible to all authenticated users.
+  \item \textbf{Department documents}: accessible only if the user belongs to the same department \textbf{and} the user's clearance level is greater than or equal to the document's security level.
+  \item \textbf{Otherwise}: the document is marked as inaccessible and the user may submit a human-in-the-loop escalation request (\texttt{RAG\_APPLY} notification), which routes to a department administrator for review. On approval, temporary access is granted with an audit trail.
+\end{itemize}
 
 \begin{table}[H]
 \small\singlespacing
 \centering
-\caption{Pseudocode --- listDocumentsForUser() Multi-Factor Document Access Rule}
+\caption{Document Access Control Rule --- Pseudocode}
 \label{tab:pseudocode-list-docs}
 \vspace{2mm}
 
@@ -164,19 +231,14 @@ FUNCTION listDocumentsForUser(userId, userDeptId, userClearance)
     documents = queryAllDocuments()
     result = []
     FOR EACH doc IN documents:
-        // Multi-factor access rule: a document is visible if...
         IF doc.dept_id IS NULL THEN
-            // Global document - accessible to all users
             doc.accessible = TRUE
         ELSE IF doc.dept_id = userDeptId
                  AND doc.security_level <= userClearance THEN
-            // Same department with sufficient clearance
             doc.accessible = TRUE
         ELSE
-            // Access denied - user may submit escalation request
             doc.accessible = FALSE
             doc.escalationType = "RAG_APPLY"
-            // Manager can approve (Pending -> Approved) or deny (Pending -> Denied)
         END IF
         result.add(doc)
     END FOR
@@ -185,60 +247,68 @@ END FUNCTION
 \end{lstlisting}
 \end{table}
 
+\textbf{Notification subsystem.} The notification system supports three message types. Chat notifications follow a simple Unread $\rightarrow$ Read flow. Document access escalation requests follow a Pending $\rightarrow$ Approved / Denied workflow, with the approving administrator's identity recorded for audit. SQL audit alerts carry a JSON payload with the suspicious query and timestamp. The frontend polls for unread counts every ten seconds and displays them as badges.
 
-The unified exit point for external communication is the REST API, all using HTTPS, with the TLS version locked at 1.3. WebSocket is forcibly upgraded to WSS in the production environment; this switch is handled in the code by checking the protocol in the Nginx X-Forwarded-Proto header, with the backend redirecting HTTP traffic to HTTPS.
+\subsubhead{4.4.4 Secure Communication}
+
+All external communication uses HTTPS with TLS 1.3. WebSocket connections are upgraded to WSS in production via Nginx configuration, with the backend checking the \texttt{X-Forwarded-Proto} header to redirect plain HTTP traffic. SQL injection is prevented through exclusive use of parameterized queries via \texttt{PreparedStatement}. User passwords are hashed with BCrypt at strength factor 10 and never stored in plaintext. API keys for external services (DeepSeek, Amap, Resend) are injected via environment variables and never exposed to the frontend.
 
 \subhead{4.5 Data Layer Architecture}
 
-For the data persistence layer, we adopted a multi-engine heterogeneous architecture. The main reason for not using a single database were the significant difference in storage requirements for different data types---storing vectors, relational data, and cache data all in MySQL would have created performance bottlenecks and architectural complexity. Instead, three specialized storage engines were deployed, each optimized for its specific data type.
-
-All relational data resides on MySQL 8.0. We agreed on the database name agent\_platform, character set utf8mb4, and collation utf8mb4\_unicode\_ci---while general\_ci is more faster, it causes garbled characters in Chinese and emoji symbols. This design is essential for internationalization (including Traditional Chinese). The complete schema (9 tables) and seed data are documented in Appendix A.
-
-The user and permission management uses five tables: sys\_user stores account information, passwords are hashed using BCrypt, and it's linked to sys\_department as foreign key, also recording security levels (1-3). sys\_role defines three role codes (ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, ROLE\_USER). sys\_permission defines six granular permissions covering user management, role management, and department management. sys\_user\_role is a many-to-many association table connecting users to roles, and sys\_role\_permission connects roles to granular permissions. The primary identity management process relies on the RBAC model described in the security section. For document management, the sys\_document table stores knowledge base content with clearance levels and department associations. Meeting room management uses meeting\_room and meeting\_schedule tables, where schedule records include room\_id FK, booker, start\_time, end\_time, and attendee list.
-
-During system initialization, we added a batch of seed data: four meeting rooms, five users with different roles and security levels, six departments, six permissions, a complete role allocation relationship tree, and eleven system documents covering banking compliance scenarios.
-
-Cache and high-frequency operational data are handled by Redis 5.0+. Session tokens are stored in memory with configurable TTLs; atomic counting also rely on Redis when the gateway layer performs IP-level rate limiting (INCR + EXPIRE is the only strategy we use, it's simple, reliable, and effectively prevents race conditions). The JWT single-session mechanism is implemented through Redis keys token:username: \{username\}; on each login, the system invalidates any existing token for the same user.
-
-Redis is also used for the tool's intelligent agent's schedule conflict detection. The key format is tool:schedule:\{userId\}. We store the meeting timestamps as scores using an ordered set. For overlapping queries, we use ZRANGEBYSCORE to retrieve entries whose startEpoch is within the query time window. The operation has logarithmic time complexity for both insertion and query. For MySQL-Redis consistency, we adopted a scheme of ``write MySQL first, then write Redis, and delete the Redis key on failure,'' this is basically a simple cache-aside pattern, prioritizing strong consistency for persistent data.
-
-Semantic retrieval for RAG agents requires vector support, so we separately introduced Milvus 2.3+. During the selection process, we considered several vector engines, and Milvus, with its relatively advanced four-tier architecture (access layer, coordinator, worker node, and object storage), ultimately stood out for enterprise deployment scenarios. Milvus's collection schema is dynamically configured at startup, with dimension matching the embedding model dimension (default 4096), metric type set to IP (inner product), and index type supporting IVF\_FLAT and HNSW.
-
-Going forward, we plan to add a security post-filter to the RAG retrieval pipeline. The raw vector results returned by Milvus will not be directly passed through; instead, they will be secondarily filtered against the allowed document list computed during the pre-retrieval phase, guaranteeing enforcement even if the filter expression in the Milvus query itself fails.
-
-Table \ref{tab:data-storage} summarizes the data storage strategy.
-
-\vspace{3mm}
+The data layer uses a multi-engine approach. Each storage engine was chosen for the type of data it handles best. Table \ref{tab:data-storage} summarizes the four engines and their roles.
 
 \begin{table}[H]
 \small\singlespacing
 \centering
-\caption{Multi-Modal Data Storage Strategy and Layered Access Patterns}
+\caption{Multi-Modal Data Storage Strategy}
 \label{tab:data-storage}
-\vspace{2mm}
-
-\begin{tabular}{@{}p{2.5cm}p{2.5cm}p{5.5cm}p{\dimexpr\textwidth-10.5cm-6\tabcolsep\relax}@{}}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.16\textwidth}>{\RaggedRight\arraybackslash}p{0.14\textwidth}>{\RaggedRight\arraybackslash}p{0.38\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
-\textbf{Category} & \textbf{Engine} & \textbf{Primary Data Types} & \textbf{Access Pattern} \\
+\textbf{Category} & \textbf{Engine} & \textbf{Stored Data} & \textbf{Usage} \\
 \midrule
-Operational Layer & MySQL 8.0   & Users, roles, departments, documents, meeting rooms, schedules, notifications & Transactional, ACID-compliant read/write \\
-Caching Layer     & Redis 5.0+  & Session tokens, rate limit counters, metadata cache (hash), schedule conflicts (sorted sets) & High-concurrency, sub-millisecond reads \\
-Object Storage    & MinIO       & PDF, DOCX, PPT files; Milvus backend objects & Document upload/download, RAG source document storage \\
-Vector Layer      & Milvus 2.3+ & Document chunk embeddings (bge-small-zh), source metadata & Semantic approximate nearest neighbor search \\
+Relational & MySQL 8.0 & Users, roles, permissions, departments, documents, meeting rooms, schedules, notifications, RAG metadata & Transactional read/write with ACID guarantees \\
+Cache & Redis 7 & Session tokens, rate limit counters, schema metadata cache, schedule conflict sorted sets & Sub-millisecond reads for hot data and real-time checks \\
+Object & MinIO & Uploaded PDF, DOCX, PPT, and Markdown files; Milvus backend storage & Document file storage and retrieval \\
+Vector & Milvus 2.6 & Document chunk embeddings with source metadata and security labels & Semantic ANN search filtered by department and clearance \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
+
+\textbf{MySQL.} The relational schema is summarized in Table \ref{tab:mysql-tables}. The complete table definitions, including column names, data types, and constraints, are provided in Appendix A.
+
+\begin{table}[H]
+\small\singlespacing
+\centering
+\caption{MySQL Table Groups}
+\label{tab:mysql-tables}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{0.20\textwidth}}
+\toprule
+\textbf{Group} & \textbf{Tables} & \textbf{Record Count (Seed)} \\
+\midrule
+RBAC & sys\_user, sys\_role, sys\_permission, sys\_user\_role, sys\_role\_permission & 5 users, 3 roles, 6 permissions \\
+Organization & sys\_department & 6 departments \\
+Documents & sys\_document & 11 documents \\
+Meetings & meeting\_room, meeting\_schedule & 4 rooms \\
+Tasks \& Notifications & task\_record, sys\_notification & — \\
+RAG Metadata & rag\_document\_chunk, rag\_query\_log & — \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Redis.} Redis serves four purposes. Session tokens with configurable TTL enforce single-session login. Atomic counters (INCR + EXPIRE) back the IP-level rate limiter at the Gateway. Schema metadata from information\_schema is cached as JSON hashes for the Code Agent. Sorted sets keyed as tool:schedule:\{userId\} enable O(log N) schedule conflict detection with ZRANGEBYSCORE queries. The MySQL-Redis consistency follows a simple cache-aside pattern: write MySQL first, then Redis, deleting the Redis key on failure.
+
+\textbf{Milvus.} Milvus stores document chunk embeddings for the RAG Agent. The collection schema is configured at startup to match the active embedding profile. The default BGE-M3 profile produces 1024-dimensional vectors with COSINE similarity and an HNSW index. Retrieval results are filtered against the user's department and clearance level before entering the LLM prompt.
 
 
 \subhead{4.6 Technology Stack Rationale}
 
-After discussion, the technology stack of our system was determined based on four main principles: First, it should be able to be deployed locally to reduce reliance on external cloud services (because banking regulations require data to be stored on local servers); second, all components should work well with container technology (because we wanted the developer environment and the production environment to be as similar as possible); third, the technology stack should match the team's current skill set (backend students are more familiar with Java than Python, so AI services had a separate Python module for LLM inference tasks); fourth, we preferred ecosystems that have long-term support and active communities (so we can find an answer on Stack Overflow when hitting a problem).
+After discussion, the technology stack of our system was determined based on four main principles: First, it should be able to be deployed locally to reduce reliance on external cloud services (because banking regulations require data to be stored on local servers); second, all components should work well with container technology (because we wanted the developer environment and the production environment to be as similar as possible); third, the technology stack should match the team's current skill set (backend students are more familiar with Java than Python, so AI services use separate Python modules for LLM and embedding workloads); fourth, we preferred ecosystems that have long-term support and active communities (so we can find an answer on Stack Overflow when hitting a problem).
 
 Specifically, the system's backend framework uses Java + Spring Boot. This choice was primarily based on its mature enterprise-level ecosystem. A strong typing system effectively reduces implicit errors caused by type mismatches; Spring Security provides fine-grained method-level permission control support for RBAC. Each microservice is configured with an independent spring-boot-starter-parent, managed hierarchically through parent POMs to unify dependency versions.
 
 Our gateway is Spring Cloud Gateway, rather than a traditional Servlet solution. (One issue with Servlets is that containers default to a blocking ``one thread, one request'' model. As the gateway acts as the hub for all service traffic, the extra thread overhead would have been substantial under high load. The reactive model is more suitable for the gateway's role as a proxy and filter, given its high-concurrency scenario. The gateway performs identity verification through a custom JwtAuthGlobalFilter, repackaging the token payload (user ID, roles, and permissions) into the request headers, unifing the previously scattered authentication logic.
 
-The AI inference service ultimately chose Python + FastAPI, deployed on port 8090. Python's dominant position in the machine learning toolchain is unlikely to be replaced in the short term (compared to alternatives like Scala or R, its library ecosystem is dramatically richer). FastAPI offers performance close to Node.js while automatically generating Swagger documentation, which reduces the cost of inter-team interface coordination.
+The AI support layer uses Python + FastAPI for model-adjacent workloads. The Code Agent uses the port 8090 inference bridge for SQL generation, while the RAG Agent uses the port 8091 embedding worker for local BGE-M3 document and query embeddings. Python's dominant position in the machine learning toolchain is unlikely to be replaced in the short term (compared to alternatives like Scala or R, its library ecosystem is dramatically richer). FastAPI offers performance close to Node.js while automatically generating Swagger documentation, which reduces the cost of inter-team interface coordination.
 
 We settled on Vue 3 with TypeScript after weighing several options. While the team's front-end skill levels were uneven, Vue 3's learning curve proved less steep than alternatives, which mattered give our project schedule. TypeScript was not optional---it stopped numerous type errors at compile time that JavaScript would have silently let through. The Composition API gave us logic reuse that we actually used across all the pages that call agents that share the same skeleton of request \textrightarrow{} progress \textrightarrow{} result display logic, while the Options API would have forced code duplication.
 

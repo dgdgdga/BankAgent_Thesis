@@ -1,0 +1,306 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 860" width="100%" height="100%">
+  <defs>
+    <style>
+      /* 全局学术字体 */
+      text {
+        font-family: 'Times New Roman', Times, serif;
+      }
+      
+      /* 参与者样式 */
+      .lifeline-title {
+        font-size: 13px;
+        font-weight: bold;
+        fill: #2c3e50;
+      }
+      .lifeline-subtitle {
+        font-size: 10px;
+        fill: #7f8c8d;
+      }
+      .lifeline-box {
+        fill: #f5f6fa;
+        stroke: #7f8c8d;
+        stroke-width: 1.5;
+        rx: 3;
+      }
+      .lifeline-line {
+        stroke: #bdc3c7;
+        stroke-width: 1.2;
+        stroke-dasharray: 6,6;
+      }
+      .activation-bar {
+        fill: #ecf0f1;
+        stroke: #7f8c8d;
+        stroke-width: 1;
+      }
+
+      /* UML 分组框 - 背景设为 none 避免遮挡虚线 */
+      .group-box {
+        fill: none;
+        stroke: #95a5a6;
+        stroke-width: 1.2;
+        stroke-dasharray: 4,4;
+        rx: 6;
+      }
+      .group-label-bg {
+        fill: #eaeded;
+        stroke: #95a5a6;
+        stroke-width: 1;
+        rx: 3;
+      }
+      .group-label-text {
+        font-size: 11px;
+        font-weight: bold;
+        fill: #2c3e50;
+      }
+      
+      /* 消息文本与控制流 */
+      .msg-text {
+        font-size: 11px;
+        fill: #2c3e50;
+      }
+      .sync-arrow {
+        fill: none;
+        stroke: #2c3e50;
+        stroke-width: 1.5;
+      }
+      .async-arrow {
+        fill: none;
+        stroke: #34495e;
+        stroke-width: 1.2;
+        stroke-dasharray: 4,3;
+      }
+      .ws-arrow {
+        fill: none;
+        stroke: #805ad5;
+        stroke-width: 1.5;
+        stroke-dasharray: 3,3;
+      }
+      .self-call-arrow {
+        fill: none;
+        stroke: #2c3e50;
+        stroke-width: 1.2;
+      }
+
+      /* 外部服务（云朵） */
+      .cloud-box {
+        fill: #fef9c3;
+        stroke: #ca8a04;
+        stroke-width: 1.2;
+        rx: 8;
+      }
+      .cloud-text {
+        font-size: 11px;
+        font-weight: bold;
+        fill: #a16207;
+      }
+    </style>
+
+    <!-- 箭头定义 -->
+    <marker id="arrow-sync" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2c3e50"/>
+    </marker>
+    <marker id="arrow-async" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9" fill="none" stroke="#34495e" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrow-ws" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9" fill="none" stroke="#805ad5" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- ==================== 1. 背景分流组框（透明背景） ==================== -->
+  <!-- Scenario A Group Box -->
+  <g transform="translate(20, 90)">
+    <rect x="0" y="0" width="1010" height="230" class="group-box"/>
+    <rect x="0" y="0" width="220" height="20" class="group-label-bg"/>
+    <text x="10" y="14" class="group-label-text">Scenario A: Copilot Intent Classification</text>
+  </g>
+
+  <!-- Scenario B Group Box -->
+  <g transform="translate(20, 340)">
+    <rect x="0" y="0" width="1010" height="460" class="group-box"/>
+    <rect x="0" y="0" width="310" height="20" class="group-label-bg"/>
+    <text x="10" y="14" class="group-label-text">Scenario B: Async Task Execution with WS Progress</text>
+  </g>
+
+  <!-- ==================== 2. 生命线（绘制在分组框上方，确保不被遮挡） ==================== -->
+  <!-- Vertical X positions:
+       Browser: 100 | Gateway: 260 | Copilot: 420 | Task Service: 580 | Agents: 760 | Data: 920
+  -->
+  <line x1="100" y1="70" x2="100" y2="810" class="lifeline-line" />
+  <line x1="260" y1="70" x2="260" y2="810" class="lifeline-line" />
+  <line x1="420" y1="70" x2="420" y2="810" class="lifeline-line" />
+  <line x1="580" y1="70" x2="580" y2="810" class="lifeline-line" />
+  <line x1="760" y1="70" x2="760" y2="810" class="lifeline-line" />
+  <line x1="920" y1="70" x2="920" y2="810" class="lifeline-line" />
+
+  <!-- 参与者头部 Box -->
+  <g transform="translate(35, 20)">
+    <rect x="0" y="0" width="130" height="50" class="lifeline-box"/>
+    <text x="65" y="22" text-anchor="middle" class="lifeline-title">Browser</text>
+    <text x="65" y="38" text-anchor="middle" class="lifeline-subtitle">Vue 3 SPA</text>
+  </g>
+
+  <g transform="translate(195, 20)">
+    <rect x="0" y="0" width="130" height="50" class="lifeline-box"/>
+    <text x="65" y="22" text-anchor="middle" class="lifeline-title">Gateway</text>
+    <text x="65" y="38" text-anchor="middle" class="lifeline-subtitle">Spring Cloud :8080</text>
+  </g>
+
+  <g transform="translate(355, 20)">
+    <rect x="0" y="0" width="130" height="50" class="lifeline-box"/>
+    <text x="65" y="22" text-anchor="middle" class="lifeline-title">Copilot</text>
+    <text x="65" y="38" text-anchor="middle" class="lifeline-subtitle">Python Flask :8090</text>
+  </g>
+
+  <g transform="translate(515, 20)">
+    <rect x="0" y="0" width="130" height="50" class="lifeline-box"/>
+    <text x="65" y="22" text-anchor="middle" class="lifeline-title">Task Service</text>
+    <text x="65" y="38" text-anchor="middle" class="lifeline-subtitle">SpringBoot :8082</text>
+  </g>
+
+  <g transform="translate(685, 20)">
+    <rect x="0" y="0" width="150" height="50" class="lifeline-box" style="fill: #e8f8f5; stroke: #16a34a;"/>
+    <text x="75" y="22" text-anchor="middle" class="lifeline-title" style="fill: #145a32;">AI Agents</text>
+    <text x="75" y="38" text-anchor="middle" class="lifeline-subtitle" style="fill: #145a32;">Tool/Code/RAG Agent</text>
+  </g>
+
+  <g transform="translate(855, 20)">
+    <rect x="0" y="0" width="130" height="50" class="lifeline-box" style="fill: #fdf2f2; stroke: #ec7063;"/>
+    <text x="65" y="22" text-anchor="middle" class="lifeline-title" style="fill: #7b241c;">Data Infrastructure</text>
+    <text x="65" y="38" text-anchor="middle" class="lifeline-subtitle" style="fill: #7b241c;">MySQL/Redis/Milvus</text>
+  </g>
+
+
+  <!-- ==================== 3. 激活块与消息交互 ==================== -->
+  
+  <!-- SCENARIO A INTERACTION DETAILS -->
+  <g>
+    <!-- 激活块 -->
+    <rect x="95" y="120" width="10" height="170" class="activation-bar" /> 
+    <rect x="255" y="120" width="10" height="150" class="activation-bar" /> 
+    <rect x="415" y="140" width="10" height="110" class="activation-bar" /> 
+
+    <!-- 消息 1 -->
+    <path d="M 105, 130 L 255, 130" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="180" y="124" text-anchor="middle" class="msg-text">POST /api/dashboard/route</text>
+
+    <!-- 消息 2 -->
+    <path d="M 265, 150 L 415, 150" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="340" y="144" text-anchor="middle" class="msg-text">Forward rewrite to /route</text>
+
+    <!-- 自调用 3 -->
+    <path d="M 425, 170 L 455, 170 L 455, 210 L 425, 210" class="self-call-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="462" y="194" text-anchor="start" class="msg-text" font-weight="bold">Three-tier classification</text>
+
+    <!-- 消息 4 -->
+    <path d="M 415, 235 L 255, 235" class="async-arrow" marker-end="url(#arrow-async)"/>
+    <text x="340" y="229" text-anchor="middle" class="msg-text">Return classified intent</text>
+
+    <!-- 消息 5 -->
+    <path d="M 255, 255 L 105, 255" class="async-arrow" marker-end="url(#arrow-async)"/>
+    <text x="180" y="249" text-anchor="middle" class="msg-text">Response {intent: TOOL | CODE | ...}</text>
+
+    <!-- 客户端判断分支（静态框标识） -->
+    <rect x="45" y="270" width="110" height="24" fill="#f8f9fa" stroke="#95a5a6" stroke-width="1" rx="3"/>
+    <text x="100" y="285" text-anchor="middle" class="msg-text" style="font-size: 10px;">CHAT ? Inline : Scenario B</text>
+  </g>
+
+  <!-- SCENARIO B INTERACTION DETAILS -->
+  <g>
+    <!-- 激活块 -->
+    <rect x="95" y="365" width="10" height="415" class="activation-bar" /> 
+    <rect x="255" y="365" width="10" height="395" class="activation-bar" /> 
+    <rect x="575" y="380" width="10" height="360" class="activation-bar" /> 
+    <rect x="755" y="460" width="10" height="180" class="activation-bar" style="fill: #e8f8f5; stroke: #16a34a;" /> 
+
+    <!-- 消息 1 -->
+    <path d="M 105, 375 L 255, 375" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="180" y="369" text-anchor="middle" class="msg-text">POST /api/task/submit</text>
+
+    <!-- 消息 2 -->
+    <path d="M 265, 390 L 575, 390" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="420" y="384" text-anchor="middle" class="msg-text">Forward with user headers</text>
+
+    <!-- 消息 3 -->
+    <path d="M 585, 410 L 915, 410" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="750" y="404" text-anchor="middle" class="msg-text">Create task_record (INIT) in DB</text>
+
+    <!-- 消息 4 (WS Connection) -->
+    <path d="M 105, 435 L 255, 435" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+    <text x="180" y="429" text-anchor="middle" class="msg-text" fill="#805ad5" font-weight="bold">Open WebSocket Connection</text>
+
+    <!-- 消息 5 (WS Proxy) -->
+    <path d="M 265, 445 L 575, 445" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+    <text x="420" y="439" text-anchor="middle" class="msg-text" fill="#805ad5">Proxy WS upgrade</text>
+
+    <!-- 自调用 6 (Worker Thread Assignment) -->
+    <path d="M 585, 465 L 615, 465 L 615, 495 L 585, 495" class="self-call-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="622" y="484" text-anchor="start" class="msg-text">Assign worker (RUNNING)</text>
+
+    <!-- Agent Path Branches (简化文字并调整间距，彻底消除重叠) -->
+    <!-- CODE Path -->
+    <path d="M 585, 515 L 755, 515" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="670" y="509" text-anchor="middle" class="msg-text" font-weight="bold" fill="#16a34a">1. CODE</text>
+    <path d="M 765, 525 L 915, 525" class="sync-arrow" stroke="#16a34a" marker-end="url(#arrow-sync)"/>
+    <text x="840" y="519" text-anchor="middle" class="msg-text" style="fill: #16a34a; font-size: 10px;">Inference &amp; SQL Whitelist Check</text>
+
+    <!-- TOOL Path -->
+    <path d="M 585, 555 L 755, 555" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="670" y="549" text-anchor="middle" class="msg-text" font-weight="bold" fill="#2c3e50">2. TOOL</text>
+    <path d="M 765, 565 L 975, 565" class="sync-arrow" stroke="#ca8a04" marker-end="url(#arrow-sync)"/>
+    <text x="860" y="559" text-anchor="middle" class="msg-text" style="fill: #ca8a04; font-size: 10px;">Extract Intent (DeepSeek API)</text>
+
+    <!-- RAG Path -->
+    <path d="M 585, 595 L 755, 595" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="670" y="589" text-anchor="middle" class="msg-text" font-weight="bold" fill="#2563eb">3. RAG</text>
+    <path d="M 765, 605 L 915, 605" class="sync-arrow" stroke="#2563eb" marker-end="url(#arrow-sync)"/>
+    <text x="840" y="599" text-anchor="middle" class="msg-text" style="fill: #2563eb; font-size: 10px;">Vector Search (Embed/Milvus)</text>
+
+    <!-- 保存状态 -->
+    <path d="M 585, 635 L 915, 635" class="sync-arrow" marker-end="url(#arrow-sync)"/>
+    <text x="750" y="629" text-anchor="middle" class="msg-text">Update status (COMPLETED / FAILED)</text>
+
+    <!-- ==================== WS PROGRESS STREAMING ==================== -->
+    <!-- 10% Progress -->
+    <path d="M 575, 665 L 265, 665" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+    <text x="420" y="659" text-anchor="middle" class="msg-text" fill="#805ad5">WS: progress 10%</text>
+    <path d="M 255, 675 L 105, 675" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+
+    <!-- 50% Progress -->
+    <path d="M 575, 705 L 265, 705" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+    <text x="420" y="699" text-anchor="middle" class="msg-text" fill="#805ad5">WS: progress 50%</text>
+    <path d="M 255, 715 L 105, 715" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+
+    <!-- 100% / Completed -->
+    <path d="M 575, 745 L 265, 745" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+    <text x="420" y="739" text-anchor="middle" class="msg-text" fill="#805ad5">WS: progress 100% (completed)</text>
+    <path d="M 255, 755 L 105, 755" class="ws-arrow" marker-end="url(#arrow-ws)"/>
+
+    <!-- Render Action Card -->
+    <rect x="45" y="765" width="110" height="20" fill="#eef2f3" stroke="#7f8c8d" stroke-width="1" rx="3"/>
+    <text x="100" y="778" text-anchor="middle" class="msg-text" style="font-size: 10px;">Render Result Card</text>
+  </g>
+
+
+  <!-- ==================== 4. EXTERNAL SERVICES (Clouds on the Right) ==================== -->
+  <g transform="translate(980, 540)">
+    <!-- DeepSeek LLM Cloud -->
+    <rect x="0" y="0" width="90" height="40" class="cloud-box"/>
+    <text x="45" y="24" text-anchor="middle" class="cloud-text">DeepSeek</text>
+  </g>
+
+  <g transform="translate(980, 595)">
+    <!-- Amap API Cloud -->
+    <rect x="0" y="0" width="90" height="40" class="cloud-box"/>
+    <text x="45" y="24" text-anchor="middle" class="cloud-text">Amap API</text>
+  </g>
+
+  <!-- Lifelines Box (Bottom Anchor) -->
+  <line x1="100" y1="810" x2="100" y2="820" class="lifeline-line" />
+  <line x1="260" y1="810" x2="260" y2="820" class="lifeline-line" />
+  <line x1="420" y1="810" x2="420" y2="820" class="lifeline-line" />
+  <line x1="580" y1="810" x2="580" y2="820" class="lifeline-line" />
+  <line x1="760" y1="810" x2="760" y2="820" class="lifeline-line" />
+  <line x1="920" y1="810" x2="920" y2="820" class="lifeline-line" />
+
+</svg>

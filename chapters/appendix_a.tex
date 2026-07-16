@@ -6,7 +6,7 @@
 
 \vspace{3mm}
 
-This appendix documents the complete database schema for the agent\_platform database. All tables use InnoDB engine, utf8mb4 character set with utf8mb4\_unicode\_ci collation. The schema comprises 14 tables across six functional domains.
+This appendix documents the complete database schema for the agent\_platform database. All relational metadata tables use InnoDB engine, utf8mb4 character set with utf8mb4\_unicode\_ci collation. The schema covers user management, RBAC, document management, notification workflows, task tracking, tool resources, and RAG knowledge-base metadata.
 
 \vspace{4mm}
 
@@ -390,6 +390,10 @@ chunk\_index   & INT, NOT NULL                 & Sequential chunk order \\
 chunk\_text    & MEDIUMTEXT, NOT NULL          & Chunk body for retrieval and citation \\
 token\_count   & INT, DEFAULT 0                & Estimated token count \\
 vector\_id     & VARCHAR(128), UNIQUE, NOT NULL & Corresponding vector PK in Milvus \\
+embedding\_profile & VARCHAR(64), NOT NULL, DEFAULT `local-bge-m3' & Active embedding profile used for the chunk \\
+embedding\_model & VARCHAR(120)                & Embedding model name \\
+vector\_collection & VARCHAR(120)              & Milvus collection containing the vector \\
+index\_status & VARCHAR(30), DEFAULT `SUCCESS' & RUNNING / SUCCESS / FAIL \\
 security\_level & TINYINT, NOT NULL, DEFAULT 1 & Copied from source document \\
 dept\_id       & BIGINT                        & Copied from source document \\
 content\_hash  & VARCHAR(64)                   & SHA-256 hash of chunk content \\
@@ -413,6 +417,9 @@ question         & TEXT, NOT NULL                    & User's natural language q
 answer           & MEDIUMTEXT                        & Generated LLM answer \\
 retrieved\_doc\_ids & VARCHAR(500)                   & Comma-separated retrieved document IDs \\
 blocked\_doc\_ids & VARCHAR(500)                     & Documents blocked by permission filter \\
+embedding\_profile & VARCHAR(64)                    & Embedding profile used for this query \\
+embedding\_model & VARCHAR(120)                      & Embedding model name \\
+vector\_collection & VARCHAR(120)                    & Milvus collection searched for this query \\
 top\_k           & INT, DEFAULT 5                    & Number of chunks retrieved \\
 latency\_ms      & INT, DEFAULT 0                    & Query response time in milliseconds \\
 status           & VARCHAR(30), NOT NULL, DEFAULT `INIT' & INIT / SUCCESS / FAIL \\

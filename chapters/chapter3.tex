@@ -24,19 +24,19 @@ The platform's functional requirements are organized by domain. Table 2 summariz
 \textbf{ID} & \textbf{Requirement} & \textbf{Description} \\
 \midrule
 FR1 & User Authentication \& RBAC & Email-format registration with hashed passwords and stateless JWT authentication. Three roles (Admin, Department Admin, End-User) with fine-grained permissions enforced at the gateway level. \\
-\midrule
+\addlinespace
 FR2 & Department Management & Hierarchical department structure with six banking units. Department administrators can manage membership and assign clearance levels (Public, Internal, Confidential). \\
-\midrule
+\addlinespace
 FR3 & Document Management with Security Clearance & Documents stored with department ownership and security level. Access granted only when the user's department and clearance meet the document's requirements. Inaccessible documents trigger a human-in-the-loop escalation pathway. \\
-\midrule
+\addlinespace
 FR4 & Notification System & Multi-type notifications (chat, access request, SQL audit alert) with a five-state state machine. Unread badge and role-specific views provided on the frontend. \\
-\midrule
+\addlinespace
 FR5 & Code Agent --- NL2SQL & Natural language to SQL translation with security validation before execution. Schema metadata cached to improve generation accuracy. Human-in-the-loop mode supported: generate, review, then execute. \\
-\midrule
-FR6 & RAG Agent --- Policy Q\&A & Natural language questions answered from organizational documents with verifiable source citations. Retrieval filtered by the user's department and clearance level. \\
-\midrule
+\addlinespace
+FR6 & RAG Agent --- Policy Q\&A & Natural language questions answered from organizational documents with verifiable source citations. Retrieval uses Milvus-indexed chunks, configurable embedding profiles, permission filtering, index status tracking, and audit records for retrieved and blocked documents. \\
+\addlinespace
 FR7 & Tool Agent --- Task Automation & Unified natural language interface for meeting room booking, schedule conflict detection, and route planning. Intent recognized automatically and routed to the appropriate handler. \\
-\midrule
+\addlinespace
 FR8 & Admin Resource Management & Role-restricted CRUD endpoints for meeting rooms and schedules. Validation rules enforce required fields, positive capacity, and chronological time ranges. \\
 \bottomrule
 \end{tabularx}
@@ -55,17 +55,17 @@ Table 3 summarizes the non-functional requirements that govern system quality at
 \toprule
 \textbf{ID} & \textbf{Requirement} & \textbf{Description} \\
 \midrule
-NFR1 & Data Sovereignty & All core data processing must run within the on-premise environment. Administrators must be able to configure whether AI inference and embedding use local models or external APIs. When external APIs are used, only the minimum necessary payload is transmitted, with no logging or retention by third-party providers. \\
-\midrule
-NFR2 & Performance & SQL generation must complete within 3 seconds. Meeting-room and schedule queries must respond within 500 ms. Route planning must return within 2 seconds. WebSocket progress updates must be delivered within 200 ms. Initial page load must not exceed 3 seconds. \\
-\midrule
-NFR3 & Security & All traffic must use HTTPS (WSS for WebSocket). Passwords must be hashed with BCrypt. Authentication must be stateless via signed JWT tokens with configurable expiry. Access must be enforced at the method level. SQL injection must be prevented through parameterized queries. Data deletion must be logical rather than physical for auditability. \\
-\midrule
-NFR4 & Reliability & The platform must achieve 99.5\% uptime during business hours. External service failures must trigger graceful degradation using mock fallbacks rather than hard failures. All task failures must be logged with user context for post-incident analysis. \\
-\midrule
+NFR1 & Data Sovereignty & All core relational storage, vector storage, document indexing, and access-control checks run within the on-premise environment. Administrators can configure whether AI inference and embedding use local models or external APIs. When external APIs are used, only the minimum permission-filtered payload is transmitted. \\
+\addlinespace
+NFR2 & Performance & SQL generation must complete within 3 seconds. Meeting-room and schedule queries must respond within 500 ms. Route planning must return within 2 seconds. RAG vector retrieval should complete within 1 second after the index is ready, while full answer generation depends on the configured LLM endpoint. WebSocket progress updates must be delivered within 200 ms. Initial page load must not exceed 3 seconds. \\
+\addlinespace
+NFR3 & Security & All traffic must use HTTPS (WSS for WebSocket). Passwords must be hashed with BCrypt. Authentication must be stateless via signed JWT tokens with configurable expiry. Access must be enforced at the method level. SQL injection must be prevented through parameterized queries. RAG retrieval must filter candidate chunks by department, clearance level, and approved access requests before any text is sent to the answer-generation model. Data deletion must be logical rather than physical for auditability. \\
+\addlinespace
+NFR4 & Reliability & The platform must achieve 99.5\% uptime during business hours. External service failures must trigger graceful degradation using mock fallbacks or permission-safe retrieval context rather than hard failures. RAG readiness checks expose Milvus, embedding, and LLM availability. All task failures must be logged with user context for post-incident analysis. \\
+\addlinespace
 NFR5 & Maintainability & Services must be independently deployable with clearly separated responsibilities. All APIs must return a consistent response wrapper for uniform error handling. Database operations must use type-safe abstractions with SQL logging for debugging. \\
-\midrule
-NFR6 & Deployability & The entire platform must start with a single command. Database schema and seed data must be initialized automatically. Service dependencies must be resolved through health-check probes before dependent containers start. \\
+\addlinespace
+NFR6 & Deployability & The entire platform must start with a single command. Database schema, seed data, and RAG metadata tables must be initialized automatically. Service dependencies must be resolved through health-check probes before dependent containers start. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -84,13 +84,13 @@ The platform serves three human actor roles and interfaces with two external sys
 \textbf{Actor} & \textbf{Type} & \textbf{Capabilities} \\
 \midrule
 ROLE\_ADMIN & Human & Full system access: manage users, roles, departments, clearance levels; configure AI providers and session policies; CRUD meeting rooms and schedules; view all tasks. \\
-\midrule
+\addlinespace
 ROLE\_DEPT\_ADMIN & Human & Department-scoped access: manage membership and clearance levels within own department; create, edit, and delete department documents; review and approve document access escalation requests. \\
-\midrule
+\addlinespace
 ROLE\_USER & Human & Basic access: submit NL2SQL, RAG, and tool tasks through the Copilot or dedicated pages; query own task history; view and request access to documents within own department and clearance level. \\
-\midrule
+\addlinespace
 AI Provider & External system & Receives natural language prompts for intent classification, SQL generation, and RAG answer generation. Administrators may configure local or cloud providers. \\
-\midrule
+\addlinespace
 Amap API & External system & Converts addresses to coordinates (geocoding) and computes driving routes for the Tool Agent's route planning capability. \\
 \bottomrule
 \end{tabularx}
@@ -108,13 +108,13 @@ The five core use cases spanning these actors are summarized in Table \ref{tab:u
 \textbf{ID} & \textbf{Actor} & \textbf{Goal} & \textbf{Agent} & \textbf{Main Flow} \\
 \midrule
 UC1 & Business analyst & Query database without writing SQL & Code Agent & User enters a natural language question; LLM generates SQL; whitelist validation runs; query executes; tabular result returned. \\
-\midrule
-UC2 & Compliance officer & Find policy clauses with verifiable citations & RAG Agent & User asks a regulatory question; query embedded; top-k chunks retrieved and filtered by department and clearance; LLM generates answer with source citations. \\
-\midrule
-UC3 & Admin. staff & Book a meeting room via natural language & Tool Agent & User describes requirements; intent classified; parameters extracted; available rooms queried; options displayed. \\
-\midrule
-UC4 & Admin. staff & Detect schedule conflicts & Tool Agent & User specifies attendees and time range; each attendee's calendar checked; conflict report returned with alternatives. \\
-\midrule
+\addlinespace
+UC2 & Compliance officer & Find policy clauses with verifiable citations & RAG Agent & User asks a regulatory question; query embedded with the active profile; Milvus returns candidate chunks; permission filtering removes inaccessible evidence; LLM generates answer with source citations and the query log records retrieved and blocked document IDs. \\
+\addlinespace
+UC3 & Staff member & Book a meeting room via natural language & Tool Agent & User describes requirements; intent classified; parameters extracted; available rooms queried; options displayed. \\
+\addlinespace
+UC4 & Staff member & Detect schedule conflicts & Tool Agent & User specifies attendees and time range; each attendee's calendar checked; conflict report returned with alternatives. \\
+\addlinespace
 UC5 & Staff member & Access a document above own clearance & Notification System & Access denied; user submits escalation request; department admin reviews and approves; temporary access granted with audit trail. \\
 \bottomrule
 \end{tabularx}

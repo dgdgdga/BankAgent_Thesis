@@ -2,7 +2,7 @@
 % ======================================================================
 \subhead{5.4 Copilot --- A Unified Intelligent Dispatcher Above the Three Agents}
 
-The three agents described in Sections 5.1--5.3 each solve a specific domain problem, but from the user's perspective, they still require knowing \textit{which} agent to use before typing a question. A bank employee asking ``Which meeting rooms are free this afternoon?'' should not need to understand that this goes to the Tool Agent rather than the Code Agent. The Copilot solves this by sitting above all three agents as a single natural language entry point: the user says what they need, and the Copilot figures out where it should go.
+The three agents described in Sections 5.1--5.3 each solve a specific domain problem, but from the user's perspective, they still require knowing \textit{which} agent to use before typing a question. A bank employee asking ``Which meeting rooms are free this afternoon?'', ``How many pending transactions are there?'', or ``Which policy clause explains this approval rule?'' should not need to understand whether the request belongs to the Tool Agent, Code Agent, or RAG Agent. The Copilot solves this by sitting above all three agents as a single natural language entry point: the user says what they need, and the Copilot figures out where it should go.
 
 \subhead{5.4.1 Design Rationale}
 
@@ -13,6 +13,8 @@ Table \ref{tab:copilot-vs-agents} summarizes the Copilot's position relative to 
 \begin{table}[H]
 \centering
 \small\singlespacing
+\caption{Copilot vs. Three Domain Agents --- Role Comparison}
+\label{tab:copilot-vs-agents}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{0.42\textwidth}>{\RaggedRight\arraybackslash}p{0.34\textwidth}}
 \toprule
 & \textbf{Three Domain Agents} & \textbf{Copilot} \\
@@ -24,8 +26,6 @@ Scope & One agent = one capability & Cross-agent, cross-page \\
 User interaction & Page-specific UI (tables, maps, panels) & Floating chat widget, always accessible \\
 \bottomrule
 \end{tabularx}
-\caption{Copilot vs. Three Domain Agents --- Role Comparison}
-\label{tab:copilot-vs-agents}
 \end{table}
 
 \subhead{5.4.2 Architecture Overview}
@@ -50,6 +50,8 @@ The Python Flask \texttt{/route} endpoint is the Copilot's brain. It implements 
 \begin{table}[H]
 \centering
 \small\singlespacing
+\caption{Three-Tier Intent Classification Strategy}
+\label{tab:three-tier}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.26\textwidth}>{\RaggedRight\arraybackslash}p{0.38\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}}
 \toprule
 \textbf{Tier} & \textbf{Mechanism} & \textbf{What It Catches} & \textbf{Cost} \\
@@ -60,8 +62,6 @@ Tier 3a & LLM classification (temperature=0.1, max\_tokens=10) & CODE, TOOL, RAG
 Tier 3b & Keyword fallback (LLM unavailable) & Same six categories, lower accuracy & Zero \\
 \bottomrule
 \end{tabularx}
-\caption{Three-Tier Intent Classification Strategy}
-\label{tab:three-tier}
 \end{table}
 
 Tier 1 acts as a pre-screening safety net. Before any LLM call is made, the user's input is checked against a hardcoded list of approximately 40 blocked patterns. These cover jailbreak prompts (e.g., ``ignore previous instructions''), role-play attempts (``pretend you are a hacker''), code injection, and entirely off-topic requests (jokes, recipes, gaming). Blocked queries are caught instantly and receive a polite refusal without consuming any API tokens.
@@ -81,7 +81,7 @@ Tier 3a is the core classification layer. The user's question is sent to the LLM
 
 The LLM is configured with temperature 0.1 and max\_tokens 10 --- the response is a single word, not a sentence. This keeps classification deterministic and cheap. For CLARIFY and CHAT intents, a second LLM call generates a conversational reply with appropriate follow-up questions or explanations.
 
-Tier 3b activates only when the LLM API is unreachable. A pure keyword-matching fallback scans for terms associated with each intent --- for CODE: terms related to databases, statistics, and data queries; for TOOL: terms related to meeting rooms, bookings, and schedules --- and defaults to RAG when no keywords match. This ensures the Copilot degrades gracefully rather than failing completely.
+Tier 3b activates only when the LLM API is unreachable. A pure keyword-matching fallback scans for terms associated with each intent --- for CODE: terms related to databases, statistics, and data queries; for TOOL: terms related to meeting rooms, bookings, and schedules; and for RAG: terms related to policies, regulations, manuals, document search, citations, and knowledge-base questions. If no keyword group is matched, the classifier defaults to RAG because document Q\&A is the safest read-only fallback. This ensures the Copilot degrades gracefully rather than failing completely.
 
 \subhead{5.4.4 Frontend Dispatch and User Experience}
 
@@ -90,6 +90,8 @@ After the intent is classified, the frontend widget takes over with type-specifi
 \begin{table}[H]
 \centering
 \small\singlespacing
+\caption{Intent Dispatch --- Frontend Behavior by Classification Result}
+\label{tab:intent-dispatch}
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.16\textwidth}>{\RaggedRight\arraybackslash}p{0.40\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{Intent} & \textbf{Widget Action} & \textbf{User Sees} \\
@@ -102,8 +104,6 @@ TOOL & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & 
 RAG & Submit task $\rightarrow$ WebSocket progress $\rightarrow$ result card & A citation card with document titles, similarity scores, and security badges \\
 \bottomrule
 \end{tabularx}
-\caption{Intent Dispatch --- Frontend Behavior by Classification Result}
-\label{tab:intent-dispatch}
 \end{table}
 
 The Copilot widget itself is a floating component: a 52px circular icon button fixed to the bottom-right corner of every page. When clicked, it expands into a 440$\times$620px chat panel with a morphing animation. This design means the user never leaves their current page to ask a question --- the Copilot comes to them.
@@ -123,8 +123,8 @@ The CLARIFY intent enables a simple but effective multi-turn dialogue pattern. I
 Because the Copilot widget is rendered once in MainLayout and persists across page navigation, it needs a mechanism to deliver agent results to whichever page the user is currently viewing. Two channels handle this:
 
 \begin{enumerate}
-  \item \textbf{Browser Custom Events}: The widget dispatches \texttt{CustomEvent} objects on the \texttt{window} object --- \texttt{copilot-tool-result} for Tool Agent results, \texttt{copilot-code-query} for Code Agent queries. Target page components listen for these events and react accordingly.
-  \item \textbf{localStorage}: As a safety net for pages that mount \textit{after} the event was dispatched (e.g., the widget navigated to a new page before the subscribing component existed), results are also written to localStorage keys. The target page checks these keys on mount and processes any pending result.
+  \item \textbf{Browser Custom Events}: The widget dispatches \texttt{CustomEvent} objects on the \texttt{window} object --- \texttt{copilot-tool-result} for Tool Agent results, \texttt{copilot-code-query} for Code Agent queries, and \texttt{copilot-rag-query} for RAG Agent questions and citation-based answers. Target page components listen for these events and react accordingly.
+  \item \textbf{localStorage}: As a safety net for pages that mount \textit{after} the event was dispatched (e.g., the widget navigated to a new page before the subscribing component existed), tool results, code queries, and RAG query payloads are also written to localStorage keys. The target page checks these keys on mount and processes any pending result.
 \end{enumerate}
 
 \subhead{5.4.7 Second-Level Intent Classification in the Tool Agent}
