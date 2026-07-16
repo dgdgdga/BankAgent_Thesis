@@ -76,7 +76,7 @@ Access Control. Three roles (ROLE\_ADMIN, ROLE\_DEPT\_ADMIN, ROLE\_USER) and six
 
 \subhead{6.2 Task Center and Orchestration}
 
-The Task Center (task-service, port 8082) is the platform's asynchronous execution backbone. Its role is to accept work from any entry point --- the Copilot widget, an agent page, or a future API integration --- and ensure that work gets done reliably, with progress visible to the user throughout. Rather than letting each agent manage its own execution lifecycle, the Task Center centralizes queuing, retry, progress reporting, and result persistence.
+The Task Center (task-service, port 8082) is the platform's asynchronous execution backbone. Its role is to accept work from any entry point --- the Copilot widget, an agent page, or an external API integration --- and ensure that work gets done reliably, with progress visible to the user throughout. Rather than letting each agent manage its own execution lifecycle, the Task Center centralizes queuing, retry, progress reporting, and result persistence.
 
 \subsubhead{6.2.1 Task Lifecycle and State Machine}
 
@@ -174,7 +174,7 @@ These milestones are chosen to reflect what the user actually cares about --- ``
 
 \subsubhead{6.2.6 Current Limitations}
 
-The Task Center's design reflects a pragmatic trade-off for a single-instance system. Tasks are queued in memory via \texttt{LinkedBlockingQueue}; if the task-service restarts, queued-but-unexecuted tasks are lost (though their INIT records remain in MySQL as orphans). Worker threads block synchronously on downstream HTTP calls via \texttt{RestTemplate}, meaning concurrency is capped at the thread pool size of 10. WebSocket session storage is a local \texttt{ConcurrentHashMap}, which would not work across multiple instances. These are acceptable constraints for the current deployment scale, and replacing the in-memory queue with a message broker (RabbitMQ or Redis Streams) is a natural next step for production hardening.
+The Task Center's design reflects a pragmatic trade-off for a single-instance system. Tasks are queued in memory via \texttt{LinkedBlockingQueue}; if the task-service restarts, queued-but-unexecuted tasks are lost (though their INIT records remain in MySQL as orphans). Worker threads block synchronously on downstream HTTP calls via \texttt{RestTemplate}, meaning concurrency is capped at the thread pool size of 10. WebSocket session storage is a local \texttt{ConcurrentHashMap}, which is suitable for the deployed single-instance topology but not for a multi-node cluster. These are acceptable constraints for the current deployment scale; a message broker such as RabbitMQ or Redis Streams belongs to a larger production hardening path rather than an unfinished part of this implementation.
 
 \vspace{3mm}
 \begin{table}[H]

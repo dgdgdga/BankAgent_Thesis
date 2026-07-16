@@ -1,6 +1,6 @@
-% CHAPTER 8: CONCLUSION AND FUTURE WORK
+% CHAPTER 8: CONCLUSION AND EXTENSIONS
 % ======================================================================
-{\fontsize{18}{22}\selectfont\textbf{8 Conclusion and Future Work}}\par
+{\fontsize{18}{22}\selectfont\textbf{8 Conclusion and Extensions}}\par
 
 \vspace{3mm}
 
@@ -14,9 +14,9 @@ Above these three agents, the Copilot serves as a cross-page, multi-agent intell
 
 The system integration layer provides JWT-based authentication with dual-mode login (password and email verification code), three-tier RBAC with department-level data isolation, HITL document access using a notification-based approval system, a Task Center with asynchronous execution, exponential-backoff retry, and WebSocket real-time progress streaming, and containerized deployment via Docker Compose.
 
-\subhead{8.2 Future Work}
+\subhead{8.2 Possible Extensions}
 
-Several directions for future work have been determined. Local ONNX Runtime inference for the Code Agent could reduce HTTP overhead. The Task Center should be upgraded from in-memory queuing to a message broker (RabbitMQ or Redis Streams) for production-grade durability. DevOps enhancements should include Prometheus metrics, Grafana dashboards, distributed tracing, Kubernetes orchestration for multi-node scaling, and automated CI/CD pipelines. The Copilot's intent classifier could benefit from a feedback loop --- tracking whether the dispatched agent actually handled the query successfully and using that signal to refine classification prompts. RBAC extensibility should allow adopting institutions to extend the three-tier role model with custom fine-grained permissions. The platform should be extended to support additional enterprise tools (email, HR systems, document management systems) through a pluggable tool registration mechanism, and to support additional database systems beyond MySQL.
+The delivered platform completes the three-agent banking workflow described in this report. Possible extensions beyond the current scope include replacing in-memory task queuing with a message broker (RabbitMQ or Redis Streams) for production-grade durability, adding Prometheus metrics and Grafana dashboards for operations teams, introducing distributed tracing and Kubernetes orchestration for multi-node scaling, and expanding the Copilot feedback loop by tracking whether the dispatched agent handled the query successfully. Adopting institutions may also extend the three-tier RBAC model with custom fine-grained permissions, register additional enterprise tools such as email or HR systems, and add database adapters beyond MySQL.
 
 \newpage
 
