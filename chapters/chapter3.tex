@@ -72,7 +72,59 @@ NFR6 & Deployability & The entire platform must start with a single command. Dat
 
 \subhead{3.4 Use Case Analysis}
 
-Use case analysis captures how users interact with the multi-agent platform. Figure \ref{fig:tool-agent-usecase} shows the use cases for the Tool Agent module. Three main actors interact with the system. The first group is end users. They have the role ROLE\_USER. They can book meeting rooms, check schedule conflicts and plan routes. The second group is administrators. They have the role ROLE\_ADMIN. They can also manage meeting room and schedule resources. Besides, they can use dedicated admin controllers to do this. There are also two external system actors. One is the DeepSeek LLM. It classifies what the user wants and pulls out parameters from natural language requests. The other is the Amap API. It converts addresses into coordinate and can also calculate routes.
+The platform serves three human actor roles and interfaces with two external systems, summarized in Table \ref{tab:actors}.
+
+\begin{table}[H]
+\centering
+\small\singlespacing
+\caption{System Actors}
+\label{tab:actors}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{Actor} & \textbf{Type} & \textbf{Capabilities} \\
+\midrule
+ROLE\_ADMIN & Human & Full system access: manage users, roles, departments, clearance levels; configure AI providers and session policies; CRUD meeting rooms and schedules; view all tasks. \\
+\midrule
+ROLE\_DEPT\_ADMIN & Human & Department-scoped access: manage membership and clearance levels within own department; create, edit, and delete department documents; review and approve document access escalation requests. \\
+\midrule
+ROLE\_USER & Human & Basic access: submit NL2SQL, RAG, and tool tasks through the Copilot or dedicated pages; query own task history; view and request access to documents within own department and clearance level. \\
+\midrule
+AI Provider & External system & Receives natural language prompts for intent classification, SQL generation, and RAG answer generation. Administrators may configure local or cloud providers. \\
+\midrule
+Amap API & External system & Converts addresses to coordinates (geocoding) and computes driving routes for the Tool Agent's route planning capability. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The five core use cases that span these actors are described below.
+
+\vspace{3mm}
+\noindent\textbf{Table 4: Use Cases}
+\vspace{2mm}
+
+\begin{table}[H]
+\centering
+\small\singlespacing
+\caption{Use Cases}
+\label{tab:usecases}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{ID} & \textbf{Actor} & \textbf{Goal} & \textbf{Agent} & \textbf{Main Flow} \\
+\midrule
+UC1 & Business analyst (ROLE\_USER) & Query database without writing SQL & Code Agent & User enters a natural language question → LLM generates SQL → whitelist validation checks safety → query executes → tabular result returned with column headers and execution time. \\
+\midrule
+UC2 & Compliance officer (ROLE\_USER) & Find policy clauses with verifiable citations & RAG Agent & User asks a regulatory question → query is embedded → top-k document chunks retrieved from vector store, filtered by department and clearance → LLM generates answer with source citations. \\
+\midrule
+UC3 & Administrative staff (ROLE\_USER) & Book a meeting room via natural language & Tool Agent & User describes requirements in natural language → intent classified as MEETING\_QUERY → parameters extracted (time, capacity, floor) → available rooms queried against bookings → options displayed. \\
+\midrule
+UC4 & Administrative staff (ROLE\_USER) & Detect schedule conflicts & Tool Agent & User specifies attendees and time range → intent classified as SCHEDULE\_CHECK → each attendee's calendar checked for overlapping entries → conflict report returned with suggested alternatives. \\
+\midrule
+UC5 & Staff member (ROLE\_USER) & Access a document above own clearance & Notification System & User attempts to open a higher-clearance document → access denied per department and clearance rules → user submits escalation request → department administrator reviews and approves → temporary access granted with audit trail. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Figure \ref{fig:tool-agent-usecase} illustrates the Tool Agent use cases in UML notation, showing the interaction between the three human roles, two external systems, and the three tool capabilities.
 
 \begin{figure}[H]
 \centering
@@ -80,18 +132,6 @@ Use case analysis captures how users interact with the multi-agent platform. Fig
 \caption{Tool Agent Use Case Diagram --- Meeting Room, Schedule Conflict, and Route Planning}
 \label{fig:tool-agent-usecase}
 \end{figure}
-
-There are three agent modules. Their use cases are as following.
-
-UC1 -- Generate SQL from Natural Language (Code Agent). A business analyst types a natural language request. An example is: "Show me all customers who opened accounts in Q1 2026 with balances exceeding HKD 500,000." The CodeAgentController receives the request at the endpoint POST /code/query. It sends the question to the Python LLM inference server on port 8090. The server returns the generated SQL. The five-layer SqlValidationService then checks the SQL. After it passes, the SQL is run through JdbcTemplate with a PreparedStatement. The system returns the result in table form. The result includes column names, row data, and execution time.
-
-UC2 -- Policy Compliance Query (RAG Agent). A compliance officer asks a question. For example: "What are the latest KYC requirements for corporate account opening?" The system encodes the query. It retrieves the top-k most similar document chunks from the Milvus vector store. These chunks are filtered by the user's department and clearance level. The system passes these chunks as context to the LLM. It returns an answer with citations. The citations point to the specific policy documents and sections used.
-
-UC3 -- Meeting Room Booking (Tool Agent). An administrative staff member types a request into the AI Assistant panel. The request is: "Book a meeting room on the 3rd floor for 10 people tomorrow morning at 10 AM." The frontend opens a WebSocket connection. It sends the query. It displays progress. The DeepSeekService classifies the request as MEETING\_QUERY. It extracts the parameters. The parameters are floor 3, capacity 10, and time tomorrow 10:00 AM. The result is sent to the MeetingAgent component. MeetingAgent queries MySQL for rooms that match. It checks the floor and capacity, and then cross-references Redis for time availability. The available options are displayed.
-
-UC4 -- Schedule Conflict Detection (Tool Agent). A user enters a request: "Check if Zhang and Li are free next Tuesday 2-4 PM." The AI identifies the user's intent and then extracts the attendees' names and time range. The ScheduleAgent component calls API and sends the attendee list. The ToolController will check each attendee's schedule. The response shows if conflicts exist, identifies the conflicting users and gives the conflict type with suggested alternatives.
-
-UC5 -- Document Access Escalation (User Center). A Credit Department staff member has clearance Level 1. They try to access a Level-3 confidential risk evaluation document. The method SysDocumentServiceImpl.listDocumentsForUser() checks the access rule. The document's department matches the user's department. But the user's clearance level is 1. This is lower than the document's clearance which is 3. So the document is not accessible. The user can then submit an escalation request, which will create a notification. The notification status starts as Pending and goes to a department administrator for review. The status can be changed to Approved. The approval creates a record that can be audited. Then the user can access the document.
 
 \newpage
 
