@@ -29,13 +29,13 @@ Layer 4 -- AI Service Layer. Three specialized agents handle the platform's AI c
 
 Layer 5 -- Data Layer. This layer uses a mix of storage engines chosen for their specific roles. MySQL stores user accounts, permissions, departments, documents, meeting rooms, and other relational data. Redis caches hot data such as schema metadata and handles schedule conflict detection through sorted sets. Milvus stores document embeddings and serves semantic similarity queries for the RAG Agent. MinIO holds uploaded document files as objects. etcd coordinates Milvus cluster metadata.
 
-The request lifecycle shown in Figure \ref{fig:data-flow} varies significantly depending on the ingress type. We assume all external traffic first flows into the gateway layer. JWT authentication and rate limiting policies are strictly implemented upfront---the legitimacy of the request and the access rate are determined before routing decisions are made (otherwise, network security issues could easily arise). Only traffic that passes through this filtering layer is allowed to proceed downstream.
+The request lifecycle involves two distinct interaction patterns, illustrated in Figure \ref{fig:request-sequence}. For short-running operations such as login, registration, and document CRUD, the browser sends a synchronous HTTP request through the Gateway directly to the relevant business service, which reads or writes to MySQL and returns a response. For AI agent tasks, the flow is asynchronous: the browser submits a task via the Copilot or an agent page, the Task Service queues it for execution and routes it to the appropriate agent, and progress is streamed back to the browser via WebSocket. The Copilot adds a preliminary classification step --- the user's natural language query is sent to the Python Flask classifier to determine which agent should handle it before any task is created.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig03_data_flow.png}
-\caption{Data Flow Architecture --- End-to-End Request Processing Across System Layers}
-\label{fig:data-flow}
+\includegraphics[width=\textwidth]{figures/fig03_request_sequence.pdf}
+\caption{End-to-End Request Sequence --- Copilot Intent Classification and Asynchronous Task Execution with WebSocket Progress Streaming}
+\label{fig:request-sequence}
 \end{figure}
 
 \subhead{4.2 Frontend Architecture}
