@@ -17,17 +17,17 @@ The five-layer structure is shown in Figure \ref{fig:five-layer}.
 \label{fig:five-layer}
 \end{figure}
 
-The five layers, from top to bottom, are as follows:
+The five layers, from top to bottom, are as follows.
 
-Layer 1 -- Web Presentation Layer. This is the front end of the architecture, using Vue 3 SPA, responsible for user interaction, result display (tables/maps/charts), and real-time progress push notifications. It supports Simplified Chinese, Traditional Chinese, and English language switching.
+Layer 1 -- Web Presentation Layer. This is the front end of the architecture, built with Vue 3 SPA, responsible for user interaction, result display (tables, maps, and charts), and real-time progress notifications via WebSocket. It supports three languages: Simplified Chinese, Traditional Chinese, and English.
 
-Layer 2 -- the gateway layer. As the system's sole entry point, the gateway layer is responsible for request routing and identity verification. Confidentiality is paramount in banking systems; requests not on the whitelist must be verified using JWT. Upon successful verification, the user's identity and permissions information are extracted and passed to downstream services.
+Layer 2 -- Gateway Layer. As the system's sole public entry point, the gateway handles request routing and identity verification. Every request not on the whitelist must carry a valid JWT. Once verified, the user's identity, roles, and permissions are extracted and forwarded to downstream services through custom headers.
 
-Layer 3 -- Business Service Layer. This layer includes user services and a task center. User services handle registration and login, JWT issuance, and role-based access control; the task center handles cross-agent request scheduling and status management.
+Layer 3 -- Business Service Layer. This layer contains user services and the task center. The user service manages registration, login, JWT issuance, role-based access control, notifications with a multi-type state machine, and document storage with department-scoped security clearance. The task center orchestrates cross-agent requests: it accepts tasks, queues them for asynchronous execution, tracks their progress, and streams status updates to the frontend via WebSocket.
 
-Layer 4 -- AI Service Layer. The AI layer deploys three dedicated agents: the Code Agent handles code generation and security verification before SQL execution; the Tool Agent handles enterprise tool requests, using a large model for intent recognition and parameter extraction; and the RAG Agent combines vector retrieval and generation models to provide policy Q\&A with cited sources.
+Layer 4 -- AI Service Layer. Three specialized agents handle the platform's AI capabilities. The Code Agent converts natural language to SQL and validates it through a multi-layer security check before execution. The Tool Agent handles business tasks such as meeting booking, schedule conflict detection, and route planning, using LLM-based intent routing to classify and dispatch requests. The RAG Agent combines vector retrieval with LLM generation to answer policy questions with verifiable citations, filtered by the user's department and clearance level. Sitting above all three, the Copilot dispatcher classifies user intent from a single natural language interface and routes each request to the appropriate agent. Two Python-based services support these agents: an LLM inference server for the Code Agent, and an embedding worker for the RAG Agent.
 
-The fifth layer -- the data layer. This is the lowest layer of the platform. We adhere to the principle of adapting to local conditions, using MySQL as the single data source to persistently store user, permission, organizational structure, document, and meeting room data; Redis is responsible for caching hot data (such as table structure metadata and schedule conflict detection); Milvus 2.3+ is deployed independently to handle document vectorization storage and semantic retrieval, providing the RAG Agent with similarity search capabilities.
+Layer 5 -- Data Layer. This layer uses a mix of storage engines chosen for their specific roles. MySQL stores user accounts, permissions, departments, documents, meeting rooms, and other relational data. Redis caches hot data such as schema metadata and handles schedule conflict detection through sorted sets. Milvus stores document embeddings and serves semantic similarity queries for the RAG Agent. MinIO holds uploaded document files as objects. etcd coordinates Milvus cluster metadata.
 
 The request lifecycle shown in Figure \ref{fig:data-flow} varies significantly depending on the ingress type. We assume all external traffic first flows into the gateway layer. JWT authentication and rate limiting policies are strictly implemented upfront---the legitimacy of the request and the access rate are determined before routing decisions are made (otherwise, network security issues could easily arise). Only traffic that passes through this filtering layer is allowed to proceed downstream.
 
@@ -37,10 +37,6 @@ The request lifecycle shown in Figure \ref{fig:data-flow} varies significantly d
 \caption{Data Flow Architecture --- End-to-End Request Processing Across System Layers}
 \label{fig:data-flow}
 \end{figure}
-
-In the Tool agent section, the natural language query (POST /tool/execute) processing path introduces an additional semantic layer. Requests don't directly reach the business logic; instead, they are first sent to DeepSeek for intent ``translation''---the model needs to understand whether the user wants to book a meeting room, check a schedule, or plan a route. Only after the intent is clear is the request routed to the corresponding domain module. Meanwhile, the code generation path (POST /code/query) follows a completely different pipeline. The service layer delegates the task to the backend Python inference server. After the SQL is returned, it undergoes a five-layer security check before the Jdbc Template is finally allowed to execute into the database. This link is significantly longer and more likely to become a bottleneck.
-
-The asynchronous task state synchronization mechanism differs from the conventional front-end polling mode. This platform relies on the Web Socket long connection maintained by the gateway proxy to actively push the proxy execution progress to the client, thereby achieving real-time visualization without increasing the request frequency (which will hardly generate any additional latency).
 
 \subhead{4.2 Frontend Architecture}
 
