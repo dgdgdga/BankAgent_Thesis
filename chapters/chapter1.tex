@@ -31,15 +31,41 @@ Data Sovereignty And Access Control. Beyond the risks from outside APIs, banking
 
 \subhead{1.3 Project Objectives}
 
-This work presents a multi-agent AI framework, built on an on-premise infrastructure and designed for banking operations, to address the challenges described above. The specific objectives are as follows.
+This work presents BankAgent, a multi-agent AI platform built on on-premise infrastructure and designed for banking operations. Table 1 summarizes the project objectives across all layers of the platform.
 
-Code Agent. The Code Agent is a component that turns natural language into SQL. It connects to a Python-based LLM inference server to generate queries. A five-tier whitelist filtering mechanism makes sure that only safe, allowed SQL operations reach the database. The agent uses metadata caching to give the LLM up-to-date schema context.
+\vspace{3mm}
+\noindent\textbf{Table 1: Project Objectives by Platform Layer}
+\vspace{2mm}
 
-RAG. RAG combines Milvus-based vector retrieval with vLLM-based inference. It gives accurate answers. These answers are backed by references. They are for banking policy and procedural questions. Organizational documents are cleaned by security level and department. Only content the user is allowed to see enters the retrieval and generation pipeline.
-
-Tool Agent. Tool Agent is a module that calls business tools. It supports conference-room inquiry and reservation. It also detects conflicts. For conflict detection, it uses Redis sorted sets. The key fields include user ID and timestamp ranges. In addition, it does route planning. It calls the Amap API. The module extracts the address and plans the route on a map. There is a unified natural language interface. DeepSeek intent recognition is used. It decides whether to call the meeting, schedule, or routing module.
-
-System Integration. It builds an end-to-end platform. The platform includes authentication secured by JWT. It has a three-level RBAC model. The roles are Administrator, Department Admin, and End-User. There is a notification system with multi-type support. The platform also includes document management with tiered security. A task center orchestrates agent workflows. WebSocket progress streaming is used. Docker Compose handles containerized deployment.
+\begin{table}[H]
+\centering
+\small\singlespacing
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{Category} & \textbf{Component} & \textbf{Objective} \\
+\midrule
+\multirow{3}{*}{AI Agents} & Code Agent & Convert natural language to SQL through a Python LLM inference server, with five-layer whitelist validation ensuring only safe queries reach the database. \\
+\cmidrule{2-3}
+ & RAG Agent & Provide citation-backed answers to policy and procedural questions using Milvus vector retrieval and LLM generation, with security-level and department-based permission filtering. \\
+\cmidrule{2-3}
+ & Tool Agent & Automate business tasks --- meeting room booking, schedule conflict detection via Redis sorted sets, and route planning via Amap API --- through a unified natural language interface with DeepSeek intent routing. \\
+\midrule
+Intelligent Dispatch & Copilot & Sit above all three agents as a cross-page dispatcher, classifying user intent through a three-tier pipeline and routing requests to the appropriate agent. \\
+\midrule
+\multirow{5}{*}{Platform Services} & Auth \& RBAC & Provide JWT-based authentication with three-tier role-based access control (Admin, Department Admin, End-User) and department-level data isolation. \\
+\cmidrule{2-3}
+ & API Gateway & Serve as the single entry point with JWT global filtering, Redis-based rate limiting, and single-session enforcement. \\
+\cmidrule{2-3}
+ & Notification System & Handle multi-type notifications (chat, RAG access requests, SQL audit alerts) with a five-state state machine and human-in-the-loop approval workflow. \\
+\cmidrule{2-3}
+ & Document Management & Provide MinIO-based document storage with three security clearance levels, HITL escalation for cross-clearance access, and RAG index synchronization. \\
+\cmidrule{2-3}
+ & Task Center & Orchestrate asynchronous agent execution with a four-state lifecycle, exponential-backoff retry, and WebSocket-based real-time progress streaming. \\
+\midrule
+DevOps & Containerized Deploy & Deploy all 13 services via Docker Compose with a single command, including Nginx reverse proxy, Let's Encrypt HTTPS, and health-check-based startup ordering. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subhead{1.4 Scope and Limitations}
 
