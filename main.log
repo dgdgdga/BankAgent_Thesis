@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:41
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1218,37 +1218,7 @@ Overfull \hbox (10.0733pt too wide) in paragraph at lines 210--210
 []|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/embedding/profiles/{id}/activate|  
  []
 
-[95] [96]
-Overfull \hbox (10.42307pt too wide) in paragraph at lines 252--252
-\TU/TimesNewRoman(0)/m/n/10.95 service:8081|  
- []
-
-
-Overfull \hbox (3.13019pt too wide) in paragraph at lines 252--252
-\TU/TimesNewRoman(0)/m/n/10.95 agent:8083|  
- []
-
-
-Overfull \hbox (3.13019pt too wide) in paragraph at lines 252--252
-\TU/TimesNewRoman(0)/m/n/10.95 agent:8084|  
- []
-
-
-Overfull \hbox (3.13019pt too wide) in paragraph at lines 252--252
-\TU/TimesNewRoman(0)/m/n/10.95 agent:8085|  
- []
-
-
-Overfull \hbox (10.42307pt too wide) in paragraph at lines 252--252
-\TU/TimesNewRoman(0)/m/n/10.95 service:8082|  
- []
-
-
-Overfull \hbox (10.42307pt too wide) in paragraph at lines 252--252
-\TU/TimesNewRoman(0)/m/n/10.95 service:8082|  
- []
-
-[97]) (./chapters/appendix_c.tex [98]
+[95] [96] [97]) (./chapters/appendix_c.tex [98]
 Underfull \hbox (badness 4366) in paragraph at lines 34--35
 \TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/resour
 ces, /app/admin/my-dept).
