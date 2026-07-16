@@ -42,17 +42,11 @@ The request lifecycle involves two distinct interaction patterns, illustrated in
 
 The front end is built on Vue 3 with Composition API and TypeScript. TypeScript catches type errors at compile time. Composition API allows shared interaction logic to be reused across Tool, Code, RAG, and management pages. The interface follows a minimalist design language: a grayscale color system, clean typography, and a collapsible sidebar that saves screen space. Responsive layout supports the range of devices found in a banking environment, from desktops to tablets.
 
-\subsubhead{Routing and Layout}
+\textbf{(1) Routing and Layout.} Vue Router divides routes into public and authenticated groups. Navigation guards block unauthenticated access before route transitions. The authenticated layout has a collapsible sidebar, a multi-tab bar that preserves page state across switches, and role-based menu visibility. Three language options are provided: Simplified Chinese, Traditional Chinese, and English. Unread notification counts are fetched every ten seconds and shown as badges on the sidebar.
 
-Vue Router divides routes into public and authenticated groups. Navigation guards block unauthenticated access before route transitions. The authenticated layout has a collapsible sidebar, a multi-tab bar that preserves page state across switches, and role-based menu visibility. Three language options are provided: Simplified Chinese, Traditional Chinese, and English. Unread notification counts are fetched every ten seconds and shown as badges on the sidebar.
+\textbf{(2) State Management and Communication.} Two Pinia stores manage frontend state. The user store holds the JWT token, user roles, permissions, department, and clearance level. The task store tracks agent task lifecycles, recording task type, status, progress, and result. HTTP requests use a shared Axios instance pre-configured with JWT attachment, 401 auto-redirect, and unified error handling. All server responses follow a standard wrapper with code, message, and data fields. WebSocket connections use a singleton client with automatic reconnection, pushing real-time task progress to the UI without polling overhead.
 
-\subsubhead{State Management and Communication}
-
-Two Pinia stores manage frontend state. The user store holds the JWT token, user roles, permissions, department, and clearance level. The task store tracks agent task lifecycles, recording task type, status, progress, and result. HTTP requests use a shared Axios instance pre-configured with JWT attachment, 401 auto-redirect, and unified error handling. All server responses follow a standard wrapper with code, message, and data fields. WebSocket connections use a singleton client with automatic reconnection, pushing real-time task progress to the UI without polling overhead.
-
-\subsubhead{Map and Loading Feedback}
-
-Map rendering uses the Amap JS API for route display with colored polylines and custom start and end markers. Loading states are handled by a full-screen overlay with a rotating status message. The progress bar uses a gradient design that fills smoothly; it stays below 100 percent until the task actually completes, so the user never feels the interface has stalled.
+\textbf{(3) Map and Loading Feedback.} Map rendering uses the Amap JS API for route display with colored polylines and custom start and end markers. Loading states are handled by a full-screen overlay with a rotating status message. The progress bar uses a gradient design that fills smoothly; it stays below 100 percent until the task actually completes, so the user never feels the interface has stalled.
 
 Table \ref{tab:frontend-tech-stack} summarizes the frontend technology stack.
 
