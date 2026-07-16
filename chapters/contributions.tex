@@ -115,42 +115,52 @@ I served as the backend architecture lead and, over the course of the project, t
 
 Building on the initial user-service skeleton (basic JWT login with a single admin/user role) created by Lin Chuanbin, I extended the platform's security model into a multi-layer permission architecture:
 
-- Designed five RBAC tables supporting three role types (admin, department admin, regular user) with fine-grained permissions pre-seeded in the database.
-- Replaced the original single-role JWT filter with a custom JwtAuthenticationFilter that extracts roles and permissions from JWT claims and registers them in Spring Security, enabling declarative @PreAuthorize checks.
-- Built admin and department-admin controllers covering user CRUD, role assignment, department assignment, clearance level management, and account lifecycle operations.
-- Introduced multi-level department trees with automatic department-scoped data isolation in all data-access controllers.
-- Implemented three-tier document clearance enforcement with department scoping, clearance level comparison, and HITL override via approved access requests.
+\begin{itemize}
+  \item Designed five RBAC tables supporting three role types (admin, department admin, regular user) with fine-grained permissions pre-seeded in the database.
+  \item Replaced the original single-role JWT filter with a custom JwtAuthenticationFilter that extracts roles and permissions from JWT claims and registers them in Spring Security, enabling declarative @PreAuthorize checks.
+  \item Built admin and department-admin controllers covering user CRUD, role assignment, department assignment, clearance level management, and account lifecycle operations.
+  \item Introduced multi-level department trees with automatic department-scoped data isolation in all data-access controllers.
+  \item Implemented three-tier document clearance enforcement with department scoping, clearance level comparison, and HITL override via approved access requests.
+\end{itemize}
 
 \textbf{(2) API gateway, session management \& unified response format}
 
 I built the platform's unified API gateway layer and standardized the cross-service response format:
 
-- Built a custom Spring Cloud Gateway global filter with route rules covering all microservices and WebSocket endpoints.
-- Implemented single-session enforcement via Redis (new logins invalidate old sessions), sliding-window TTL renewal with polling endpoint exemption, and dynamic admin-configurable session timeout.
-- Propagated user identity through HTTP headers so downstream services operate without holding JWT\_SECRET.
-- Defined the Result\textless T\textgreater generic wrapper standard, deployed identical DTOs across all four microservices, and wrote the frontend Axios interceptor with automatic unwrapping.
+\begin{itemize}
+  \item Built a custom Spring Cloud Gateway global filter with route rules covering all microservices and WebSocket endpoints.
+  \item Implemented single-session enforcement via Redis (new logins invalidate old sessions), sliding-window TTL renewal with polling endpoint exemption, and dynamic admin-configurable session timeout.
+  \item Propagated user identity through HTTP headers so downstream services operate without holding JWT\_SECRET.
+  \item Defined the Result\textless T\textgreater generic wrapper standard, deployed identical DTOs across all four microservices, and wrote the frontend Axios interceptor with automatic unwrapping.
+\end{itemize}
 
 \textbf{(3) Notification \& HITL approval system}
 
 I independently designed and implemented the platform's notification and approval subsystem:
 
-- Designed the notification table with threaded messaging support (parent\_id/thread\_id) and a five-state state machine spanning unread, read, pending, approved, and rejected statuses.
-- Built the notification controller with endpoints for sending, filtered listing, read marking, approve/deny with audit trail, and threaded conversation view.
+\begin{itemize}
+  \item Designed the notification table with threaded messaging support (parent\_id/thread\_id) and a five-state state machine spanning unread, read, pending, approved, and rejected statuses.
+  \item Built the notification controller with endpoints for sending, filtered listing, read marking, approve/deny with audit trail, and threaded conversation view.
+\end{itemize}
 
 \textbf{(4) Task center orchestration}
 
 Building on the initial static agent routing scaffold, I designed and implemented the complete task-service microservice as a centralized orchestration layer that tracks and manages all Agent workflows across the platform. When a user submits a request through any Agent, the task center persists it as a task record, queues it for asynchronous execution in a bounded thread pool, and pushes real-time progress updates to the frontend via WebSocket.
 
-- Built the task-service microservice with a four-state lifecycle (INIT → RUNNING → SUCCESS / FAIL) and an async execution pipeline backed by a ThreadPoolExecutor.
-- Implemented routing by task type (CODE / TOOL / RAG) to the corresponding Agent, with domain-meaningful progress milestones pushed at each stage.
-- Designed fault-tolerance mechanisms including connection timeout, read timeout, up to 3 automatic retries with exponential backoff, and graceful queue overflow rejection via AbortPolicy to prevent system overload under high concurrency.
+\begin{itemize}
+  \item Built the task-service microservice with a four-state lifecycle (INIT → RUNNING → SUCCESS / FAIL) and an async execution pipeline backed by a ThreadPoolExecutor.
+  \item Implemented routing by task type (CODE / TOOL / RAG) to the corresponding Agent, with domain-meaningful progress milestones pushed at each stage.
+  \item Designed fault-tolerance mechanisms including connection timeout, read timeout, up to 3 automatic retries with exponential backoff, and graceful queue overflow rejection via AbortPolicy to prevent system overload under high concurrency.
+\end{itemize}
 
 \textbf{(5) Email verification system}
 
 I replaced the initial QQ SMTP implementation (originally contributed by Xia Xin) with a production-grade solution after identifying reliability and security limitations:
 
-- Migrated from QQ SMTP to the Resend HTTP API with a redesigned HTML email template.
-- Hardened security with brute-force protection against verification code guessing and a three-tier rate limiting system (per-email cooldown, per-IP hourly cap, per-email daily cap).
+\begin{itemize}
+  \item Migrated from QQ SMTP to the Resend HTTP API with a redesigned HTML email template.
+  \item Hardened security with brute-force protection against verification code guessing and a three-tier rate limiting system (per-email cooldown, per-IP hourly cap, per-email daily cap).
+\end{itemize}
 
 \textbf{(6) Copilot backend \& AI provider unification}
 
@@ -160,9 +170,11 @@ I built the backend for the global Copilot assistant, which generalized the AI c
 
 I worked with Huang Siyuan to build the document storage and management backend, which serves both the document library and her RAG Agent:
 
-- Built a MinIO storage service with auto bucket creation, admin-configurable upload size limits, and support for PDF, DOCX, PPT, and Markdown files.
-- Extended the document table with file metadata and parse status columns to support RAG document parsing.
-- Implemented document access request approval routing to department managers with fallback to system admin.
+\begin{itemize}
+  \item Built a MinIO storage service with auto bucket creation, admin-configurable upload size limits, and support for PDF, DOCX, PPT, and Markdown files.
+  \item Extended the document table with file metadata and parse status columns to support RAG document parsing.
+  \item Implemented document access request approval routing to department managers with fallback to system admin.
+\end{itemize}
 
 \textbf{2. Frontend}
 
@@ -170,36 +182,54 @@ I worked with Huang Siyuan to build the document storage and management backend,
 
 I rebuilt the frontend shell from the initial scaffold created by Lin Chuanbin into a production-grade application framework:
 
-- Rebuilt the main layout with a collapsible sidebar, multi-tab top bar, responsive mobile layout with off-screen drawer, and role-based dynamic menu visibility.
-- Built a browser-style multi-tab system that preserves page state when users switch between tabs --- form inputs, filters, and scroll positions remain intact --- preventing task interruption, a common issue in enterprise workflows.
-- Implemented a five-layer global navigation guard covering silent refresh recovery, authentication redirect, bounce-back, single-role check, and multi-role check.
+\begin{itemize}
+  \item Rebuilt the main layout with a collapsible sidebar, multi-tab top bar, responsive mobile layout with off-screen drawer, and role-based dynamic menu visibility.
+  \item Built a browser-style multi-tab system that preserves page state when users switch between tabs --- form inputs, filters, and scroll positions remain intact --- preventing task interruption, a common issue in enterprise workflows.
+  \item Implemented a five-layer global navigation guard covering silent refresh recovery, authentication redirect, bounce-back, single-role check, and multi-role check.
+\end{itemize}
 
 \textbf{(2) UI design system}
 
 I established a minimalist visual design language across the entire platform, replacing the default Element Plus styling inherited from the initial scaffold:
 
-- Globally replaced the default blue theme with a grayscale color system, removing accent strips and unifying border-radius, sizing, and spacing.
-- Redesigned notifications with macOS-style frosted glass and custom cubic-bezier slide-in animation.
+\begin{itemize}
+  \item Globally replaced the default blue theme with a grayscale color system, removing accent strips and unifying border-radius, sizing, and spacing.
+  \item Redesigned notifications with macOS-style frosted glass and custom cubic-bezier slide-in animation.
+\end{itemize}
 
 \textbf{(3) Tool Agent UI rebuild}
 
 I redesigned all three Tool Agent interfaces originally built by Lin Chuanbin, splitting the monolithic ~600-line file into independent sub-components and removing the fixed AI chat panel in favor of an inline interaction model:
 
-- Meeting Agent: rebuilt search as a horizontal inline bar with a responsive card grid, SVG icons, equipment tags, and a booking dialog.
-- Schedule Agent: unified two separate forms into a single filter panel and replaced manual user ID input with a filterable multi-select dropdown.
-- Route Agent: redesigned the map from conditional rendering (hidden when no results) to a persistent full-width display. Added a floating control panel and clickable route segments that show detailed navigation steps.
+\begin{itemize}
+  \item Meeting Agent: rebuilt search as a horizontal inline bar with a responsive card grid, SVG icons, equipment tags, and a booking dialog.
+  \item Schedule Agent: unified two separate forms into a single filter panel and replaced manual user ID input with a filterable multi-select dropdown.
+  \item Route Agent: redesigned the map from conditional rendering (hidden when no results) to a persistent full-width display. Added a floating control panel and clickable route segments that show detailed navigation steps.
+\end{itemize}
 
 \textbf{3. DevOps}
 
-\textbf{(1) Containerization \& deployment}
+\textbf{(1) Docker Compose orchestration}
 
-I set up the full deployment pipeline for the platform, bringing all Agent services --- Zhang Zhaoming's Code Agent, Huang Siyuan's RAG Agent, and Lin Chuanbin's initial Tool Agent --- onto a single DigitalOcean Droplet:
+I wrote the docker-compose.yml that defines all services with proper startup ordering via health checks and dependency declarations. The composition includes MySQL, Redis, etcd, MinIO, Milvus, five Java microservices, two Python workers, Nginx, and Certbot. Each Java service was containerized with a multi-stage Dockerfile that builds the JAR in a Maven stage and runs it on a slim JRE base image.
 
-- Wrote the docker-compose.yml that starts all services with proper startup order, health checks, and data persistence.
-- Created Dockerfiles for each Spring Boot service.
-- Deployed a DigitalOcean Droplet. To keep the Maven build from running out of memory on a small instance, I compiled the JARs locally and copied them over.
-- Set up Nginx as the only public-facing entry point, handling SPA routing, API/WebSocket proxying, and static file caching.
-- Registered the domain bankagent.online through Namecheap and configured Let's Encrypt for HTTPS access.
+\textbf{(2) Server deployment}
+
+I deployed the full platform on a single DigitalOcean Droplet. To avoid Maven exhausting memory on the small instance, I compiled all JARs locally and transferred them to the server. The deployment uses a single docker compose up -d command with automatic database initialization via mounted SQL seed files.
+
+\textbf{(3) Nginx, domain, and HTTPS}
+
+I configured Nginx as the sole public-facing entry point, handling three concerns: static file serving for the Vue 3 SPA with client-side routing fallback, reverse proxying of API calls and WebSocket upgrade connections to the Gateway, and caching headers for static assets. I registered the domain bankagent.online through Namecheap and configured Let's Encrypt for automated HTTPS certificate issuance and renewal via Certbot.
+
+\textbf{4. Documentation and Project Management}
+
+\textbf{(1) Final report}
+
+Xia Xin initially drafted the project report in DOCX format. I converted it into LaTeX, uploaded the source to GitHub for collaborative editing with line-level change tracking, and contributed writing and revision across several sections. I converted verbose prose passages into tables for clarity and created several SVG figures where the original illustrations were incomplete or outdated. I standardized the LaTeX formatting across the entire document.
+
+\textbf{(2) Repository and collaboration}
+
+Lin Chuanbin initialized the early project repository as a basic scaffold: a single-file README, initial Tool Agent source code, and skeleton POM files for the other services. Building on that foundation, I restructured the repository with a comprehensive README covering build instructions, service ports, and test accounts. I authored architecture specification documents for the database and core subsystems, and resolved merge conflicts across multiple contributors' work streams.
 
 \vspace{4mm}
 

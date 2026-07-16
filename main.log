@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 14:29
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 15:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1287,14 +1287,14 @@ ces, /app/admin/my-dept).
  []
 
 [94]) (./chapters/contributions.tex [95] [96] [97] [98] [99] [100] [101]
-[102] [103] [104] [105]
-Underfull \hbox (badness 1348) in paragraph at lines 260--261
+[102] [103] [104] [105] [106] [107]
+Underfull \hbox (badness 1348) in paragraph at lines 290--291
 \TU/TimesNewRoman(0)/m/n/12 can rebuild the index so that MySQL chunk metadata 
 and Milvus vectors match
  []
 
-[106] [107] [108] [109]
-Underfull \hbox (badness 1931) in paragraph at lines 351--352
+[108] [109] [110] [111]
+Underfull \hbox (badness 1931) in paragraph at lines 381--382
 \TU/TimesNewRoman(0)/m/n/12 (\TU/lmtt/m/n/12 \bDROP\b\TU/TimesNewRoman(0)/m/n/1
 2 , \TU/lmtt/m/n/12 \bDELETE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bI
 NSERT\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bUPDATE\b\TU/TimesNewRoma
@@ -1303,7 +1303,7 @@ n(0)/m/n/12 , \TU/lmtt/m/n/12 \bALTER\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m
  []
 
 
-Underfull \hbox (badness 1681) in paragraph at lines 351--352
+Underfull \hbox (badness 1681) in paragraph at lines 381--382
 \TU/lmtt/m/n/12 \bCREATE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bEXEC\
 b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bUNION\b\TU/TimesNewRoman(0)/m/
 n/12 , \TU/lmtt/m/n/12 \bINTO\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \b
@@ -1311,7 +1311,7 @@ LOAD_- FILE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bOUTFILE\b\TU/Times
 NewRoman(0)/m/n/12 ,
  []
 
-[110] [111] [112] [113] (./main.aux)
+[112] [113] [114] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1326,4 +1326,4 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  78i,11n,96p,1252b,1204s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (118 pages).
+Output written on main.pdf (119 pages).
