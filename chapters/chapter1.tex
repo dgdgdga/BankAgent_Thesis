@@ -9,11 +9,9 @@
 
 \subhead{1.1 Background and Motivation}
 
-LLMs are built on transformer architectures. They are trained on large sets of text and have pushed artificial intelligence forward. These systems can understand almost every language, create runnable code from a text prompt, and give detailed answers about many field. This is why engineers see them as a key piece of enterprise digital change.
+LLMs are built on transformer architectures. Through training on large sets of text, these systems can understand almost every language, create runnable code from a text prompt, and give detailed answers about many field. This is why engineers see them as a key piece of enterprise digital change.
 
-But using LLMs in business banking brings problems that go beyond just linking up the tech. First, SQL that is made by the model for database queries is not always reliable. The code often has mistakes in structure or meaning, especially when the database has a complex layout. Second, AI models have limited knowledge of bank-specific rules. The rules change often, and model weights learned during training cannot reflect updates in policies. Third, bank workers must integrate AI into their daily work, such as room booking, schedule checking, and route planning. However, present AI models are not always good at calling the right tool or reading the right input.
-
-The most serious problem comes from the common industry practice. Many firms rely on outside LLM APIs, like those from big cloud providers. This brings up data safety issues and legal control problems. The Hong Kong Monetary Authority (HKMA) has strict rules about handling customer information. The rules suggest that institutions must keep control over data access and processing. Therefore, sending internal queries or customer data to an outside API for AI reasoning is not safe in terms of compliance. It is against the principle of data sovereignty.
+But using LLMs in the banking industry brings several technical and non-technical problems. First, LLM made SQL is not always reliable. The code often has mistakes in structure or meaning, especially when the database has a complex layout. These problems may lead to incorrent changes to fund. Second, AI models have limited knowledge of bank-specific rules. Frequent updates to regulations and policies make model's knowledge outdated. Third, bank workers must integrate AI into their daily work, such as room booking, schedule checking, and route planning. However, present AI models are not always good at calling the right tool or reading the right input. All these problems will lead to 
 
 The current work is driven by several linked problems. These are technical precision, keeping domain knowledge correct, stable tool calling, and data control. So, a single multi-agent AI system is clearly needed. This system must work on-site and take a defense-in-depth approach. It must combine secure code generation, local knowledge retrieval, and enterprise tool calling.
 
@@ -21,11 +19,11 @@ The current work is driven by several linked problems. These are technical preci
 
 The present work are facing four major challenges.
 
-\textbf{Code generation accuracy.} Database queries are used in everyday bank work. For example, they are used to get customer data and to file reports required by rules. Natural-language interfaces can make data access much easier. But LLM-written SQL is not always safe. It must be run through careful checks. The model may add syntax faults, wrong column references, or even harmful operations. The system needs to check multiple levels before executing any SQL statement.
+\textbf{Code generation accuracy.} Database queries are used in everyday bank work. For example, they are used to get customer data and to file reports. Natural-language interfaces can make data access much easier. But LLM-written SQL is not always safe. It must be run through careful checks. The model may add syntax faults, wrong column references, or even harmful operations. The system needs to check multiple levels before executing any SQL statement.
 
-\textbf{Knowledge retrieval.} Answers to procedural and policy questions must be verifiable. They must be backed by citations. This is important for bank employees. Finance is a field where rules must be followed and there is zero tolerance for errors. RAG methods are used to fix LLM issues with old or made-up information. But bank documents have security levels. The system must filter retrieval results to match the user's clearance level. Documents must not leak through answers.
+\textbf{Knowledge retrieval.} Answers to procedural and policy questions must be verifiable. This is important beacuse finance is a field where rules must be followed and there is zero tolerance for errors. RAG methods are used to fix LLM issues with old or made-up information. But bank documents have security levels. The system must filter retrieval results to match the user's clearance level. Documents must not leak through agent's answers.
 
-\textbf{Enterprise Tool Integration.} Daily bank work uses many tools, including room booking, calendar syncing, and route planning. An AI system must correctly understand user requests. It must find the right intent, extract the right parameters, and run the matching tool. The system should also use large language model routing to pick the best handler for each request.
+\textbf{Enterprise Tool Integration.} Daily bank work uses many tools, including room booking, calendar syncing, and travel route planning. An AI system must correctly understand user requests. It must find the right intent, extract the right parameters, and run the matching tool. The system should also use LLM routing to pick the best handler for each request.
 
 \textbf{Data Sovereignty And Access Control.} Beyond the risks from outside APIs, banking settings need strict access levels. Different departments handle documents with different security clearances. The rule of least privilege must be enforced at every layer. Small permission models are often too simple for an organization that has many departments and levels of leadership.
 
@@ -65,13 +63,7 @@ DevOps & Containerized Deploy & Start all services with a single Docker Compose 
 \end{tabularx}
 \end{table}
 
-\subhead{1.4 Scope and Limitations}
-
-This project covers the design, implementation, and evaluation of the multi-agent platform described above. The intended users are banking personnel. The platform provides three main functions. It generates and checks SQL queries. It does knowledge retrieval with citations. It calls business tools. The deployment model is local. It uses Docker Compose for container management. The security model includes JWT authentication and RBAC.
-
-But there are still several limits. First, the Code Agent supports only MySQL SQL and relational table structures. It does not work with other database systems or NoSQL interfaces. Second, the RAG Agent's retrieval quality depends on the selected embedding model and the coverage of indexed documents. Third, the Tool Agent only supports three business tools at present. Its scope is defined by the current set of enterprise APIs. Fourth, the platform is built for a single deployment and does not yet support Kubernetes or multi-node scaling.
-
-\subhead{1.5 Report Organization}
+\subhead{1.4 Report Organization}
 
 The rest of this report is arranged like this. Chapter 2 looks at past work on LLM use in business settings, systems with many agents, turning text into SQL, RAG methods, language models with added tools, and on-site use and data safety. Chapter 3 explains what banks need, functional and non-functional requirements, and user case studies. Chapter 4 shows the five-layer system design, the frontend and backend layouts, data layer construction, and the reasons for choosing each technology. Chapter 5 explains in detail how the three main agents are built. Chapter 6 covers the process of putting the system parts together, including user management, task planning, live communication, and deploying with containers. Chapter 7 talks about the project's difficulties, how this work compares to other solutions, and where it falls short. Chapter 8 sums up the work that was finished and suggests what should be looked at next along with future work.
 
