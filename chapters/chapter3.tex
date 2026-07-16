@@ -96,30 +96,26 @@ Amap API & External system & Converts addresses to coordinates (geocoding) and c
 \end{tabularx}
 \end{table}
 
-The five core use cases that span these actors are described below.
-
-\vspace{3mm}
-\noindent\textbf{Table 4: Use Cases}
-\vspace{2mm}
+The five core use cases spanning these actors are summarized in Table \ref{tab:usecases}.
 
 \begin{table}[H]
 \centering
 \small\singlespacing
 \caption{Use Cases}
 \label{tab:usecases}
-\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}X}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.10\textwidth}>{\RaggedRight\arraybackslash}p{0.16\textwidth}>{\RaggedRight\arraybackslash}p{0.20\textwidth}>{\RaggedRight\arraybackslash}p{0.10\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
 \textbf{ID} & \textbf{Actor} & \textbf{Goal} & \textbf{Agent} & \textbf{Main Flow} \\
 \midrule
-UC1 & Business analyst (ROLE\_USER) & Query database without writing SQL & Code Agent & User enters a natural language question → LLM generates SQL → whitelist validation checks safety → query executes → tabular result returned with column headers and execution time. \\
+UC1 & Business analyst & Query database without writing SQL & Code Agent & User enters a natural language question; LLM generates SQL; whitelist validation runs; query executes; tabular result returned. \\
 \midrule
-UC2 & Compliance officer (ROLE\_USER) & Find policy clauses with verifiable citations & RAG Agent & User asks a regulatory question → query is embedded → top-k document chunks retrieved from vector store, filtered by department and clearance → LLM generates answer with source citations. \\
+UC2 & Compliance officer & Find policy clauses with verifiable citations & RAG Agent & User asks a regulatory question; query embedded; top-k chunks retrieved and filtered by department and clearance; LLM generates answer with source citations. \\
 \midrule
-UC3 & Administrative staff (ROLE\_USER) & Book a meeting room via natural language & Tool Agent & User describes requirements in natural language → intent classified as MEETING\_QUERY → parameters extracted (time, capacity, floor) → available rooms queried against bookings → options displayed. \\
+UC3 & Admin. staff & Book a meeting room via natural language & Tool Agent & User describes requirements; intent classified; parameters extracted; available rooms queried; options displayed. \\
 \midrule
-UC4 & Administrative staff (ROLE\_USER) & Detect schedule conflicts & Tool Agent & User specifies attendees and time range → intent classified as SCHEDULE\_CHECK → each attendee's calendar checked for overlapping entries → conflict report returned with suggested alternatives. \\
+UC4 & Admin. staff & Detect schedule conflicts & Tool Agent & User specifies attendees and time range; each attendee's calendar checked; conflict report returned with alternatives. \\
 \midrule
-UC5 & Staff member (ROLE\_USER) & Access a document above own clearance & Notification System & User attempts to open a higher-clearance document → access denied per department and clearance rules → user submits escalation request → department administrator reviews and approves → temporary access granted with audit trail. \\
+UC5 & Staff member & Access a document above own clearance & Notification System & Access denied; user submits escalation request; department admin reviews and approves; temporary access granted with audit trail. \\
 \bottomrule
 \end{tabularx}
 \end{table}
