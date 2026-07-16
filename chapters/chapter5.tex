@@ -32,6 +32,7 @@ Tables \ref{tab:pseudocode-ai-intent} and \ref{tab:pseudocode-deepseek-chat} sho
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- handleAiIntent() AI Intent Classification and Routing}
 \label{tab:pseudocode-ai-intent}
@@ -79,6 +80,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- DeepSeekService.chat() LLM API Call with Fallback}
 \label{tab:pseudocode-deepseek-chat}
@@ -132,6 +134,7 @@ The second set, the management side, uses a completely different logic (although
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- queryRoomsWithStatus() Three-Phase Room Availability Algorithm}
 \label{tab:pseudocode-query-rooms}
@@ -180,6 +183,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- bookRoom() Atomic Conflict Check-and-Insert}
 \label{tab:pseudocode-book-room}
@@ -228,6 +232,7 @@ Table \ref{tab:tool-agent-api} lists the Tool Agent REST API endpoints implement
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Tool Agent REST API Endpoints}
 \label{tab:tool-agent-api}
@@ -275,6 +280,7 @@ Tables \ref{tab:pseudocode-redis-schedule}, \ref{tab:pseudocode-check-conflict},
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- Redis Sorted Set Schedule Operations (add / remove / checkConflicts)}
 \label{tab:pseudocode-redis-schedule}
@@ -323,6 +329,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- POST /tool/check-conflict Attendee-Based Conflict Workflow}
 \label{tab:pseudocode-check-conflict}
@@ -355,6 +362,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- Schedule Dual-Write Pattern (MySQL + Redis Consistency)}
 \label{tab:pseudocode-dual-write}
@@ -410,6 +418,7 @@ The route planning feature integrates the Amap Open API through the AmapService 
 
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Route Planning Three-Stage Geocoding and Navigation Pipeline}
 \label{tab:route-planning}
@@ -434,6 +443,7 @@ Table \ref{tab:pseudocode-geocode} shows the route geocoding pipeline with a thr
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- geocodeWithFallback() Multi-Level Address Resolution}
 \label{tab:pseudocode-geocode}
@@ -490,6 +500,7 @@ Table \ref{tab:code-agent-pipeline} shows the four-stage pipeline of Code Agent.
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Code Agent Four-Stage Natural Language to SQL Pipeline}
 \label{tab:code-agent-pipeline}
@@ -530,6 +541,7 @@ Table \ref{tab:pseudocode-onnx} shows the SQL generation HTTP proxy that forward
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- OnnxCodeGenerationService HTTP Proxy to Python Inference Server}
 \label{tab:pseudocode-onnx}
@@ -588,6 +600,7 @@ Tables \ref{tab:pseudocode-validate-op}, \ref{tab:pseudocode-validate-keywords},
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- validateOperation() SQL Operation Type Check (Layer 1)}
 \label{tab:pseudocode-validate-op}
@@ -611,6 +624,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- validateForbiddenKeywords() Keyword Blacklist Scan (Layer 2)}
 \label{tab:pseudocode-validate-keywords}
@@ -637,6 +651,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- validateTableNames() Table Whitelist Verification (Layer 3)}
 \label{tab:pseudocode-validate-tables}
@@ -668,6 +683,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- validateColumnNames() Column Whitelist Verification (Layer 4)}
 \label{tab:pseudocode-validate-cols}
@@ -714,6 +730,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- validateComplexity() Query Complexity Limits (Layer 5)}
 \label{tab:pseudocode-validate-complexity}
@@ -751,6 +768,7 @@ Table \ref{tab:sql-validation-rules} summarizes the five validation layers with 
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{SQL Whitelist Validation Rules (Five-Layer Defense)}
 \label{tab:sql-validation-rules}
@@ -777,6 +795,7 @@ Tables \ref{tab:pseudocode-refresh-metadata}, \ref{tab:pseudocode-cache-lifecycl
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- refreshAllMetadata() Schema Metadata Cache Loading}
 \label{tab:pseudocode-refresh-metadata}
@@ -827,6 +846,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- MetadataCacheManager Cache Lifecycle Management}
 \label{tab:pseudocode-cache-lifecycle}
@@ -876,6 +896,7 @@ END FUNCTION
 \vspace{3mm}
 
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{Pseudocode --- SqlExecutionService Defense-in-Depth SQL Execution}
 \label{tab:pseudocode-sql-execution}

@@ -19,6 +19,7 @@ This appendix documents the complete database schema for the agent\_platform dat
 
 % --- Table A1 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{meeting\_room --- Meeting room resources}
 \label{tab:schema-meeting-room}
@@ -44,6 +45,7 @@ deleted     & INT, DEFAULT 0             & Logical delete flag \\
 
 % --- Table A2 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{meeting\_schedule --- Booking and schedule records}
 \label{tab:schema-meeting-schedule}
@@ -69,6 +71,7 @@ deleted     & INT, DEFAULT 0             & Logical delete flag \\
 
 % --- Table A3 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_user --- User accounts}
 \label{tab:schema-sys-user}
@@ -98,6 +101,7 @@ deleted         & TINYINT, NOT NULL, DEFAULT 0    & Logical delete (0=normal, 1=
 
 % --- Table A4 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_role --- System roles}
 \label{tab:schema-sys-role}
@@ -121,6 +125,7 @@ deleted     & TINYINT, NOT NULL, DEFAULT 0 & Logical delete flag \\
 
 % --- Table A5 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_permission --- Granular permissions}
 \label{tab:schema-sys-permission}
@@ -149,6 +154,7 @@ deleted       & TINYINT, NOT NULL, DEFAULT 0   & Logical delete flag \\
 
 % --- Table A6 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_user\_role \& sys\_role\_permission --- Association tables}
 \label{tab:schema-association}
@@ -183,6 +189,7 @@ perm\_id & BIGINT, NOT NULL & FK to sys\_permission.id \\
 
 % --- Table A7 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_department --- Organizational structure}
 \label{tab:schema-sys-department}
@@ -207,6 +214,7 @@ create\_time & DATETIME                    & Record creation timestamp \\
 
 % --- Table A8 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_document --- Knowledge base documents}
 \label{tab:schema-sys-document}
@@ -232,6 +240,7 @@ create\_time     & DATETIME                       & Record creation timestamp \\
 
 % --- Table A9 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_notification --- Multi-type notification system}
 \label{tab:schema-sys-notification}
@@ -261,6 +270,7 @@ deleted     & TINYINT, NOT NULL, DEFAULT 0  & Logical delete flag \\
 
 % --- Table A10 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{sys\_config --- System configuration}
 \label{tab:schema-sys-config}
@@ -281,6 +291,7 @@ update\_time & DATETIME                   & Auto-updated on modification \\
 
 % --- Table A11 ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{task\_record --- Agent task lifecycle tracking}
 \label{tab:schema-task-record}
@@ -307,6 +318,7 @@ updated\_at   & DATETIME                           & Auto-updated on modificatio
 
 % --- Table A12: RAG tables ---
 \begin{table}[H]
+\small\singlespacing
 \centering
 \caption{RAG knowledge base tables}
 \label{tab:schema-rag}
