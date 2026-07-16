@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:39
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 17:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1189,71 +1189,66 @@ Overfull \vbox (1101.41306pt too high) has occurred while \output is active []
 
 
 [92]) (./chapters/appendix_b.tex
-Underfull \hbox (badness 2846) in paragraph at lines 64--64
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/dept- 
+Overfull \hbox (4.36255pt too wide) in paragraph at lines 83--83
+[]|\TU/TimesNewRoman(0)/m/n/10.95 DELETE|  
  []
 
 [93]
-Overfull \hbox (15.0287pt too wide) in paragraph at lines 101--101
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/notification/approve/{id}|  
+Overfull \hbox (8.02502pt too wide) in paragraph at lines 118--118
+[]|\TU/TimesNewRoman(0)/m/n/10.95 GET/PUT|  
  []
 
 
-Overfull \hbox (1.04713pt too wide) in paragraph at lines 101--101
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/notification/deny/{id}|  
- []
-
-
-Underfull \hbox (badness 1092) in paragraph at lines 118--118
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/user/config/ai- 
- []
-
-
-Overfull \hbox (3.47453pt too wide) in paragraph at lines 141--141
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/tool/schedule/user/{userId}|  
- []
-
-
-Overfull \hbox (5.32925pt too wide) in paragraph at lines 141--141
+Overfull \hbox (28.09111pt too wide) in paragraph at lines 141--141
 []|\TU/TimesNewRoman(0)/m/n/10.95 PUT/DELETE|  
  []
 
 [94]
-Overfull \hbox (2.70996pt too wide) in paragraph at lines 210--210
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/permissions/documents|  
- []
-
-
-Overfull \hbox (36.918pt too wide) in paragraph at lines 210--210
+Overfull \hbox (2.78043pt too wide) in paragraph at lines 210--210
 []|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/document/{id}/reprocess|  
  []
 
 
-Overfull \hbox (2.7046pt too wide) in paragraph at lines 210--210
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/documents/status|  
+Overfull \hbox (4.36255pt too wide) in paragraph at lines 210--210
+[]|\TU/TimesNewRoman(0)/m/n/10.95 DELETE|  
  []
 
 
-Overfull \hbox (26.59357pt too wide) in paragraph at lines 210--210
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/document/{id}/chunks|  
- []
-
-
-Overfull \hbox (25.37453pt too wide) in paragraph at lines 210--210
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/embedding/profiles/{id}/test|  
- []
-
-
-Overfull \hbox (44.21088pt too wide) in paragraph at lines 210--210
+Overfull \hbox (10.0733pt too wide) in paragraph at lines 210--210
 []|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/embedding/profiles/{id}/activate|  
  []
 
-
-Overfull \hbox (27.8126pt too wide) in paragraph at lines 210--210
-[]|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/kb/{kbId}/documents/upload|  
+[95] [96]
+Overfull \hbox (10.42307pt too wide) in paragraph at lines 252--252
+\TU/TimesNewRoman(0)/m/n/10.95 service:8081|  
  []
 
-[95] [96] [97]) (./chapters/appendix_c.tex [98]
+
+Overfull \hbox (3.13019pt too wide) in paragraph at lines 252--252
+\TU/TimesNewRoman(0)/m/n/10.95 agent:8083|  
+ []
+
+
+Overfull \hbox (3.13019pt too wide) in paragraph at lines 252--252
+\TU/TimesNewRoman(0)/m/n/10.95 agent:8084|  
+ []
+
+
+Overfull \hbox (3.13019pt too wide) in paragraph at lines 252--252
+\TU/TimesNewRoman(0)/m/n/10.95 agent:8085|  
+ []
+
+
+Overfull \hbox (10.42307pt too wide) in paragraph at lines 252--252
+\TU/TimesNewRoman(0)/m/n/10.95 service:8082|  
+ []
+
+
+Overfull \hbox (10.42307pt too wide) in paragraph at lines 252--252
+\TU/TimesNewRoman(0)/m/n/10.95 service:8082|  
+ []
+
+[97]) (./chapters/appendix_c.tex [98]
 Underfull \hbox (badness 4366) in paragraph at lines 34--35
 \TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/resour
 ces, /app/admin/my-dept).
