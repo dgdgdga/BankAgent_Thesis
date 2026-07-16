@@ -17,10 +17,16 @@
 \usepackage{multirow}
 \usepackage{ragged2e}
 \usepackage{titlesec}
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{\hfill\fontsize{16}{19}\selectfont\bfseries}
+\renewcommand{\cftaftertoctitle}{\hfill}
 
 % Section numbering depth
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
+
+% Rename and style the table of contents heading
+\renewcommand{\contentsname}{Content}
 
 % Section: 18pt bold, same as original chapter headings
 \titleformat{\section}

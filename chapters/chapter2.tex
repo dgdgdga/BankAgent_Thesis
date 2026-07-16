@@ -34,7 +34,7 @@ Enterprise RAG differs from a simple demonstration system because retrieved text
 
 RAG technology is highly valuable in the banking sector, as regulatory rules, internal policies, and product documentation are typically stored in vast text repositories. Furthermore, this content is frequently updated, making it impractical to integrate directly into model weights. Pipitone and Alami (2024) introduced LegalBench-RAG [2], a benchmark specifically designed to evaluate RAG systems in the legal and financial domains; this benchmark focuses on clause-level precision rather than document-level recall. This project follows the same principle: the RAG Agent is designed around chunk-level retrieval, permission-safe filtering, and citation-based responses rather than document-level keyword search.
 
-\subsection{Tool-Augmented Model}
+\subsection{Tool-Augmented Language Models}
 
 LLMs have inherent limitations that prevent them from directly interacting with external systems or data stores. Tool-augmented language models effectively solve this problem by equipping LLMs with the capability to call APIs, query databases, and perform computational tasks. Yao et al. (2023) [10] introduced the ReAct paradigm, whic combines "Reasoning" and "Acting", demonstrates that integrating reasoning steps with actions enables LLMs to use external tools for tasks involving real-time data, mathmatical calculations, and environmental interactions.
 

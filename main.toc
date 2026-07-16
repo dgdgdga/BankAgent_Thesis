@@ -7,7 +7,7 @@
 \contentsline {subsection}{\numberline {2.2}Multi-Agent Systems and Orchestration}{5}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Code Generation and Text-to-SQL}{6}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}RAG}{6}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Tool-Augmented Model}{8}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.5}Tool-Augmented Language Models}{8}{subsection.2.5}%
 \contentsline {subsection}{\numberline {2.6}Data Security and Local Deployment}{8}{subsection.2.6}%
 \contentsline {section}{\numberline {3}Requirements Analysis}{10}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Banking Industry Context}{10}{subsection.3.1}%
@@ -27,47 +27,47 @@
 \contentsline {subsection}{\numberline {4.6}Technology Stack Rationale}{28}{subsection.4.6}%
 \contentsline {section}{\numberline {5}Core Agent Implementation}{31}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Tool Agent Implementation}{31}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Architecture and AI Intent Routing}{31}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Meeting Room Management}{34}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Schedule Conflict Detection}{37}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}Route Planning}{40}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}Code Agent Implementation}{42}{subsection.5.6}%
-\contentsline {subsection}{\numberline {5.7}Architecture Overview}{42}{subsection.5.7}%
-\contentsline {subsection}{\numberline {5.8}Python LLM Inference Server Integration}{44}{subsection.5.8}%
-\contentsline {subsection}{\numberline {5.9}Five-Layer SQL Whitelist Validation}{45}{subsection.5.9}%
-\contentsline {subsection}{\numberline {5.10}Metadata Caching and Execution}{48}{subsection.5.10}%
-\contentsline {subsection}{\numberline {5.11}RAG Agent Implementation}{51}{subsection.5.11}%
-\contentsline {subsection}{\numberline {5.12}Architecture Overview}{51}{subsection.5.12}%
-\contentsline {subsection}{\numberline {5.13}Data Structure and Storage Ownership}{53}{subsection.5.13}%
-\contentsline {subsection}{\numberline {5.14}Document Indexing and Chunking Pipeline}{54}{subsection.5.14}%
-\contentsline {subsection}{\numberline {5.15}Permission-Safe Retrieval and Answer Generation}{56}{subsection.5.15}%
-\contentsline {subsection}{\numberline {5.16}API Surface and Orchestration Integration}{60}{subsection.5.16}%
-\contentsline {subsection}{\numberline {5.17}Frontend RAG Workbench and Citation Rendering}{62}{subsection.5.17}%
-\contentsline {subsection}{\numberline {5.18}Synchronization, Deployment, and Testing}{62}{subsection.5.18}%
-\contentsline {subsection}{\numberline {5.19}Copilot --- A Unified Intelligent Dispatcher Above the Three Agents}{65}{subsection.5.19}%
-\contentsline {subsection}{\numberline {5.20}Design Rationale}{65}{subsection.5.20}%
-\contentsline {subsection}{\numberline {5.21}Architecture Overview}{65}{subsection.5.21}%
-\contentsline {subsection}{\numberline {5.22}Three-Tier Intent Classification}{66}{subsection.5.22}%
-\contentsline {subsection}{\numberline {5.23}Frontend Dispatch and User Experience}{68}{subsection.5.23}%
-\contentsline {subsection}{\numberline {5.24}Multi-Turn Clarification}{69}{subsection.5.24}%
-\contentsline {subsection}{\numberline {5.25}Cross-Page Communication}{69}{subsection.5.25}%
-\contentsline {subsection}{\numberline {5.26}Second-Level Intent Classification in the Tool Agent}{70}{subsection.5.26}%
-\contentsline {subsection}{\numberline {5.27}AI Provider Configuration Unification}{70}{subsection.5.27}%
-\contentsline {section}{\numberline {6}System Integration and Deployment}{72}{section.6}%
-\contentsline {subsection}{\numberline {6.1}User Center and RBAC}{72}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Task Center and Orchestration}{73}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}Task Lifecycle and State Machine}{73}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}Submission, Queuing, and Thread Pool}{74}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}Agent Routing and Execution}{75}{subsubsection.6.2.3}%
-\contentsline {subsubsection}{\numberline {6.2.4}Retry with Exponential Backoff}{75}{subsubsection.6.2.4}%
-\contentsline {subsubsection}{\numberline {6.2.5}Progress Streaming and WebSocket Integration}{76}{subsubsection.6.2.5}%
-\contentsline {subsubsection}{\numberline {6.2.6}Current Limitations}{76}{subsubsection.6.2.6}%
-\contentsline {subsection}{\numberline {6.3}WebSocket Real-Time Communication}{77}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Containerized Deployment}{78}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Discussion}{80}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Challenges and Resolutions}{80}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Comparison with Existing Solutions}{82}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Project Limitations}{83}{subsection.7.3}%
-\contentsline {section}{\numberline {8}Conclusion and Extensions}{84}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Summary of Achievements}{84}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Possible Extensions}{85}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {5.1.1}Architecture and AI Intent Routing}{31}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Meeting Room Management}{34}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}Schedule Conflict Detection}{37}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.4}Route Planning}{40}{subsubsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.2}Code Agent Implementation}{42}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Architecture Overview}{42}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Python LLM Inference Server Integration}{44}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}Five-Layer SQL Whitelist Validation}{45}{subsubsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {5.2.4}Metadata Caching and Execution}{48}{subsubsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.3}RAG Agent Implementation}{51}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Architecture Overview}{51}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Data Structure and Storage Ownership}{53}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Document Indexing and Chunking Pipeline}{54}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Permission-Safe Retrieval and Answer Generation}{55}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}API Surface and Orchestration Integration}{59}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}Frontend RAG Workbench and Citation Rendering}{61}{subsubsection.5.3.6}%
+\contentsline {subsubsection}{\numberline {5.3.7}Synchronization, Deployment, and Testing}{61}{subsubsection.5.3.7}%
+\contentsline {subsection}{\numberline {5.4}Copilot --- A Unified Intelligent Dispatcher Above the Three Agents}{64}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Design Rationale}{64}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}Architecture Overview}{64}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}Three-Tier Intent Classification}{65}{subsubsection.5.4.3}%
+\contentsline {subsubsection}{\numberline {5.4.4}Frontend Dispatch and User Experience}{67}{subsubsection.5.4.4}%
+\contentsline {subsubsection}{\numberline {5.4.5}Multi-Turn Clarification}{68}{subsubsection.5.4.5}%
+\contentsline {subsubsection}{\numberline {5.4.6}Cross-Page Communication}{68}{subsubsection.5.4.6}%
+\contentsline {subsubsection}{\numberline {5.4.7}Second-Level Intent Classification in the Tool Agent}{69}{subsubsection.5.4.7}%
+\contentsline {subsubsection}{\numberline {5.4.8}AI Provider Configuration Unification}{69}{subsubsection.5.4.8}%
+\contentsline {section}{\numberline {6}System Integration and Deployment}{71}{section.6}%
+\contentsline {subsection}{\numberline {6.1}User Center and RBAC}{71}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Task Center and Orchestration}{72}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Task Lifecycle and State Machine}{72}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Submission, Queuing, and Thread Pool}{73}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Agent Routing and Execution}{74}{subsubsection.6.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.4}Retry with Exponential Backoff}{74}{subsubsection.6.2.4}%
+\contentsline {subsubsection}{\numberline {6.2.5}Progress Streaming and WebSocket Integration}{75}{subsubsection.6.2.5}%
+\contentsline {subsubsection}{\numberline {6.2.6}Current Limitations}{75}{subsubsection.6.2.6}%
+\contentsline {subsection}{\numberline {6.3}WebSocket Real-Time Communication}{76}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Containerized Deployment}{77}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Discussion}{79}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Challenges and Resolutions}{79}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Comparison with Existing Solutions}{81}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Project Limitations}{82}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Conclusion and Future Work}{83}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Summary of Achievements}{83}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Future Work}{84}{subsection.8.2}%

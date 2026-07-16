@@ -4,7 +4,7 @@
 
 The three agents described in Sections 5.1--5.3 each solve a specific domain problem, but from the user's perspective, they still require knowing \textit{which} agent to use before typing a question. A bank employee asking ``Which meeting rooms are free this afternoon?'', ``How many pending transactions are there?'', or ``Which policy clause explains this approval rule?'' should not need to understand whether the request belongs to the Tool Agent, Code Agent, or RAG Agent. The Copilot solves this by sitting above all three agents as a single natural language entry point: the user says what they need, and the Copilot figures out where it should go.
 
-\subsection{Design Rationale}
+\subsubsection{Design Rationale}
 
 The Copilot is not a fourth agent with its own domain capability. It is a \textbf{dispatcher} --- its only job is to understand the user's intent, route the request to the right agent, and present the result back in a unified chat interface. This design follows a simple principle: the platform has exactly one text box the user needs to care about, and it works across every page.
 
@@ -28,7 +28,7 @@ User interaction & Page-specific UI (tables, maps, panels) & Floating chat widge
 \end{tabularx}
 \end{table}
 
-\subsection{Architecture Overview}
+\subsubsection{Architecture Overview}
 
 The Copilot spans three layers of the platform. On the frontend, a Vue 3 floating widget (CopilotWidget.vue) renders inside the global MainLayout, making it accessible from every page. On the backend, a Python Flask intent classifier (port 8090, shared with the Code Agent's inference server) performs the core dispatch logic. Between them, the Task Service provides asynchronous execution and WebSocket-based progress streaming for long-running agent calls.
 
@@ -43,7 +43,7 @@ Figure \ref{fig:copilot-flow} shows how a user query flows through the Copilot s
 
 The flow has four stages. First, the user types a question into the Copilot widget. Second, the widget sends the question to \texttt{POST /api/dashboard/route}, which the Gateway rewrites to \texttt{/route} on the Python Flask server. Third, Flask runs a three-tier classification pipeline and returns an intent label. Fourth, the frontend dispatches based on the label: chat replies are shown inline, while domain tasks (TOOL, RAG) are submitted to the Task Service for asynchronous execution with progress streaming.
 
-\subsection{Three-Tier Intent Classification}
+\subsubsection{Three-Tier Intent Classification}
 
 The Python Flask \texttt{/route} endpoint is the Copilot's brain. It implements a three-tier classification strategy that balances cost, latency, and accuracy, shown in Table \ref{tab:three-tier}.
 
@@ -83,7 +83,7 @@ The LLM is configured with temperature 0.1 and max\_tokens 10 --- the response i
 
 Tier 3b activates only when the LLM API is unreachable. A pure keyword-matching fallback scans for terms associated with each intent --- for CODE: terms related to databases, statistics, and data queries; for TOOL: terms related to meeting rooms, bookings, and schedules; and for RAG: terms related to policies, regulations, manuals, document search, citations, and knowledge-base questions. If no keyword group is matched, the classifier defaults to RAG because document Q\&A is the safest read-only fallback. This ensures the Copilot degrades gracefully rather than failing completely.
 
-\subsection{Frontend Dispatch and User Experience}
+\subsubsection{Frontend Dispatch and User Experience}
 
 After the intent is classified, the frontend widget takes over with type-specific handling, summarized in Table \ref{tab:intent-dispatch}.
 
@@ -114,11 +114,11 @@ When a task completes, the raw JSON output from the agent is transformed into a 
 
 Session history is persisted in the browser's localStorage under the key prefix \texttt{copilot\_session\_}, with a session index limited to 20 entries. Users can review past conversations or start a fresh session from the history panel.
 
-\subsection{Multi-Turn Clarification}
+\subsubsection{Multi-Turn Clarification}
 
 The CLARIFY intent enables a simple but effective multi-turn dialogue pattern. If a user types ``Book a meeting room,'' the classifier recognizes that critical parameters are missing and returns CLARIFY. The widget saves the original query into a \texttt{sessionContextQuery} variable and displays the LLM's follow-up question (e.g., ``What time and how many people?''). When the user replies ``Three o'clock, five people,'' the widget prepends the saved context to form a combined query --- ``Book a meeting room [context: Three o'clock, five people]'' --- and re-classifies. This time, with all parameters present, the classifier returns TOOL and the request proceeds to the Tool Agent.
 
-\subsection{Cross-Page Communication}
+\subsubsection{Cross-Page Communication}
 
 Because the Copilot widget is rendered once in MainLayout and persists across page navigation, it needs a mechanism to deliver agent results to whichever page the user is currently viewing. Two channels handle this:
 
@@ -127,13 +127,13 @@ Because the Copilot widget is rendered once in MainLayout and persists across pa
   \item \textbf{localStorage}: As a safety net for pages that mount \textit{after} the event was dispatched (e.g., the widget navigated to a new page before the subscribing component existed), tool results, code queries, and RAG query payloads are also written to localStorage keys. The target page checks these keys on mount and processes any pending result.
 \end{enumerate}
 
-\subsection{Second-Level Intent Classification in the Tool Agent}
+\subsubsection{Second-Level Intent Classification in the Tool Agent}
 
 When the Copilot classifies a query as TOOL, the Task Service forwards it to the Tool Agent's \texttt{/tool/execute} endpoint with \texttt{toolType: "AI"}. At this point, a second classification happens inside the Tool Agent itself. The \texttt{handleAiIntent()} method sends the query to DeepSeek with a system prompt asking it to distinguish between three sub-intents: MEETING\_QUERY, SCHEDULE\_CHECK, and ROUTE\_PLAN. The LLM returns a JSON object with the sub-intent and extracted parameters, which the Tool Agent uses to call the appropriate handler.
 
 This two-level classification --- Copilot first decides \textit{which agent}, then the Tool Agent decides \textit{which tool} --- keeps each classifier's job simple. The Copilot's classifier only needs to distinguish broad domains; the Tool Agent's classifier only needs to distinguish between its own three tools. Neither classifier needs to understand the full complexity of the entire platform.
 
-\subsection{AI Provider Configuration Unification}
+\subsubsection{AI Provider Configuration Unification}
 
 Before the Copilot was introduced, each agent that called an LLM managed its own API key and endpoint configuration independently. The Tool Agent's DeepSeek service had its own \texttt{application.yml} block; the Python inference server read from a separate \texttt{ds\_config.json} file; the RAG Agent had a third set of environment variables.
 

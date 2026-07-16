@@ -1,6 +1,6 @@
 % CHAPTER 8: CONCLUSION AND EXTENSIONS
 % ======================================================================
-\section{Conclusion and Extensions}
+\section{Conclusion and Future Work}
 
 \subsection{Summary of Achievements}
 
@@ -12,7 +12,7 @@ Above these three agents, the Copilot serves as a cross-page, multi-agent intell
 
 The system integration layer provides JWT-based authentication with dual-mode login (password and email verification code), three-tier RBAC with department-level data isolation, HITL document access using a notification-based approval system, a Task Center with asynchronous execution, linear-backoff retry, and WebSocket real-time progress streaming, and containerized deployment via Docker Compose.
 
-\subsection{Possible Extensions}
+\subsection{Future Work}
 
 The delivered platform completes the three-agent banking workflow described in this report. Possible extensions beyond the current scope include replacing in-memory task queuing with a message broker (RabbitMQ or Redis Streams) for production-grade durability, adding Prometheus metrics and Grafana dashboards for operations teams, introducing distributed tracing and Kubernetes orchestration for multi-node scaling, and expanding the Copilot feedback loop by tracking whether the dispatched agent handled the query successfully. Adopting institutions may also extend the three-tier RBAC model with custom fine-grained permissions, register additional enterprise tools such as email or HR systems, and add database adapters beyond MySQL.
 

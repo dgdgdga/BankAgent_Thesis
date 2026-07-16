@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  17 JUL 2026 02:10
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  17 JUL 2026 02:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -372,23 +372,60 @@ Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \titlewidthlast=\dimen256
 \titlewidthfirst=\dimen257
 )
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tocloft/tocloft.sty
+Package: tocloft 2017/08/31 v2.3i parameterised ToC, etc., typesetting
+Package tocloft Info: The document has section divisions on input line 51.
+\cftparskip=\skip76
+\cftbeforetoctitleskip=\skip77
+\cftaftertoctitleskip=\skip78
+\cftbeforepartskip=\skip79
+\cftpartnumwidth=\skip80
+\cftpartindent=\skip81
+\cftbeforesecskip=\skip82
+\cftsecindent=\skip83
+\cftsecnumwidth=\skip84
+\cftbeforesubsecskip=\skip85
+\cftsubsecindent=\skip86
+\cftsubsecnumwidth=\skip87
+\cftbeforesubsubsecskip=\skip88
+\cftsubsubsecindent=\skip89
+\cftsubsubsecnumwidth=\skip90
+\cftbeforeparaskip=\skip91
+\cftparaindent=\skip92
+\cftparanumwidth=\skip93
+\cftbeforesubparaskip=\skip94
+\cftsubparaindent=\skip95
+\cftsubparanumwidth=\skip96
+\cftbeforeloftitleskip=\skip97
+\cftafterloftitleskip=\skip98
+\cftbeforefigskip=\skip99
+\cftfigindent=\skip100
+\cftfignumwidth=\skip101
+\c@lofdepth=\count318
+\c@lotdepth=\count319
+\cftbeforelottitleskip=\skip102
+\cftafterlottitleskip=\skip103
+\cftbeforetabskip=\skip104
+\cfttabindent=\skip105
+\cfttabnumwidth=\skip106
+)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
 Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 
-\f@nch@headwidth=\skip76
-\f@nch@offset@elh=\skip77
-\f@nch@offset@erh=\skip78
-\f@nch@offset@olh=\skip79
-\f@nch@offset@orh=\skip80
-\f@nch@offset@elf=\skip81
-\f@nch@offset@erf=\skip82
-\f@nch@offset@olf=\skip83
-\f@nch@offset@orf=\skip84
-\f@nch@height=\skip85
-\f@nch@footalignment=\skip86
-\f@nch@widthL=\skip87
-\f@nch@widthC=\skip88
-\f@nch@widthR=\skip89
+\f@nch@headwidth=\skip107
+\f@nch@offset@elh=\skip108
+\f@nch@offset@erh=\skip109
+\f@nch@offset@olh=\skip110
+\f@nch@offset@orh=\skip111
+\f@nch@offset@elf=\skip112
+\f@nch@offset@erf=\skip113
+\f@nch@offset@olf=\skip114
+\f@nch@offset@orf=\skip115
+\f@nch@height=\skip116
+\f@nch@footalignment=\skip117
+\f@nch@widthL=\skip118
+\f@nch@widthC=\skip119
+\f@nch@widthR=\skip120
 \@temptokenb=\toks26
 )
 (/usr/local/texlive/2026/texmf-dist/tex/latex/setspace/setspace.sty
@@ -401,9 +438,9 @@ Package: expl3 2026-01-19 L3 programming layer (loader)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
 File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
-\g__graphics_track_int=\count318
-\g__pdfannot_backend_int=\count319
-\g__pdfannot_backend_link_int=\count320
+\g__graphics_track_int=\count320
+\g__pdfannot_backend_int=\count321
+\g__pdfannot_backend_link_int=\count322
 ))
 Package: xparse 2025-10-09 L3 Experimental document command parser
 )
@@ -412,17 +449,17 @@ Package: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
 (/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
 Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTe
 X
-\l__fontspec_script_int=\count321
-\l__fontspec_language_int=\count322
-\l__fontspec_strnum_int=\count323
-\l__fontspec_tmp_int=\count324
-\l__fontspec_tmpa_int=\count325
-\l__fontspec_tmpb_int=\count326
-\l__fontspec_tmpc_int=\count327
-\l__fontspec_em_int=\count328
-\l__fontspec_emdef_int=\count329
-\l__fontspec_strong_int=\count330
-\l__fontspec_strongdef_int=\count331
+\l__fontspec_script_int=\count323
+\l__fontspec_language_int=\count324
+\l__fontspec_strnum_int=\count325
+\l__fontspec_tmp_int=\count326
+\l__fontspec_tmpa_int=\count327
+\l__fontspec_tmpb_int=\count328
+\l__fontspec_tmpc_int=\count329
+\l__fontspec_em_int=\count330
+\l__fontspec_emdef_int=\count331
+\l__fontspec_strong_int=\count332
+\l__fontspec_strongdef_int=\count333
 \l__fontspec_tmpa_dim=\dimen258
 \l__fontspec_tmpb_dim=\dimen259
 \l__fontspec_tmpc_dim=\dimen260
@@ -458,26 +495,26 @@ LaTeX Info: Redefining \_ on input line 43.
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 120.
-LaTeX Font Info:    ... okay on input line 120.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -513,8 +550,8 @@ LaTeX Font Info:    ... okay on input line 120.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@lstlisting=\count332
-Package hyperref Info: Link coloring ON on input line 120.
+\c@lstlisting=\count334
+Package hyperref Info: Link coloring ON on input line 126.
 (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
@@ -533,80 +570,80 @@ Package fontspec Info:
 
 \symlegacymaths=\mathgroup4
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 120.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 120.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 120.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 120.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 120.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 120.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 120.
-LaTeX Font Info:    Redeclaring math accent \check on input line 120.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 120.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 120.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \colon on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 120.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 120.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 120.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 126.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 126.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 126.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 126.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 126.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 126.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 126.
+LaTeX Font Info:    Redeclaring math accent \check on input line 126.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 126.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 126.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \colon on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 126.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 126.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 126.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 120.
+(Font)              `operators' in the math version `normal' on input line 126.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> TU/TimesNewRoman(0)/m/n on input line 1
-20.
+26.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 120.
+(Font)              `operators' in the math version `bold' on input line 126.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/m/n on input line 
-120.
+126.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/m/n on 
-input line 120.
+input line 126.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/cmr/m/it --> TU/TimesNewRoman(0)/m/it on input line
- 120.
+ 126.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/b/n on input line 
-120.
+126.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 120.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 126.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 120.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 126.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/b/n on 
-input line 120.
+input line 126.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> TU/TimesNewRoman(0)/b/it on input lin
-e 120.
+e 126.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 120.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 126.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 120.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 126.
 )
 (./chapters/front_toc.tex (./main.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 2.
+(Font)              <12> on input line 1.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 2.
+(Font)              <8> on input line 1.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 2.
+(Font)              <6> on input line 1.
  [1
 
-] [2])
+])
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- [3]) (./chapters/abstract.tex
+ [2]) (./chapters/abstract.tex
 [1]) (./chapters/declaration.tex [2]) (./chapters/acknowledgments.tex [3])
 (./chapters/chapter1.tex [1]
 Overfull \hbox (1.3331pt too wide) in paragraph at lines 61--61
@@ -1010,7 +1047,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 972--972
 \TU/TimesNewRoman(0)/m/n/10.95 sponse +
  []
 
-[52] [53] [54] [55] [56] [57] [58] [59]
+[52] [53] [54] [55] [56] [57] [58]
 Underfull \hbox (badness 1460) in paragraph at lines 1281--1281
 []|\TU/TimesNewRoman(0)/m/n/10.95 GET /rag/health, 
  []
@@ -1040,7 +1077,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1281--1281
 []|\TU/TimesNewRoman(0)/m/n/10.95 POST 
  []
 
-[60] [61] [62] [63] [64]) (./chapters/chapter5bis_copilot.tex [65]
+[59] [60] [61] [62] [63]) (./chapters/chapter5bis_copilot.tex [64]
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
 
@@ -1048,7 +1085,7 @@ Overfull \hbox (47.99997pt too wide) in alignment at lines 64--64
 [][][][] 
  []
 
-[66] [67] [68]
+[65] [66] [67]
 Underfull \hbox (badness 7397) in paragraph at lines 126--127
 []\TU/TimesNewRoman(0)/b/n/12 Browser Custom Events\TU/TimesNewRoman(0)/m/n/12 
 : The widget dispatches \TU/lmtt/m/n/12 CustomEvent \TU/TimesNewRoman(0)/m/n/12
@@ -1062,24 +1099,24 @@ m/n/12 object — \TU/lmtt/m/n/12 copilot-tool-result \TU/TimesNewRoman(0)/m/n/1
  for Tool Agent results,
  []
 
-[69]
+[68]
 Underfull \hbox (badness 10000) in paragraph at lines 140--141
 []\TU/TimesNewRoman(0)/m/n/12 The Copilot unified all AI provider configuration
  under the user-service’s
  []
 
-[70] [71]) (./chapters/chapter6.tex [72]
+[69] [70]) (./chapters/chapter6.tex [71]
 Underfull \hbox (badness 5374) in paragraph at lines 97--97
 []|\TU/TimesNewRoman(0)/m/n/10.95 Agent error, timeout, or 
  []
 
-[73]
+[72]
 Underfull \hbox (badness 3989) in paragraph at lines 104--105
 []\TU/TimesNewRoman(0)/m/n/12 Tasks enter the system through two channels. The 
 primary channel is \TU/lmtt/m/n/12 POST
  []
 
-[74]
+[73]
 Overfull \hbox (11.94124pt too wide) in paragraph at lines 145--145
 \TU/lmtt/m/n/10.95 naturalLanguage: 
  []
@@ -1090,10 +1127,10 @@ Underfull \hbox (badness 1629) in paragraph at lines 148--149
  RestTemplate \TU/TimesNewRoman(0)/m/n/12 with a 5-second connect time-
  []
 
-[75] [76] [77]
+[74] [75] [76]
 File: figures/fig10_docker_topology.png Graphic file (type bmp)
 <figures/fig10_docker_topology.png>
- [78] [79]) (./chapters/chapter7.tex [80]
+ [77] [78]) (./chapters/chapter7.tex [79]
 Missing character: There is no 天 (U+5929) in font Times New Roman/OT:script=lat
 n;language=dflt;mapping=tex-text;!
 Missing character: There is no 安 (U+5B89) in font Times New Roman/OT:script=lat
@@ -1104,8 +1141,8 @@ Missing character: There is no 广 (U+5E7F) in font Times New Roman/OT:script=la
 n;language=dflt;mapping=tex-text;!
 Missing character: There is no 场 (U+573A) in font Times New Roman/OT:script=lat
 n;language=dflt;mapping=tex-text;!
-[81] [82] [83]) (./chapters/chapter8.tex [84] [85]) (./chapters/references.tex
-[86] [87]) (./chapters/appendix_a.tex
+[80] [81] [82]) (./chapters/chapter8.tex [83] [84]) (./chapters/references.tex
+[85] [86]) (./chapters/appendix_a.tex
 Underfull \hbox (badness 10000) in paragraph at lines 59--59
 []|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
  []
@@ -1145,7 +1182,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 92--92
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[88]
+[87]
 Underfull \hbox (badness 10000) in paragraph at lines 113--113
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
  []
@@ -1185,12 +1222,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 145--145
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[89]
+[88]
 Underfull \hbox (badness 10000) in paragraph at lines 201--201
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
-[90]
+[89]
 Underfull \hbox (badness 10000) in paragraph at lines 226--226
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1225,7 +1262,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[91]
+[90]
 Underfull \hbox (badness 10000) in paragraph at lines 282--282
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1245,7 +1282,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 304--304
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[92]
+[91]
 Underfull \hbox (badness 10000) in paragraph at lines 329--329
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(120),
  []
@@ -1300,7 +1337,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 372--372
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[93]
+[92]
 Underfull \hbox (badness 10000) in paragraph at lines 396--396
 []|\TU/TimesNewRoman(0)/m/n/10.95 MEDIUMTEXT,
  []
@@ -1335,7 +1372,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 408--408
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[94]
+[93]
 Underfull \hbox (badness 10000) in paragraph at lines 426--426
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1345,7 +1382,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 436--436
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[95]
+[94]
 Underfull \hbox (badness 4013) in paragraph at lines 456--457
 []|\TU/TimesNewRoman(0)/m/n/10.95 REBUILD_- ALL / INDEX_- DOCUMENT /
  []
@@ -1355,12 +1392,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 457--457
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[96]) (./chapters/appendix_b.tex
+[95]) (./chapters/appendix_b.tex
 Overfull \hbox (4.36255pt too wide) in paragraph at lines 83--83
 []|\TU/TimesNewRoman(0)/m/n/10.95 DELETE|  
  []
 
-[97]
+[96]
 Overfull \hbox (8.02502pt too wide) in paragraph at lines 118--118
 []|\TU/TimesNewRoman(0)/m/n/10.95 GET/PUT|  
  []
@@ -1370,7 +1407,7 @@ Overfull \hbox (8.17427pt too wide) in paragraph at lines 141--141
 []|\TU/TimesNewRoman(0)/m/n/10.95 PUT/DELETE|  
  []
 
-[98]
+[97]
 Overfull \hbox (2.78043pt too wide) in paragraph at lines 211--211
 []|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/document/{id}/reprocess|  
  []
@@ -1385,20 +1422,20 @@ Overfull \hbox (10.0733pt too wide) in paragraph at lines 211--211
 []|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/embedding/profiles/{id}/activate|  
  []
 
-[99] [100] [101]) (./chapters/appendix_c.tex [102] [103]
+[98] [99] [100]) (./chapters/appendix_c.tex [101] [102]
 Underfull \hbox (badness 4366) in paragraph at lines 83--84
 []\TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/reso
 urces, /app/admin/my-dept).
  []
 
-[104] [105]) (./chapters/contributions.tex [106] [107] [108] [109] [110]
-[111] [112] [113] [114] [115] [116] [117] [118]
+[103] [104]) (./chapters/contributions.tex [105] [106] [107] [108] [109]
+[110] [111] [112] [113] [114] [115] [116] [117]
 Underfull \hbox (badness 1348) in paragraph at lines 290--291
 \TU/TimesNewRoman(0)/m/n/12 can rebuild the index so that MySQL chunk metadata 
 and Milvus vectors match
  []
 
-[119] [120] [121] [122]
+[118] [119] [120] [121]
 Underfull \hbox (badness 1931) in paragraph at lines 381--382
 \TU/TimesNewRoman(0)/m/n/12 (\TU/lmtt/m/n/12 \bDROP\b\TU/TimesNewRoman(0)/m/n/1
 2 , \TU/lmtt/m/n/12 \bDELETE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bI
@@ -1416,21 +1453,21 @@ LOAD_- FILE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bOUTFILE\b\TU/Times
 NewRoman(0)/m/n/12 ,
  []
 
-[123] [124] [125] (./main.aux)
+[122] [123] [124] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 323D47BDEEF92F55BF571628E8DE62B1;14942.
+(rerunfilecheck)             Checksum: 9D1FE8E6C24A17C541B79EA9A02C517C;15175.
  ) ) 
 Here is how much of TeX's memory you used:
- 15599 strings out of 468168
- 303785 string characters out of 5432816
- 1085224 words of memory out of 5000000
- 44058 multiletter control sequences out of 15000+600000
+ 15876 strings out of 468168
+ 308119 string characters out of 5432816
+ 1090842 words of memory out of 5000000
+ 44331 multiletter control sequences out of 15000+600000
  632021 words of font info for 89 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  78i,14n,96p,1326b,1198s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (131 pages).
+Output written on main.pdf (129 pages).
