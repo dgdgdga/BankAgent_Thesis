@@ -8,12 +8,83 @@
 
 This platform adopts a five-layer architecture with high cohesion and low coupling, implementing one-way dependencies between layers: data is transmitted downwards via RESTful APIs, and long-lived connections are established upwards via WebSockets to proactively push events. This meets the requirements of banking systems for ``modularity,'' ``testability,'' and ``independent scalability.''
 
-The five-layer structure described above is shown in the diagram below.
+The five-layer structure is shown in Figure \ref{fig:five-layer}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig02_five_layer_arch.png}
-\caption{Five-Layer Logical System Architecture --- Web, Gateway, Business Service, AI Service, and Data Layers}
+\begin{tikzpicture}[
+  node distance=0.6cm,
+  box/.style={rectangle, draw=black!70, fill=black!5, rounded corners=2pt, minimum width=2.0cm, minimum height=0.7cm, font=\footnotesize, align=center},
+  smallbox/.style={rectangle, draw=black!70, fill=black!5, rounded corners=2pt, minimum width=1.6cm, minimum height=0.6cm, font=\footnotesize\ttfamily, align=center},
+  layer/.style={rectangle, draw=none, font=\footnotesize\bfseries, align=left, minimum width=1.8cm},
+  arrow/.style={->, >=stealth, line width=0.4pt},
+  line/.style={line width=0.3pt, draw=black!50},
+]
+
+% === Layer 1: Frontend ===
+\node[layer] (l1) at (0,0) {\small\textbf{Web}\\Presentation};
+\node[box, right=0.3cm of l1] (vue) {Vue 3 SPA\\\scriptsize Nginx :443};
+
+% Arrow from user
+\node[font=\footnotesize, above=0.2cm of vue] (user) {Browser};
+\draw[arrow] (user) -- (vue);
+
+% === Layer 2: Gateway ===
+\node[layer] (l2) at (0,-1.5) {\small\textbf{Gateway}};
+\node[box, right=0.3cm of l2] (gw) {Spring Cloud\\Gateway :8080\\\scriptsize JWT \textbullet{} Rate Limit};
+
+\draw[arrow] (vue.south) -- (gw.north);
+
+% === Layer 3: Business Services ===
+\node[layer, minimum height=1.2cm] (l3) at (0,-3.3) {\small\textbf{Business}};
+\node[box, right=0.3cm of l3] (userSvc) {User\\Service\\:8081};
+\node[box, right=0.25cm of userSvc] (taskSvc) {Task\\Service\\:8082};
+
+\draw[arrow] (gw.south) -- ++(0,-0.25) -| (userSvc.north);
+\draw[arrow] (gw.south) -- ++(0,-0.25) -| (taskSvc.north);
+
+% === Layer 4: AI Services ===
+\node[layer, minimum height=1.2cm] (l4) at (0,-5.3) {\small\textbf{AI}};
+\node[box, right=0.3cm of l4] (toolA) {Tool Agent\\:8083};
+\node[box, right=0.25cm of toolA] (codeA) {Code Agent\\:8084};
+\node[box, right=0.25cm of codeA] (ragA) {RAG Agent\\:8085};
+
+\draw[arrow] (userSvc.south) -- ++(0,-0.15) -| (toolA.north);
+\draw[arrow] (taskSvc.south) -- ++(0,-0.15) -| (codeA.north);
+\draw[arrow] (taskSvc.south) -- ++(0,-0.15) -| (ragA.north);
+
+% Python inference boxes below AI agents
+\node[smallbox, below=0.25cm of codeA] (pyCode) {Python LLM\\Inference :8090};
+\node[smallbox, below=0.25cm of ragA] (pyRag) {Python Embed\\Worker :8091};
+
+\draw[arrow] (codeA.south) -- (pyCode.north);
+\draw[arrow] (ragA.south) -- (pyRag.north);
+
+% === Layer 5: Data ===
+\node[layer, minimum height=1.0cm] (l5) at (0,-7.8) {\small\textbf{Data}};
+
+\pgfmathsetmacro{\dx}{1.75}
+\node[smallbox, right=0.3cm of l5] (mysql) {MySQL\\:3306};
+\node[smallbox, right=0.15cm of mysql] (redis) {Redis\\:6379};
+\node[smallbox, right=0.15cm of redis] (milvus) {Milvus\\:9091};
+\node[smallbox, right=0.15cm of milvus] (minio) {MinIO\\:9000};
+\node[smallbox, right=0.15cm of minio] (etcd) {etcd\\:2379};
+
+% Data connections
+\draw[arrow] (pyCode.south) |- (mysql.north);
+\draw[arrow] (pyRag.south) |- (milvus.north);
+\draw[arrow, line width=0.3pt, draw=black!40] (userSvc.south east) -- ++(0,-0.8) -| (mysql.north west);
+\draw[arrow, line width=0.3pt, draw=black!40] (toolA.south) |- (redis.north);
+\draw[arrow, line width=0.3pt, draw=black!40] (ragA.south east) -- ++(0,-0.5) -| (minio.north);
+
+% Layer braces on the left
+\draw[line width=0.5pt, draw=black!40] (-0.6,0.35) -- (-0.6,-8.3);
+\foreach \y/\label in {0.35/1, -1.15/2, -2.95/3, -4.95/4, -7.45/5} {
+  \node[font=\footnotesize\bfseries, left=0.05cm] at (-0.6,\y) {\label};
+}
+
+\end{tikzpicture}
+\caption{Five-Layer Architecture --- Web, Gateway, Business, AI, and Data Layers with Internal Ports}
 \label{fig:five-layer}
 \end{figure}
 
