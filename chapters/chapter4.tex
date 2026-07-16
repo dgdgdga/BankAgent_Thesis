@@ -92,19 +92,17 @@ Map              & Amap JS API v2.0              & Dynamic SDK loading, route po
 
 The backend consists of independent Spring Boot microservices, each handling a specific business capability and communicating through the Gateway layer. This decomposition allows independent development, testing, deployment, and scaling of each service, while the Gateway provides a single API entry point for the frontend.
 
-\subsubhead{Gateway Service}
+\textbf{(1) Gateway Service.} The Gateway runs on port 8080, built on Spring Cloud Gateway. A global JWT filter validates tokens on all non-whitelisted paths and forwards user identity to downstream services through custom HTTP headers. Single-session enforcement invalidates old tokens when a new login occurs. IP-based rate limiting rejects requests exceeding the configured threshold. The Gateway is the only container exposed to the public internet; all other services communicate over the internal Docker network.
 
-The Gateway runs on port 8080, built on Spring Cloud Gateway. A global JWT filter validates tokens on all non-whitelisted paths and forwards user identity to downstream services through custom HTTP headers. Single-session enforcement invalidates old tokens when a new login occurs. IP-based rate limiting rejects requests exceeding the configured threshold. The Gateway is the only container exposed to the public internet; all other services communicate over the internal Docker network.
+\textbf{(2) User Service.} The User Service runs on port 8081. It handles registration with email verification, dual-mode login via password or verification code, JWT issuance with roles and permissions embedded in claims, and three-tier RBAC with department-scoped data isolation. It manages documents stored in MinIO with clearance-level access control and HITL escalation for cross-clearance requests. A notification subsystem handles multi-type messages with a five-state state machine for approval workflows. The email verification subsystem uses the Resend HTTP API with three-tier rate limiting.
 
-\subsubhead{User Service}
+\textbf{(3) Tool Agent Service.} The Tool Agent runs on port 8083. It provides three business capabilities: meeting room booking, schedule conflict detection using Redis sorted sets, and route planning via the Amap API. A unified natural language entry point uses LLM intent routing to classify user requests and dispatch them to the appropriate handler. Dedicated admin endpoints support CRUD operations on rooms and schedules for authorized users.
 
-Tool Agent Service (port 8083). The most developed AI service, it implements the Tool Agent with two controller groups. The ToolController (/tool/*) exposes 11 endpoints for end-user tool operations including room queries and reservations, CRUD for personal schedules, conflict detection, route planning, and a unified /tool/execute natural language AI entry point. The MeetingRoomAdminController (/tool/admin/*) exposes CRUD endpoints for administrators---room and schedule management. The AI intent routing module integrates with DeepSeek API (via iFlytek MaaS) for intent classification, routing requests to MeetingHandler, ScheduleHandler, or RouteHandler accordingly, with MockDetectFallback providing graceful degradation when the API is unavailable.
+\textbf{(4) Code Agent Service.} The Code Agent runs on port 8084. It converts natural language questions to SQL through a Python LLM inference proxy on port 8090. Generated SQL passes through a multi-layer whitelist validation before execution. Database schema metadata is cached for query generation accuracy. A human-in-the-loop mode lets users review SQL before it reaches the database.
 
-Code Agent Service (port 8084). Implements the NL2SQL pipeline. The OnnxCodeGenerationService (enabled through the code-agent.onnx.enabled=true property) is the sole CodeGenerationService implementation, acting as an HTTP client proxy to the Python inference server. It is responsible for constructing the prompt (including database schema information), forwarding the natural language question, and extracting the generated SQL from the response. The Sql Validation Service performs five-layer whitelist checking. The MetadataCacheManager periodically refreshes the schema metadata cache from information\_schema to Redis, so the LLM always has an up-to-date view of the table structure.
+\textbf{(5) RAG Agent Service.} The RAG Agent runs on port 8085. It ingests enterprise documents through parsing and structure-aware chunking, generates embeddings, and stores vectors in Milvus for semantic search. User questions are embedded, matched against the vector store, and answered with source citations. Retrieval is filtered by the user's department and clearance level. A Python embedding worker on port 8091 supports local model inference.
 
-RAG Agent Service (port 8085). Implements the enterprise document Q\&A pipeline. The service exposes query, indexing, knowledge-base management, permission snapshot, access request, health-check, and embedding-profile endpoints through the Gateway route /api/rag/**. Internally, RagQueryService coordinates permission resolution, vector retrieval, LLM answer generation, citation construction, and query logging. RagIndexService handles document parsing, structure-aware chunking, embedding generation, Milvus upsert/delete operations, and index task tracking. RagPermissionService reuses the user-service document access model, including department scope, clearance level, admin role, and approved RAG\_APPLY notifications. The service depends on MySQL for RAG metadata, Milvus for vector search, MinIO for source-file storage, and rag-worker or external embedding providers for vector generation.
-
-Task Service (port 8082). Currently scaffolded with a basic POM configuration and TaskApplication main class. In the current architecture, task orchestration is distributed between the Gateway (request routing) and each agent service (autonomous execution). The separate task service is planned for centralizing asynchronous task tracking, progress management, and cross-agent workflow coordination in future phases.
+\textbf{(6) Task Service.} The Task Service runs on port 8082. It is the platform's asynchronous execution backbone. It accepts tasks from the Copilot and agent pages, persists them, queues them for execution in a bounded thread pool, and routes each task to the appropriate agent. Failed tasks are retried up to three times with exponential backoff. Progress is pushed to the frontend in real time via WebSocket.
 
 Table \ref{tab:backend-services} summarizes the backend services.
 
@@ -119,21 +117,23 @@ Table \ref{tab:backend-services} summarizes the backend services.
 
 \begin{tabular}{@{}p{3cm}p{3.5cm}p{\dimexpr\textwidth-6.5cm-4\tabcolsep\relax}@{}}
 \toprule
-\textbf{Component} & \textbf{Technology} & \textbf{Utility \& Responsibility} \\
+\textbf{Component} & \textbf{Technology} & \textbf{Description} \\
 \midrule
-Gateway Layer        & Spring Cloud Gateway 3.1.9  & Dynamic routing, JWT validation, IP rate limiting, WebSocket proxy \\
-Business Logic       & Spring Boot 3.x + MyBatis-Plus & Service orchestration, type-safe CRUD, logical deletion (@TableLogic) \\
-Security Framework   & Spring Security 6.x + JWT   & Stateless authentication, RBAC with @PreAuthorize, BCrypt password hashing \\
-Caching Layer        & Spring Data Redis           & Session caching, rate limit counters, metadata cache \\
-AI Integration (Tool) & DeepSeek API (HTTPS)       & Intent routing (MEETING/SCHEDULE/ROUTE), parameter extraction, route translation \\
-Inference Engine     & Python FastAPI (port 8090)  & LLM-based SQL generation from natural language questions via /infer endpoint \\
-RAG Agent            & Spring Boot 3.x (port 8085) & Document Q\&A, vector retrieval, source citation, access workflow \\
-Embedding Worker     & Python FastAPI (rag-worker) & bge-m3 embedding generation, Markdown chunking \\
-Document Parsing     & Apache Tika                 & Multi-format document parsing for RAG ingestion pipeline \\
-Vector Retrieval     & Milvus REST API + VectorStoreService & Semantic ANN search for RAG document retrieval \\
-Object Storage       & MinIO                       & Document file storage (PDF/DOCX/PPT), Milvus backend \\
-Email Service        & Resend API                  & Email verification code delivery, three-tier rate limiting \\
-Map Services         & Amap API (HTTPS)            & Geocoding (multi-level fallback), direction calculation, polyline coordinate parsing \\
+Gateway        & Spring Cloud Gateway        & Dynamic routing, JWT validation, rate limiting, WebSocket proxy \\
+User Service   & Spring Boot 3.x + MyBatis-Plus & Authentication, RBAC, document management, notifications, email verification \\
+Task Service   & Spring Boot 3.x             & Async task orchestration, retry with backoff, WebSocket progress streaming \\
+Tool Agent     & Spring Boot 3.x             & Meeting booking, schedule detection, route planning, LLM intent routing \\
+Code Agent     & Spring Boot 3.x + Python FastAPI & NL2SQL generation, multi-layer SQL validation, metadata caching \\
+RAG Agent      & Spring Boot 3.x             & Document Q\&A, vector retrieval, source citation, clearance-filtered access \\
+Security       & Spring Security 6.x + JWT   & Stateless authentication, RBAC with @PreAuthorize, BCrypt hashing \\
+Caching        & Redis                       & Session caching, rate limit counters, metadata cache, schedule zsets \\
+LLM Inference  & DeepSeek API (HTTPS)        & Intent routing, SQL generation, RAG answer generation \\
+Embedding      & Python FastAPI (port 8091)  & BGE-M3 embedding generation for document indexing and query \\
+Document Parse & Apache Tika                 & Multi-format document parsing for RAG ingestion \\
+Vector DB      & Milvus                      & Semantic ANN search for RAG document retrieval \\
+Object Storage & MinIO                       & Document file storage, Milvus backend \\
+Email          & Resend API                  & Verification code delivery, three-tier rate limiting \\
+Maps           & Amap API (HTTPS)            & Geocoding, direction calculation, route polyline \\
 \bottomrule
 \end{tabular}
 \end{table}
