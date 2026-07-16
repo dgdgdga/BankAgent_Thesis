@@ -138,11 +138,13 @@ Maps           & Amap API (HTTPS)            & Geocoding, direction calculation,
 \end{tabular}
 \end{table}
 
-\subhead{4.4 Gateway and Security Design}
+\subhead{4.4 Security Architecture}
 
-Data security is paramount in banking systems. Therefore, our platform's security design does not rely on a single line of defense, but rather incorporates defense in depth across all layers. Each layer is independently verified before a request can pass through, which make it significantly harder for a single component failure to lead to a data breach or security incident.
+Data security is paramount in banking systems. The platform does not rely on a single line of defense, but rather incorporates defense in depth across four layers: gateway authentication, email verification with rate limiting, role-based access control with department-level data isolation, and transport-layer encryption.
 
-Figure \ref{fig:jwt-auth-flow} shows the complete user authentication flow in three stages, including the email verification code mechanism that supports both registration and code-based login.
+\subsubhead{4.4.1 Gateway Authentication}
+
+Figure \ref{fig:jwt-auth-flow} illustrates the complete authentication flow, from registration through email verification to JWT-based request authentication.
 
 \begin{figure}[H]
 \centering
@@ -151,24 +153,76 @@ Figure \ref{fig:jwt-auth-flow} shows the complete user authentication flow in th
 \label{fig:jwt-auth-flow}
 \end{figure}
 
-The login process begins with an email verification code. We migrated the email delivery mechanism from QQ Mail SMTP to the \textbf{Resend HTTP API}, eliminating the connection instability and vendor-specific risk controls associated with private SMTP relays while leveraging Resend's managed infrastructure for higher deliverability and operational traceability. The HTML verification email template was redesigned to render the 6-digit code in a \textbf{monospace font}, reducing user misreading errors caused by visually similar character pairs (e.g., ``0'' versus ``O'', ``1'' versus ``l'').
+The authentication model is stateless and token-based. On login, the user service validates credentials and issues a signed JWT containing the user's identity, roles, permissions, department ID, and clearance level. The token has a configurable expiry, and a Redis-based single-session mechanism ensures that a new login invalidates any previously issued token for the same user.
 
-After the user submits their email address on the front end, the request reaches the user service section. The service enforces a \textbf{three-tier rate-limiting strategy} backed by Redis. \textbf{Tier 1} imposes a 60-second cooldown per email address (Redis key \texttt{rate:email:send:\{email\}}), preventing rapid-fire brute-force attempts. \textbf{Tier 2} adds an IP-level hourly quota of maximum 5 requests per IP per hour, mitigating distributed enumeration attacks where the adversary rotates target addresses while sharing a common network egress; to ensure accurate IP attribution behind the gateway layer, the \texttt{UserController} extracts the real client IP from the \texttt{X-Forwarded-For} and \texttt{X-Real-IP} headers rather than using the immediate TCP connection endpoint. \textbf{Tier 3} enforces a daily ceiling of 10 requests per individual email address, preventing persistent resource exhaustion and harassment. Only after all three tiers are passed does the service call the Resend HTTP API using WebClient. The recipient email address is injected into the HTML template at the \{email\} placeholder, and the generated 6-digit random verification code is stored in Redis with a 5-minute TTL. The front-end receives a success response, triggers a 60-second countdown to disable the send button, and displays the sample email in an Alert.
+On every subsequent request, the frontend attaches the JWT as a Bearer Token via an Axios interceptor. The Gateway's global filter intercepts the request before routing and performs the following checks:
 
-These architectural changes are formally documented in \texttt{docs/email-verification-design.md}, which includes a complete system architecture diagram illustrating the end-to-end flow from client request through gateway routing, tiered rate-limiting evaluation, Resend API dispatch, and Redis state management.
+\begin{itemize}
+  \item \textbf{Whitelist bypass.} Login, registration, and verification code endpoints are publicly accessible without a token.
+  \item \textbf{Signature verification.} The token is verified using HMAC-SHA256 with a secret key injected via environment variable.
+  \item \textbf{Expiry check.} Expired tokens are rejected.
+  \item \textbf{Session check.} The token is validated against the active session stored in Redis. If no matching session exists, the request is denied.
+  \item \textbf{Identity propagation.} On success, user identity is extracted from the JWT claims and forwarded to downstream services through custom HTTP headers: \texttt{X-User-Name}, \texttt{X-User-Roles}, \texttt{X-User-Permissions}, \texttt{X-User-Dept-Id}, and \texttt{X-User-Security-Level}.
+\end{itemize}
 
-Specifically, the registration process requires the user to submit their email address, verification code, and password. The backend retrieves the verification code from Redis and compares it. If successful, it creates the user record (with the password hashed by BCrypt), immediately deletes the verification code from Redis, and returns a JWT. Attempts exceeding 5 incorrect verification attempts will cause the verification code to be forcibly invalidated and the user need to request a new one. For the multi-level rate limiting, the code brute-force crack protection is covered in NFR3.
+This header-based propagation means downstream services never hold the JWT secret. They trust the headers because the Gateway is the only entry point and cannot be bypassed from within the internal Docker network.
 
-In subsequent requests, the frontend automatically appends a Bearer Token via an Axios interceptor. the gateway layer's JwtAuthGlobalFilter is responsible for signature verification, checking the validity period and extracting the payload. The whole process is statless---the backend does not keep session state---so the system can be scaled horizontally seamlessly. This approach avoids the common performance and availability issues associated with centralized session storage.
+Sliding-window session renewal refreshes the Redis TTL on each authenticated request, with polling endpoints (such as the notification unread-count endpoint) excluded to avoid unnecessary Redis writes.
 
-The CAPTCHA itself is also heavily reinforced: the 6-digit random number only lasts for 5 minutes and is immediately deleted from Redis after successful verification, ensuring single-use semantics; a maximum of 5 incorrect attempts trigger forced invalidation; the 60-seconds cooldown effectively prevents SMS bombing attacks, so the CAPTCHA security is not something we overlooked.
+\subsubhead{4.4.2 Email Verification and Rate Limiting}
 
-We adopted RBAC for our permission design, but only implemented a coarse-grained division of roles into three tiers---this ``coarseness'' was intentional. Different banks have vastly different organizational structures and reporting relationships; fine-tuning the details ourselves would inevitably not match a real deployment scenario. So, we chose to provide a clear foundational role framework and leave the detailed permission customization to the bank's own IT administrators.
+Registration and code-based login both require email verification. The platform uses the Resend HTTP API to deliver verification codes, with several hardening measures:
+
+\textbf{Code delivery.} A 6-digit random verification code is generated and sent via a styled HTML email. The code is rendered in monospace font to reduce misreading errors between visually similar characters such as ``0'' and ``O''. The code is stored in Redis with a 5-minute TTL and is deleted immediately after successful verification, enforcing single-use semantics.
+
+\textbf{Brute-force protection.} After 5 consecutive incorrect attempts, the code is forcibly invalidated and the user must request a new one.
+
+\textbf{Three-tier rate limiting.} A Redis-backed strategy prevents abuse at three levels, summarized in Table \ref{tab:rate-limiting}.
+
+\begin{table}[H]
+\centering
+\small\singlespacing
+\caption{Three-Tier Email Rate Limiting Strategy}
+\label{tab:rate-limiting}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.18\textwidth}>{\RaggedRight\arraybackslash}X}
+\toprule
+\textbf{Tier} & \textbf{Scope} & \textbf{Limit} & \textbf{Purpose} \\
+\midrule
+Tier 1 & Per email address & 1 request per 60 seconds & Prevent rapid-fire brute-force on a single target \\
+Tier 2 & Per IP address & 5 requests per hour & Mitigate distributed enumeration attacks across multiple targets \\
+Tier 3 & Per email address & 10 requests per day & Prevent persistent resource exhaustion and harassment \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+To ensure accurate IP attribution behind the Gateway and Nginx proxy, the User Service extracts the real client IP from the \texttt{X-Forwarded-For} and \texttt{X-Real-IP} headers rather than using the immediate TCP connection endpoint. The frontend disables the send button for 60 seconds after each request and displays a countdown.
+
+\subsubhead{4.4.3 RBAC and Department-Level Data Isolation}
+
+The platform implements a three-tier role-based access control model. Rather than hard-coding fine-grained permissions that would not generalize across institutions, a foundational role framework is provided, leaving detailed permission customization to the adopting bank.
+
+\textbf{Role definitions.} Three roles govern all access:
+
+\begin{itemize}
+  \item \textbf{ROLE\_ADMIN.} Full system access: manage users, assign roles, configure departments, set clearance levels, adjust system settings including AI provider configuration and session timeout, and view all tasks platform-wide.
+  \item \textbf{ROLE\_DEPT\_ADMIN.} Department-scoped access: manage membership and clearance levels within the administrator's own department; create, edit, and delete department documents; review and approve document access escalation requests.
+  \item \textbf{ROLE\_USER.} Basic access: submit NL2SQL, RAG, and tool tasks via the Copilot or dedicated agent pages; query personal task history; view and request access to documents within the user's department and clearance level.
+\end{itemize}
+
+\textbf{Enforcement.} At the controller level, Spring Security's \texttt{@PreAuthorize} annotations restrict entire classes or individual methods to specific roles. The AdminController is accessible only to ROLE\_ADMIN. The DeptAdminController accepts ROLE\_ADMIN and ROLE\_DEPT\_ADMIN, with programmatic checks further restricting department admins to their own department's data. At the Gateway level, the JWT filter extracts and forwards role claims; downstream services trust these headers because the Gateway is the sole entry point.
+
+\textbf{Document access model.} Documents carry a department identifier and a security clearance level from 1 (Public) to 3 (Confidential). Access is governed by a multi-factor rule, shown in Table \ref{tab:pseudocode-list-docs}:
+
+\begin{itemize}
+  \item \textbf{Global documents} (\texttt{dept\_id IS NULL}): accessible to all authenticated users.
+  \item \textbf{Department documents}: accessible only if the user belongs to the same department \textbf{and} the user's clearance level is greater than or equal to the document's security level.
+  \item \textbf{Otherwise}: the document is marked as inaccessible and the user may submit a human-in-the-loop escalation request (\texttt{RAG\_APPLY} notification), which routes to a department administrator for review. On approval, temporary access is granted with an audit trail.
+\end{itemize}
 
 \begin{table}[H]
 \small\singlespacing
 \centering
-\caption{Pseudocode --- listDocumentsForUser() Multi-Factor Document Access Rule}
+\caption{Document Access Control Rule --- Pseudocode}
 \label{tab:pseudocode-list-docs}
 \vspace{2mm}
 
@@ -177,19 +231,14 @@ FUNCTION listDocumentsForUser(userId, userDeptId, userClearance)
     documents = queryAllDocuments()
     result = []
     FOR EACH doc IN documents:
-        // Multi-factor access rule: a document is visible if...
         IF doc.dept_id IS NULL THEN
-            // Global document - accessible to all users
             doc.accessible = TRUE
         ELSE IF doc.dept_id = userDeptId
                  AND doc.security_level <= userClearance THEN
-            // Same department with sufficient clearance
             doc.accessible = TRUE
         ELSE
-            // Access denied - user may submit escalation request
             doc.accessible = FALSE
             doc.escalationType = "RAG_APPLY"
-            // Manager can approve (Pending -> Approved) or deny (Pending -> Denied)
         END IF
         result.add(doc)
     END FOR
@@ -198,8 +247,11 @@ END FUNCTION
 \end{lstlisting}
 \end{table}
 
+\textbf{Notification subsystem.} The notification system supports three message types. Chat notifications follow a simple Unread $\rightarrow$ Read flow. Document access escalation requests follow a Pending $\rightarrow$ Approved / Denied workflow, with the approving administrator's identity recorded for audit. SQL audit alerts carry a JSON payload with the suspicious query and timestamp. The frontend polls for unread counts every ten seconds and displays them as badges.
 
-The unified exit point for external communication is the REST API, all using HTTPS, with the TLS version locked at 1.3. WebSocket is forcibly upgraded to WSS in the production environment; this switch is handled in the code by checking the protocol in the Nginx X-Forwarded-Proto header, with the backend redirecting HTTP traffic to HTTPS.
+\subsubhead{4.4.4 Secure Communication}
+
+All external communication uses HTTPS with TLS 1.3. WebSocket connections are upgraded to WSS in production via Nginx configuration, with the backend checking the \texttt{X-Forwarded-Proto} header to redirect plain HTTP traffic. SQL injection is prevented through exclusive use of parameterized queries via \texttt{PreparedStatement}. User passwords are hashed with BCrypt at strength factor 10 and never stored in plaintext. API keys for external services (DeepSeek, Amap, Resend) are injected via environment variables and never exposed to the frontend.
 
 \subhead{4.5 Data Layer Architecture}
 
