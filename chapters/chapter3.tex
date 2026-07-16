@@ -19,25 +19,25 @@ The platform's functional requirements are organized by domain. Table 2 summariz
 \small\singlespacing
 \caption{Functional Requirements}
 \label{tab:functional-requirements}
-\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.12\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}>{\RaggedRight\arraybackslash}p{0.34\textwidth}>{\RaggedRight\arraybackslash}p{0.14\textwidth}}
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.15\textwidth}>{\RaggedRight\arraybackslash}p{0.28\textwidth}>{\RaggedRight\arraybackslash}X}
 \toprule
-\textbf{ID} & \textbf{Requirement} & \textbf{Description} & \textbf{Priority} \\
+\textbf{ID} & \textbf{Requirement} & \textbf{Description} \\
 \midrule
-FR1 & User Authentication \& RBAC & Email-format registration with hashed passwords and stateless JWT authentication. Three roles (Admin, Department Admin, End-User) with fine-grained permissions enforced at the gateway level. & High \\
+FR1 & User Authentication \& RBAC & Email-format registration with hashed passwords and stateless JWT authentication. Three roles (Admin, Department Admin, End-User) with fine-grained permissions enforced at the gateway level. \\
 \midrule
-FR2 & Department Management & Hierarchical department structure with six banking units. Department administrators can manage membership and assign clearance levels (Public, Internal, Confidential). & High \\
+FR2 & Department Management & Hierarchical department structure with six banking units. Department administrators can manage membership and assign clearance levels (Public, Internal, Confidential). \\
 \midrule
-FR3 & Document Management with Security Clearance & Documents stored with department ownership and security level. Access granted only when the user's department and clearance meet the document's requirements. Inaccessible documents trigger a human-in-the-loop escalation pathway. & High \\
+FR3 & Document Management with Security Clearance & Documents stored with department ownership and security level. Access granted only when the user's department and clearance meet the document's requirements. Inaccessible documents trigger a human-in-the-loop escalation pathway. \\
 \midrule
-FR4 & Notification System & Multi-type notifications (chat, access request, SQL audit alert) with a five-state state machine. Unread badge and role-specific views provided on the frontend. & Medium \\
+FR4 & Notification System & Multi-type notifications (chat, access request, SQL audit alert) with a five-state state machine. Unread badge and role-specific views provided on the frontend. \\
 \midrule
-FR5 & Code Agent --- NL2SQL & Natural language to SQL translation with security validation before execution. Schema metadata cached to improve generation accuracy. Human-in-the-loop mode supported: generate, review, then execute. & High \\
+FR5 & Code Agent --- NL2SQL & Natural language to SQL translation with security validation before execution. Schema metadata cached to improve generation accuracy. Human-in-the-loop mode supported: generate, review, then execute. \\
 \midrule
-FR6 & RAG Agent --- Policy Q\&A & Natural language questions answered from organizational documents with verifiable source citations. Retrieval filtered by the user's department and clearance level. & Medium \\
+FR6 & RAG Agent --- Policy Q\&A & Natural language questions answered from organizational documents with verifiable source citations. Retrieval filtered by the user's department and clearance level. \\
 \midrule
-FR7 & Tool Agent --- Task Automation & Unified natural language interface for meeting room booking, schedule conflict detection, and route planning. Intent recognized automatically and routed to the appropriate handler. & Medium \\
+FR7 & Tool Agent --- Task Automation & Unified natural language interface for meeting room booking, schedule conflict detection, and route planning. Intent recognized automatically and routed to the appropriate handler. \\
 \midrule
-FR8 & Admin Resource Management & Role-restricted CRUD endpoints for meeting rooms and schedules. Validation rules enforce required fields, positive capacity, and chronological time ranges. & Medium \\
+FR8 & Admin Resource Management & Role-restricted CRUD endpoints for meeting rooms and schedules. Validation rules enforce required fields, positive capacity, and chronological time ranges. \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 10:21
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 10:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -421,16 +421,7 @@ Overfull \hbox (1.3331pt too wide) in paragraph at lines 65--65
  []
 
 [2] [3] [4]) (./chapters/chapter2.tex [5] [6] [7] [8]) (./chapters/chapter3.tex
-
-Underfull \hbox (badness 10000) in alignment at lines 42--42
-[][][][] 
- []
-
-[9]
-Overfull \vbox (79.61203pt too high) has occurred while \output is active []
-
-
-[10] [11]
+[9] [10] [11]
 File: figures/fig01_tool_agent_usecase.png Graphic file (type bmp)
 <figures/fig01_tool_agent_usecase.png>
  [12] [13] [14] [15]) (./chapters/chapter4.tex
@@ -439,7 +430,8 @@ File: figures/fig02_five_layer_arch.png Graphic file (type bmp)
  [16]
 File: figures/fig03_data_flow.png Graphic file (type bmp)
 <figures/fig03_data_flow.png>
- [17] [18] [19]
+ [17] [18]
+[19]
 Underfull \hbox (badness 10000) in paragraph at lines 79--79
 []|\TU/TimesNewRoman(0)/m/n/10.95 International-
  []
