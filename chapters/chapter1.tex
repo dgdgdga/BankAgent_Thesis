@@ -44,7 +44,7 @@ This work presents BankAgent, a multi-agent AI platform built on on-premise infr
 \midrule
 \multirow{3}{*}{AI Agents} & Code Agent & Safely translate natural language questions into executable SQL queries. \\
 \cmidrule{2-3}
- & RAG Agent & Retrieve policy knowledge with verifiable citations and clearance based permission filtering. \\
+ & RAG Agent & Retrieve policy knowledge from Milvus-indexed documents with verifiable citations and clearance based permission filtering. \\
 \cmidrule{2-3}
  & Tool Agent & Automate business tasks such as room booking, schedule conflict detection, and route planning through natural language. \\
 \midrule
@@ -69,7 +69,7 @@ DevOps & Containerized Deploy & Start all services with a single Docker Compose 
 
 This project covers the design, implementation, and evaluation of the multi-agent platform described above. The intended users are banking personnel. The platform provides three main functions. It generates and checks SQL queries. It does knowledge retrieval with citations. It calls business tools. The deployment model is local. It uses Docker Compose for container management. The security model includes JWT authentication and RBAC.
 
-But there are still several limits. First, the Code Agent supports only MySQL SQL and relational table structures. It does not work with other database systems or NoSQL interfaces. Second, the RAG Agent needs a pretrained embedding model. We provide a mock mode for development, but the real accuracy depends on the model you choose. Third, the Tool Agent only supports three business tools at present. Its scope is defined by the current set of enterprise APIs. Fourth, the platform is built for a single deployment and does not yet support Kubernetes or multi-node scaling.
+But there are still several limits. First, the Code Agent supports only MySQL SQL and relational table structures. It does not work with other database systems or NoSQL interfaces. Second, the RAG Agent's retrieval quality depends on the selected embedding model and the coverage of indexed documents. Third, the Tool Agent only supports three business tools at present. Its scope is defined by the current set of enterprise APIs. Fourth, the platform is built for a single deployment and does not yet support Kubernetes or multi-node scaling.
 
 \subhead{1.5 Report Organization}
 

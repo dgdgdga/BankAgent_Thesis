@@ -1,19 +1,15 @@
-<<<<<<< HEAD
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 11:24
-=======
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  16 JUL 2026 11:56
->>>>>>> f140a12 (修改code agent相关描述)
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.20)  16 JUL 2026 12:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main.tex
-(./main.tex
+**./main.tex
+(main.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
-(./main_preamble.tex
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls
+(main_preamble.tex
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/size12.clo
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/base\size12.clo
 File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count271
@@ -28,31 +24,29 @@ File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 \belowcaptionskip=\skip50
 \bibindent=\dimen148
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks17
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: xetex.def on input line 106.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/xetex.def
+ (C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\xetex.def
 File: xetex.def 2025/11/01 v5.0p Graphics/color driver for xetex
 ))
 \Gin@req@height=\dimen149
 \Gin@req@width=\dimen150
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/float/float.sty
+) (C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count279
 \float@exts=\toks18
@@ -60,13 +54,13 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks19
 \@floatcapt=\box54
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
 Package: geometry 2026/03/07 v6.0 Page Geometry
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 
-(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
 \Gm@cnth=\count280
@@ -81,8 +75,9 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \Gm@layouthoffset=\dimen157
 \Gm@layoutvoffset=\dimen158
 \Gm@dimlist=\toks20
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
+
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen159
 \lightrulewidth=\dimen160
@@ -102,7 +97,7 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count286
 \@thisrulewidth=\dimen171
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \col@sep=\dimen172
 \ar@mcellbox=\box55
@@ -112,15 +107,15 @@ Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \backup@length=\skip52
 \ar@cellbox=\box56
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: xetex.def on input line 274.
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
 Package xcolor Info: Model `RGB' extended on input line 1365.
 Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
@@ -130,7 +125,7 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
 \lst@mode=\count287
 \lst@gtempboxa=\box57
 \lst@token=\toks22
@@ -144,16 +139,16 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 \lst@lineno=\count292
 \lst@maxwidth=\dimen177
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
 \c@lstnumber=\count293
 \lst@skipnumbers=\count294
 \lst@framebox=\box58
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
 File: listings.cfg 2025/11/14 1.11b listings configuration
 ))
 Package: listings 2025/11/14 1.11b (Carsten Heinz)
@@ -164,17 +159,17 @@ Package: listings 2025/11/14 1.11b (Carsten Heinz)
     but found:
         2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
-(/usr/local/texlive/2026/texmf-dist/tex/latex/needspace/needspace.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/needspace\needspace.sty
 Package: needspace 2025/03/13 v1.3e reserve vertical space
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/url/url.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen178
 \captionmargin=\dimen179
@@ -191,7 +186,7 @@ Package caption Info: Standard document class detected.
 Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/tabularx.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
 Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
 \TX@col@width=\dimen186
 \TX@old@table=\dimen187
@@ -201,14 +196,14 @@ Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
 \TX@cols=\count297
 \TX@ftn=\toks23
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/multirow/multirow.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
 Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
 \multirow@colwidth=\skip53
 \multirow@cntb=\count298
 \multirow@dima=\skip54
 \bigstrutjot=\dimen191
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/ragged2e/ragged2e.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/ragged2e\ragged2e.sty
 Package: ragged2e 2023/06/22 v3.6 ragged2e Package
 \CenteringLeftskip=\skip55
 \RaggedLeftLeftskip=\skip56
@@ -225,15 +220,16 @@ Package: ragged2e 2023/06/22 v3.6 ragged2e Package
 \RaggedRightParindent=\skip67
 \JustifyingParindent=\skip68
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/setspace/setspace.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xparse.
+sty (C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
 Package: expl3 2026-01-19 L3 programming layer (loader) 
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-xetex
+.def
 File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
 \g__graphics_track_int=\count299
 \g__pdfannot_backend_int=\count300
@@ -243,7 +239,8 @@ Package: xparse 2025-10-09 L3 Experimental document command parser
 )
 Package: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec-xetex.s
+ty
 Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTe
 X
 \l__fontspec_script_int=\count302
@@ -260,11 +257,10 @@ X
 \l__fontspec_tmpa_dim=\dimen192
 \l__fontspec_tmpb_dim=\dimen193
 \l__fontspec_tmpc_dim=\dimen194
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty
+ (C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.cfg)))
 
 Package fontspec Info: 
 (fontspec)             Font family 'TimesNewRoman(0)' created for font 'Times
@@ -275,25 +271,40 @@ Package fontspec Info:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.: <->"Times New
 (fontspec)             Roman/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: <->"Times New
+(fontspec)             Roman/OT:script=latn;language=dflt;+smcp;mapping=tex-tex
+t;"
 (fontspec)             - 'bold' (b/n) with NFSS spec.: <->"Times New
 (fontspec)             Roman/B/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: <->"Times
+(fontspec)             New
+(fontspec)             Roman/B/OT:script=latn;language=dflt;+smcp;mapping=tex-t
+ext;"
 (fontspec)             - 'italic' (m/it) with NFSS spec.: <->"Times New
 (fontspec)             Roman/I/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'italic small caps'  (m/scit) with NFSS spec.:
+(fontspec)             <->"Times New
+(fontspec)             Roman/I/OT:script=latn;language=dflt;+smcp;mapping=tex-t
+ext;"
 (fontspec)             - 'bold italic' (b/it) with NFSS spec.: <->"Times New
 (fontspec)             Roman/BI/OT:script=latn;language=dflt;mapping=tex-text;"
 
+(fontspec)             - 'bold italic small caps'  (b/scit) with NFSS spec.:
+(fontspec)             <->"Times New
+(fontspec)             Roman/BI/OT:script=latn;language=dflt;+smcp;mapping=tex-
+text;"
 
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/hyphenat/hyphenat.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/hyphenat\hyphenat.sty
 Package: hyphenat 2009/09/02 v2.3c hyphenation utilities
-\langwohyphens=\language91
+\langwohyphens=\language79
 LaTeX Info: Redefining \_ on input line 43.
 )
-(/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+(C:\Users\hsy\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count313
 )
-(./main.aux)
+(main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 81.
@@ -415,16 +426,16 @@ LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 81.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 81.
-) (./chapters/front_toc.tex [1
+) (chapters/front_toc.tex [1
 
-] [2]) (./chapters/abstract.tex [3])
-(./chapters/declaration.tex [4]) (./chapters/acknowledgments.tex [5])
-(./chapters/chapter1.tex [1]
+] [2]) (chapters/abstract.tex [3])
+(chapters/declaration.tex [4]) (chapters/acknowledgments.tex [5])
+(chapters/chapter1.tex [1]
 Overfull \hbox (1.3331pt too wide) in paragraph at lines 65--65
 []|[]|  
  []
 
-[2] [3] [4]) (./chapters/chapter2.tex [5] [6] [7] [8]) (./chapters/chapter3.tex
+[2] [3] [4]) (chapters/chapter2.tex [5] [6] [7] [8]) (chapters/chapter3.tex
 [9] [10] [11]
 Overfull \hbox (10.229pt too wide) in paragraph at lines 120--120
 []|\TU/TimesNewRoman(0)/m/n/10.95 Notification 
@@ -433,7 +444,7 @@ Overfull \hbox (10.229pt too wide) in paragraph at lines 120--120
 [12]
 File: figures/fig01_tool_agent_usecase.png Graphic file (type bmp)
 <figures/fig01_tool_agent_usecase.png>
- [13] [14]) (./chapters/chapter4.tex
+ [13] [14]) (chapters/chapter4.tex
 File: figures/fig02_five_layer_arch_new.pdf Graphic file (type pdf)
 <use figures/fig02_five_layer_arch_new.pdf>
  [15] [16]
@@ -452,53 +463,53 @@ Underfull \hbox (badness 2237) in paragraph at lines 78--79
  []
 
 [18] [19]
-Underfull \hbox (badness 10000) in paragraph at lines 118--118
+Underfull \hbox (badness 10000) in paragraph at lines 120--120
 []|\TU/TimesNewRoman(0)/m/n/10.95 Spring Boot 3.x +
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 119--119
+Underfull \hbox (badness 10000) in paragraph at lines 121--121
 []|\TU/TimesNewRoman(0)/m/n/10.95 Security Frame-
  []
 
 
-Underfull \hbox (badness 1248) in paragraph at lines 120--121
+Underfull \hbox (badness 1248) in paragraph at lines 122--123
 []|\TU/TimesNewRoman(0)/m/n/10.95 Session caching, rate limit counters, metadat
 a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--121
+Underfull \hbox (badness 10000) in paragraph at lines 123--123
 []|\TU/TimesNewRoman(0)/m/n/10.95 AI Integration
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--121
+Underfull \hbox (badness 10000) in paragraph at lines 123--123
 []|\TU/TimesNewRoman(0)/m/n/10.95 DeepSeek API
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--122
+Underfull \hbox (badness 10000) in paragraph at lines 123--124
 []|\TU/TimesNewRoman(0)/m/n/10.95 Intent routing (MEET-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--122
+Underfull \hbox (badness 10000) in paragraph at lines 123--124
 \TU/TimesNewRoman(0)/m/n/10.95 ING/SCHEDULE/ROUTE), parameter ex-
  []
 
 
-Underfull \hbox (badness 1490) in paragraph at lines 122--123
+Underfull \hbox (badness 1490) in paragraph at lines 124--125
 []|\TU/TimesNewRoman(0)/m/n/10.95 LLM-based SQL generation from natural lan-
  []
 
 
-Underfull \hbox (badness 1005) in paragraph at lines 124--124
+Underfull \hbox (badness 1005) in paragraph at lines 126--126
 []|\TU/TimesNewRoman(0)/m/n/10.95 Python FastAPI (rag-
  []
 
 
-Underfull \hbox (badness 1009) in paragraph at lines 126--127
+Underfull \hbox (badness 1009) in paragraph at lines 128--129
 []|\TU/TimesNewRoman(0)/m/n/10.95 Semantic ANN search for RAG document re-
  []
 
@@ -506,84 +517,84 @@ Underfull \hbox (badness 1009) in paragraph at lines 126--127
 File: figures/fig04_jwt_auth_flow.png Graphic file (type bmp)
 <figures/fig04_jwt_auth_flow.png>
  [21]
-Underfull \hbox (badness 1609) in paragraph at lines 149--150
+Underfull \hbox (badness 1609) in paragraph at lines 151--152
 []\TU/TimesNewRoman(0)/m/n/12 After the user submits their email address on the
  front end, the request reaches
  []
 
 [22]
-Overfull \hbox (45.35764pt too wide) in paragraph at lines 151--152
+Overfull \hbox (45.35764pt too wide) in paragraph at lines 153--154
 []\TU/TimesNewRoman(0)/m/n/12 These architectural changes are formally document
 ed in \TU/lmtt/m/n/12 docs/email-verification-design.md\TU/TimesNewRoman(0)/m/n
 /12 ,
  []
 
 [23] [24] [25]
-Underfull \hbox (badness 10000) in paragraph at lines 230--230
+Underfull \hbox (badness 10000) in paragraph at lines 232--232
 []|\TU/TimesNewRoman(0)/m/n/10.95 Operational
  []
 
 
-Underfull \hbox (badness 2689) in paragraph at lines 230--230
+Underfull \hbox (badness 2689) in paragraph at lines 232--232
 []|\TU/TimesNewRoman(0)/m/n/10.95 Users, roles, departments, docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 230--231
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
 []|\TU/TimesNewRoman(0)/m/n/10.95 Transactional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 230--231
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
 \TU/TimesNewRoman(0)/m/n/10.95 ACID-compliant
  []
 
 
-Underfull \hbox (badness 3323) in paragraph at lines 231--231
+Underfull \hbox (badness 3323) in paragraph at lines 233--233
 []|\TU/TimesNewRoman(0)/m/n/10.95 Session tokens, rate limit coun-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--232
+Underfull \hbox (badness 10000) in paragraph at lines 233--234
 []|\TU/TimesNewRoman(0)/m/n/10.95 High-concurrency,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--232
+Underfull \hbox (badness 10000) in paragraph at lines 233--234
 \TU/TimesNewRoman(0)/m/n/10.95 sub-millisecond
  []
 
 
-Underfull \hbox (badness 2503) in paragraph at lines 232--232
+Underfull \hbox (badness 2503) in paragraph at lines 234--234
 []|\TU/TimesNewRoman(0)/m/n/10.95 PDF, DOCX, PPT files; Milvus
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 232--233
+Underfull \hbox (badness 10000) in paragraph at lines 234--235
 []|\TU/TimesNewRoman(0)/m/n/10.95 Document up-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 232--233
+Underfull \hbox (badness 10000) in paragraph at lines 234--235
 \TU/TimesNewRoman(0)/m/n/10.95 load/download,
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 232--233
+Underfull \hbox (badness 4779) in paragraph at lines 234--235
 \TU/TimesNewRoman(0)/m/n/10.95 RAG source docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 235--236
 []|\TU/TimesNewRoman(0)/m/n/10.95 Semantic approx-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 235--236
 \TU/TimesNewRoman(0)/m/n/10.95 imate nearest
  []
 
-[26] [27] [28]) (./chapters/chapter5.tex
+[26] [27] [28]) (chapters/chapter5.tex
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
  [29] [30] [31] [32] [33] [34]
@@ -840,25 +851,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 785--786
 []|\TU/TimesNewRoman(0)/m/n/10.95 Block execution,
  []
 
-<<<<<<< HEAD
-[49] [50] [51] [52]
-Underfull \hbox (badness 6691) in paragraph at lines 946--947
-[]\TU/TimesNewRoman(0)/m/n/12 The test dataset provides three core tables for e
-valuation and demonstration:
- []
-
-
-Underfull \hbox (badness 2418) in paragraph at lines 946--947
-\TU/TimesNewRoman(0)/m/n/12 bank_- customer (5 rows with customer_- no, name, i
-d_- card, phone, risk_- level
- []
-
-[53] [54] [55] [56]
-Underfull \hbox (badness 1831) in paragraph at lines 996--997
-=======
-[50] [51] [52] [53] [54] [55] [56]
+[49] [50] [51] [52] [53] [54] [55]
 Underfull \hbox (badness 1831) in paragraph at lines 994--995
->>>>>>> f140a12 (修改code agent相关描述)
 []\TU/TimesNewRoman(0)/m/n/12 A synchronization mechanism ensures that the docu
 ment library remains in sync
  []
@@ -869,7 +863,7 @@ Underfull \hbox (badness 1478) in paragraph at lines 994--995
  admin-accessible “Rebuild
  []
 
-[57] [58]) (./chapters/chapter5bis_copilot.tex [59]
+[56] [57] [58]) (chapters/chapter5bis_copilot.tex [59]
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
 
@@ -900,7 +894,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 140--141
  under the user-service’s
  []
 
-[64] [65]) (./chapters/chapter6.tex [66]
+[64] [65]) (chapters/chapter6.tex [66]
 Overfull \vbox (120.9069pt too high) has occurred while \output is active []
 
 
@@ -923,9 +917,9 @@ Overfull \hbox (11.94124pt too wide) in paragraph at lines 147--147
 [70] [71] [72] [73]
 File: figures/fig10_docker_topology.png Graphic file (type bmp)
 <figures/fig10_docker_topology.png>
- [74]) (./chapters/chapter7.tex [75] [76] [77])
-(./chapters/chapter8.tex [78] [79]) (./chapters/references.tex [80] [81])
-(./chapters/appendix_a.tex
+ [74] [75]) (chapters/chapter7.tex [76] [77] [78])
+(chapters/chapter8.tex [79] [80]) (chapters/references.tex [81] [82])
+(chapters/appendix_a.tex
 Underfull \hbox (badness 10000) in paragraph at lines 59--59
 []|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
  []
@@ -965,7 +959,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 92--92
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[82]
+[83]
 Underfull \hbox (badness 10000) in paragraph at lines 113--113
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
  []
@@ -1005,12 +999,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 145--145
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[83]
+[84]
 Underfull \hbox (badness 10000) in paragraph at lines 201--201
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
-[84]
+[85]
 Underfull \hbox (badness 10000) in paragraph at lines 226--226
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1045,7 +1039,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[85]
+[86]
 Underfull \hbox (badness 10000) in paragraph at lines 282--282
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1065,7 +1059,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 304--304
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[86]
+[87]
 Underfull \hbox (badness 10000) in paragraph at lines 333--333
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(120),
  []
@@ -1137,39 +1131,49 @@ Underfull \hbox (badness 10000) in paragraph at lines 392--392
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 393--393
+\TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
+ []
+
+
+Underfull \hbox (badness 3302) in paragraph at lines 396--396
+[]|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(30), DE-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 397--397
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 398--398
+Underfull \hbox (badness 10000) in paragraph at lines 402--402
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 411--411
+Underfull \hbox (badness 10000) in paragraph at lines 415--415
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 418--418
+Underfull \hbox (badness 10000) in paragraph at lines 425--425
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
 
-Underfull \hbox (badness 4013) in paragraph at lines 433--434
+Underfull \hbox (badness 4013) in paragraph at lines 440--441
 []|\TU/TimesNewRoman(0)/m/n/10.95 REBUILD_- ALL / INDEX_- DOCUMENT /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 434--434
+Underfull \hbox (badness 10000) in paragraph at lines 441--441
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[87]
-Overfull \vbox (965.4131pt too high) has occurred while \output is active []
+[88]
+Overfull \vbox (1101.41306pt too high) has occurred while \output is active []
 
 
-[88]) (./chapters/appendix_b.tex
+[89]) (chapters/appendix_b.tex
 Underfull \hbox (badness 1297) in paragraph at lines 42--43
 \TU/TimesNewRoman(0)/m/n/12 GET /api/admin/users → [UserResponse[]]; POST /api/
 admin/user/role → {userId,
@@ -1181,7 +1185,7 @@ Overfull \hbox (8.85526pt too wide) in paragraph at lines 44--45
 ble/disable; PUT /api/admin/user/dept
  []
 
-[89]
+[90]
 Underfull \hbox (badness 1694) in paragraph at lines 66--67
 \TU/TimesNewRoman(0)/m/n/12 POST /api/user/document/create → {title, content, d
 eptId, securityLevel} → AD-
@@ -1193,26 +1197,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 80--81
 ount (status=0); POST
  []
 
-[90]
+[91]
 Overfull \hbox (3.25876pt too wide) in paragraph at lines 120--121
 \TU/TimesNewRoman(0)/m/n/12 GET /api/code/metadata → Cached schema {tables: {}}
 ; POST /api/code/metadata/refresh
  []
 
+[92]
+Underfull \hbox (badness 10000) in paragraph at lines 136--137
+\TU/TimesNewRoman(0)/m/n/12 POST /api/rag/index/document/{documentId} → Index o
+ne document; POST
+ []
 
-Overfull \hbox (19.70346pt too wide) in paragraph at lines 126--127
+
+Underfull \hbox (badness 10000) in paragraph at lines 142--143
+\TU/TimesNewRoman(0)/m/n/12 GET /api/rag/embedding/profiles → Available embeddi
+ng profiles; POST
+ []
+
+
+Overfull \hbox (19.70346pt too wide) in paragraph at lines 152--153
 \TU/TimesNewRoman(0)/m/n/12 Routes: /api/user/**→user-service:8081; /api/tool/*
 *→tool-agent:8083; /api/code/**→code-
  []
 
-[91]) (./chapters/appendix_c.tex [92]
-Underfull \hbox (badness 4366) in paragraph at lines 31--32
+[93]) (chapters/appendix_c.tex [94]
+Underfull \hbox (badness 4366) in paragraph at lines 34--35
 \TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/resour
 ces, /app/admin/my-dept).
  []
 
-[93]) (./chapters/contributions.tex [94] [95] [96] [97] [98] [99] [100]
-[101] [102] [103] [104]
+[95]) (chapters/contributions.tex [96] [97] [98] [99] [100] [101] [102]
+[103] [104] [105] [106]
 Underfull \hbox (badness 1931) in paragraph at lines 265--266
 \TU/TimesNewRoman(0)/m/n/12 (\TU/lmtt/m/n/12 \bDROP\b\TU/TimesNewRoman(0)/m/n/1
 2 , \TU/lmtt/m/n/12 \bDELETE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bI
@@ -1230,19 +1246,19 @@ LOAD_- FILE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bOUTFILE\b\TU/Times
 NewRoman(0)/m/n/12 ,
  []
 
-[105] [106] [107] [108] (./main.aux)
+[107] [108] [109] [110] (main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) ) 
 Here is how much of TeX's memory you used:
- 8244 strings out of 468168
- 188432 string characters out of 5432815
- 885579 words of memory out of 5000000
- 36808 multiletter control sequences out of 15000+600000
+ 8237 strings out of 402983
+ 186079 string characters out of 5448896
+ 886218 words of memory out of 5000000
+ 36795 multiletter control sequences out of 15000+600000
  631653 words of font info for 87 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 78i,11n,96p,1433b,1190s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,11n,96p,1435b,1190s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (113 pages).
+Output written on main.pdf (115 pages).

@@ -120,10 +120,36 @@
 \noindent GET /api/code/metadata \textrightarrow{} Cached schema \{tables: \{\}\}; POST /api/code/metadata/refresh \textrightarrow{} Force refresh; GET /api/code/health \textrightarrow{} Status
 
 \vspace{2mm}
+\noindent\textbf{RAG Agent (Port 8085):}
+
+\vspace{1mm}
+\noindent POST /api/rag/query \textrightarrow{} \{question, topK?\} \textrightarrow{} \{answer, citations[], chunks[], retrievedDocumentIds[], blockedDocumentIds[], latencyMs, status\}
+
+\noindent GET /api/rag/health \textrightarrow{} RAG service, Milvus, embedding, and LLM readiness summary
+
+\noindent GET /api/rag/health/embedding \textrightarrow{} Active embedding profile readiness and dimension check
+
+\noindent GET /api/rag/permissions/documents \textrightarrow{} Current user's accessible document snapshot
+
+\noindent POST /api/rag/index/rebuild \textrightarrow{} Trigger full RAG index rebuild
+
+\noindent POST /api/rag/index/document/\{documentId\} \textrightarrow{} Index one document; POST /api/rag/index/document/\{documentId\}/reprocess \textrightarrow{} Reprocess one document
+
+\noindent DELETE /api/rag/index/document/\{documentId\} \textrightarrow{} Delete one document's RAG chunks and vectors
+
+\noindent GET /api/rag/index/tasks \textrightarrow{} Recent index tasks; GET /api/rag/index/documents/status \textrightarrow{} Per-document index status
+
+\noindent GET /api/rag/embedding/profiles \textrightarrow{} Available embedding profiles; POST /api/rag/embedding/profiles/\{profileId\}/activate \textrightarrow{} Switch active embedding profile
+
+\noindent CRUD /api/rag/kb \textrightarrow{} Knowledge-base management and document upload endpoints
+
+\noindent POST /api/rag/access-request \textrightarrow{} Submit a RAG document access request
+
+\vspace{2mm}
 \noindent\textbf{Gateway (Port 8080):}
 
 \vspace{1mm}
-\noindent Routes: /api/user/**\textrightarrow{}user-service:8081; /api/tool/**\textrightarrow{}tool-agent:8083; /api/code/**\textrightarrow{}code-agent:8084; /ws/**\textrightarrow{}tool-agent:8083/tool/ws
+\noindent Routes: /api/user/**\textrightarrow{}user-service:8081; /api/tool/**\textrightarrow{}tool-agent:8083; /api/code/**\textrightarrow{}code-agent:8084; /api/rag/**\textrightarrow{}rag-agent:8085; /ws/**\textrightarrow{}task-service WebSocket endpoint
 
 \noindent JwtAuthGlobalFilter (order=-100): Validates JWT on all non-whitelist paths; extracts claims \textrightarrow{} X-User-* headers; rate limiting: 100 req/s per IP (burst 200)
 

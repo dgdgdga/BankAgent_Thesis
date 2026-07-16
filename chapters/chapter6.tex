@@ -195,6 +195,8 @@ The Task Center's design reflects a pragmatic trade-off for a single-instance sy
 \label{tab:task-service-api}
 \end{table}
 
+RAG tasks use the same orchestration path. When the submitted task type is RAG, the task service forwards the question to rag-agent through POST /rag/query, stores the returned answer and citations in task\_record.output, and pushes progress messages back to the frontend. This allows the Copilot, Task Center, and the dedicated RAG workbench to share the same backend capability instead of maintaining separate query implementations.
+
 \subhead{6.3 WebSocket Real-Time Communication}
 
 Long-running AI tasks need progress streaming beyond HTTP request-response. The platform uses WebSocket connections to push task progress from backend to frontend.
@@ -267,6 +269,8 @@ Figure \ref{fig:docker-topology} shows the Docker Compose service topology, illu
 \end{figure}
 
 The platform is deployed through Docker Compose. Each service (Gateway, four backend services, frontend, MySQL, Redis, and optionally Milvus with etcd and MinIO) runs in an independent container on an internal bridge network. Only the Gateway (port 8080) is exposed. The frontend Nginx (port 80) serves static Vue 3 SPA files and proxies API and WebSocket requests to the Gateway. MySQL initialization is handled via a mounted SQL dump file. The Python inference server for the Code Agent runs in a separate container with FastAPI.
+
+For RAG deployment, the Gateway maps /api/rag/** to rag-agent:8085. The rag-agent container depends on MySQL for metadata tables, Milvus for vector search, MinIO for document object storage, and rag-worker for local BGE-M3 embedding generation. Environment variables configure the active embedding provider, vector dimension, Milvus collection, chunk size, overlap, and LLM endpoint. This keeps the RAG subsystem deployable through the same Docker Compose command as the rest of the platform.
 
 \newpage
 
