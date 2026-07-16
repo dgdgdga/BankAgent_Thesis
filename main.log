@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.20)  16 JUL 2026 16:06
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.20)  16 JUL 2026 16:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -845,36 +845,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 974--974
  []
 
 [53] [54] [55] [56] [57] [58]
-Underfull \hbox (badness 1460) in paragraph at lines 1240--1240
+Underfull \hbox (badness 1460) in paragraph at lines 1237--1237
 []|\TU/TimesNewRoman(0)/m/n/10.95 GET /rag/health, 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1240--1240
+Underfull \hbox (badness 10000) in paragraph at lines 1237--1237
 []|\TU/TimesNewRoman(0)/m/n/10.95 POST 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1240--1240
+Underfull \hbox (badness 10000) in paragraph at lines 1237--1237
 []|\TU/TimesNewRoman(0)/m/n/10.95 POST 
  []
 
 
-Underfull \hbox (badness 5431) in paragraph at lines 1240--1240
+Underfull \hbox (badness 5431) in paragraph at lines 1237--1237
 []|\TU/TimesNewRoman(0)/m/n/10.95 DELETE 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1240--1240
+Underfull \hbox (badness 10000) in paragraph at lines 1237--1237
 []|\TU/TimesNewRoman(0)/m/n/10.95 GET 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1240--1240
+Underfull \hbox (badness 10000) in paragraph at lines 1237--1237
 []|\TU/TimesNewRoman(0)/m/n/10.95 POST 
  []
 
-[59] [60] [61] [62]) (chapters/chapter5bis_copilot.tex [63]
+[59] [60] [61]) (chapters/chapter5bis_copilot.tex [62]
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
 
@@ -882,7 +882,7 @@ Overfull \hbox (47.99997pt too wide) in alignment at lines 62--62
 [][][][] 
  []
 
-[64] [65] [66]
+[63] [64] [65]
 Underfull \hbox (badness 7397) in paragraph at lines 126--127
 []\TU/TimesNewRoman(0)/b/n/12 Browser Custom Events\TU/TimesNewRoman(0)/m/n/12 
 : The widget dispatches \TU/lmtt/m/n/12 CustomEvent \TU/TimesNewRoman(0)/m/n/12
@@ -896,24 +896,24 @@ m/n/12 object — \TU/lmtt/m/n/12 copilot-tool-result \TU/TimesNewRoman(0)/m/n/1
  for Tool Agent results,
  []
 
-[67]
+[66]
 Underfull \hbox (badness 10000) in paragraph at lines 140--141
 []\TU/TimesNewRoman(0)/m/n/12 The Copilot unified all AI provider configuration
  under the user-service’s
  []
 
-[68] [69]) (chapters/chapter6.tex [70]
+[67] [68]) (chapters/chapter6.tex [69]
 Underfull \hbox (badness 5374) in paragraph at lines 98--98
 []|\TU/TimesNewRoman(0)/m/n/10.95 Agent error, timeout, or 
  []
 
-[71]
+[70]
 Underfull \hbox (badness 3989) in paragraph at lines 107--108
 []\TU/TimesNewRoman(0)/m/n/12 Tasks enter the system through two channels. The 
 primary channel is \TU/lmtt/m/n/12 POST
  []
 
-[72]
+[71]
 Overfull \hbox (11.94124pt too wide) in paragraph at lines 147--147
 \TU/lmtt/m/n/10.95 naturalLanguage: 
  []
@@ -924,11 +924,11 @@ Underfull \hbox (badness 1629) in paragraph at lines 152--153
  RestTemplate \TU/TimesNewRoman(0)/m/n/12 with a 5-second connect time-
  []
 
-[73] [74] [75]
+[72] [73] [74]
 File: figures/fig10_docker_topology.png Graphic file (type bmp)
 <figures/fig10_docker_topology.png>
- [76] [77]) (chapters/chapter7.tex [78] [79] [80] [81])
-(chapters/chapter8.tex [82] [83]) (chapters/references.tex [84] [85])
+ [75] [76]) (chapters/chapter7.tex [77] [78] [79] [80])
+(chapters/chapter8.tex [81] [82]) (chapters/references.tex [83] [84])
 (chapters/appendix_a.tex
 Underfull \hbox (badness 10000) in paragraph at lines 59--59
 []|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
@@ -969,7 +969,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 92--92
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[86]
+[85]
 Underfull \hbox (badness 10000) in paragraph at lines 113--113
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
  []
@@ -1009,12 +1009,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 145--145
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[87]
+[86]
 Underfull \hbox (badness 10000) in paragraph at lines 201--201
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
-[88]
+[87]
 Underfull \hbox (badness 10000) in paragraph at lines 226--226
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1049,7 +1049,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[89]
+[88]
 Underfull \hbox (badness 10000) in paragraph at lines 282--282
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1069,7 +1069,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 304--304
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[90]
+[89]
 Underfull \hbox (badness 10000) in paragraph at lines 333--333
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(120),
  []
@@ -1179,11 +1179,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 441--441
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[91]
+[90]
 Overfull \vbox (1101.41306pt too high) has occurred while \output is active []
 
 
-[92]) (chapters/appendix_b.tex
+[91]) (chapters/appendix_b.tex
 Underfull \hbox (badness 1297) in paragraph at lines 42--43
 \TU/TimesNewRoman(0)/m/n/12 GET /api/admin/users → [UserResponse[]]; POST /api/
 admin/user/role → {userId,
@@ -1195,7 +1195,7 @@ Overfull \hbox (8.85526pt too wide) in paragraph at lines 44--45
 ble/disable; PUT /api/admin/user/dept
  []
 
-[93]
+[92]
 Underfull \hbox (badness 1694) in paragraph at lines 66--67
 \TU/TimesNewRoman(0)/m/n/12 POST /api/user/document/create → {title, content, d
 eptId, securityLevel} → AD-
@@ -1207,13 +1207,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 80--81
 ount (status=0); POST
  []
 
-[94]
+[93]
 Overfull \hbox (3.25876pt too wide) in paragraph at lines 120--121
 \TU/TimesNewRoman(0)/m/n/12 GET /api/code/metadata → Cached schema {tables: {}}
 ; POST /api/code/metadata/refresh
  []
 
-[95]
+[94]
 Underfull \hbox (badness 10000) in paragraph at lines 136--137
 \TU/TimesNewRoman(0)/m/n/12 POST /api/rag/index/document/{documentId} → Index o
 ne document; POST
@@ -1231,20 +1231,20 @@ Overfull \hbox (19.70346pt too wide) in paragraph at lines 160--161
 *→tool-agent:8083; /api/code/**→code-
  []
 
-[96]) (chapters/appendix_c.tex [97]
+[95]) (chapters/appendix_c.tex [96]
 Underfull \hbox (badness 4366) in paragraph at lines 34--35
 \TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/resour
 ces, /app/admin/my-dept).
  []
 
-[98]) (chapters/contributions.tex [99] [100] [101] [102] [103] [104] [105]
-[106] [107] [108] [109] [110] [111]
+[97]) (chapters/contributions.tex [98] [99] [100] [101] [102] [103] [104]
+[105] [106] [107] [108] [109] [110]
 Underfull \hbox (badness 1348) in paragraph at lines 290--291
 \TU/TimesNewRoman(0)/m/n/12 can rebuild the index so that MySQL chunk metadata 
 and Milvus vectors match
  []
 
-[112] [113] [114] [115]
+[111] [112] [113] [114]
 Underfull \hbox (badness 1931) in paragraph at lines 381--382
 \TU/TimesNewRoman(0)/m/n/12 (\TU/lmtt/m/n/12 \bDROP\b\TU/TimesNewRoman(0)/m/n/1
 2 , \TU/lmtt/m/n/12 \bDELETE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bI
@@ -1262,7 +1262,7 @@ LOAD_- FILE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bOUTFILE\b\TU/Times
 NewRoman(0)/m/n/12 ,
  []
 
-[116] [117] [118] (main.aux)
+[115] [116] [117] (main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1275,6 +1275,6 @@ Here is how much of TeX's memory you used:
  36816 multiletter control sequences out of 15000+600000
  631661 words of font info for 88 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 78i,11n,96p,1286b,1204s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 78i,11n,96p,1286b,1182s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (123 pages).
+Output written on main.pdf (122 pages).

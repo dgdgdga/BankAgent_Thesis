@@ -1049,13 +1049,12 @@ Table \ref{tab:pseudocode-rag-index} shows the indexing algorithm. The algorithm
 \needspace{0.72\textheight}
 
 \begin{table}[H]
-\small\singlespacing
 \centering
 \caption{Pseudocode --- indexDocument() RAG Document Parsing, Chunking, and Vector Upsert}
 \label{tab:pseudocode-rag-index}
 \vspace{2mm}
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,aboveskip=2pt,belowskip=2pt]
+\begin{lstlisting}
 FUNCTION indexDocument(documentId: Long): IndexResult
     task = indexTaskRepository.create("INDEX_DOCUMENT", documentId)
     TRY
@@ -1113,13 +1112,12 @@ Tables \ref{tab:pseudocode-rag-retrieve} and \ref{tab:pseudocode-rag-generate} s
 \needspace{0.62\textheight}
 
 \begin{table}[H]
-\small\singlespacing
 \centering
 \caption{Pseudocode --- retrieveAllowedChunks() Permission-Safe Vector Retrieval}
 \label{tab:pseudocode-rag-retrieve}
 \vspace{2mm}
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,aboveskip=2pt,belowskip=2pt]
+\begin{lstlisting}
 FUNCTION retrieveAllowedChunks(request, user): RetrievalResult
     allowedDocIds = permissionService.listAccessibleDocumentIds(
         user.id, user.deptId, user.roles,
@@ -1164,13 +1162,12 @@ END FUNCTION
 \needspace{0.52\textheight}
 
 \begin{table}[H]
-\small\singlespacing
 \centering
 \caption{Pseudocode --- generateGroundedAnswer() Citation and Audit Workflow}
 \label{tab:pseudocode-rag-generate}
 \vspace{2mm}
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,aboveskip=2pt,belowskip=2pt]
+\begin{lstlisting}
 FUNCTION generateGroundedAnswer(request, user): RagAnswer
     startTime = now()
     retrieval = retrieveAllowedChunks(request, user)
