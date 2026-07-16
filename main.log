@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 13:35
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.5.3)  16 JUL 2026 13:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -436,70 +436,70 @@ File: figures/fig02_five_layer_arch_new.pdf Graphic file (type pdf)
 File: figures/fig03_request_sequence.pdf Graphic file (type pdf)
 <use figures/fig03_request_sequence.pdf>
  [17]
-Underfull \hbox (badness 1502) in paragraph at lines 73--74
+Underfull \hbox (badness 1502) in paragraph at lines 71--72
 []|\TU/TimesNewRoman(0)/m/n/10.95 userStore (JWT, roles, permissions), taskStor
 e
  []
 
 
-Underfull \hbox (badness 2237) in paragraph at lines 78--79
+Underfull \hbox (badness 2237) in paragraph at lines 76--77
 []|\TU/TimesNewRoman(0)/m/n/10.95 Singleton client with auto-reconnect and four
 
  []
 
 [18] [19]
-Underfull \hbox (badness 10000) in paragraph at lines 120--120
+Underfull \hbox (badness 10000) in paragraph at lines 118--118
 []|\TU/TimesNewRoman(0)/m/n/10.95 Spring Boot 3.x +
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--121
+Underfull \hbox (badness 10000) in paragraph at lines 119--119
 []|\TU/TimesNewRoman(0)/m/n/10.95 Security Frame-
  []
 
 
-Underfull \hbox (badness 1248) in paragraph at lines 122--123
+Underfull \hbox (badness 1248) in paragraph at lines 120--121
 []|\TU/TimesNewRoman(0)/m/n/10.95 Session caching, rate limit counters, metadat
 a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--123
+Underfull \hbox (badness 10000) in paragraph at lines 121--121
 []|\TU/TimesNewRoman(0)/m/n/10.95 AI Integration
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--123
+Underfull \hbox (badness 10000) in paragraph at lines 121--121
 []|\TU/TimesNewRoman(0)/m/n/10.95 DeepSeek API
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--124
+Underfull \hbox (badness 10000) in paragraph at lines 121--122
 []|\TU/TimesNewRoman(0)/m/n/10.95 Intent routing (MEET-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--124
+Underfull \hbox (badness 10000) in paragraph at lines 121--122
 \TU/TimesNewRoman(0)/m/n/10.95 ING/SCHEDULE/ROUTE), parameter ex-
  []
 
 
-Underfull \hbox (badness 1490) in paragraph at lines 124--125
+Underfull \hbox (badness 1490) in paragraph at lines 122--123
 []|\TU/TimesNewRoman(0)/m/n/10.95 LLM-based SQL generation from natural lan-
  []
 
 
-Underfull \hbox (badness 1005) in paragraph at lines 126--126
+Underfull \hbox (badness 1005) in paragraph at lines 124--124
 []|\TU/TimesNewRoman(0)/m/n/10.95 Python FastAPI (rag-
  []
 
 
-Underfull \hbox (badness 1337) in paragraph at lines 128--128
+Underfull \hbox (badness 1337) in paragraph at lines 126--126
 []|\TU/TimesNewRoman(0)/m/n/10.95 Milvus REST API +
  []
 
 
-Underfull \hbox (badness 1009) in paragraph at lines 128--129
+Underfull \hbox (badness 1009) in paragraph at lines 126--127
 []|\TU/TimesNewRoman(0)/m/n/10.95 Semantic ANN search for RAG document re-
  []
 
@@ -507,90 +507,90 @@ Underfull \hbox (badness 1009) in paragraph at lines 128--129
 File: figures/fig04_jwt_auth_flow.png Graphic file (type bmp)
 <figures/fig04_jwt_auth_flow.png>
  [21]
-Underfull \hbox (badness 1609) in paragraph at lines 151--152
+Underfull \hbox (badness 1609) in paragraph at lines 149--150
 []\TU/TimesNewRoman(0)/m/n/12 After the user submits their email address on the
  front end, the request reaches
  []
 
 [22]
-Overfull \hbox (45.35764pt too wide) in paragraph at lines 153--154
+Overfull \hbox (45.35764pt too wide) in paragraph at lines 151--152
 []\TU/TimesNewRoman(0)/m/n/12 These architectural changes are formally document
 ed in \TU/lmtt/m/n/12 docs/email-verification-design.md\TU/TimesNewRoman(0)/m/n
 /12 ,
  []
 
 [23] [24] [25]
-Underfull \hbox (badness 10000) in paragraph at lines 232--232
+Underfull \hbox (badness 10000) in paragraph at lines 230--230
 []|\TU/TimesNewRoman(0)/m/n/10.95 Operational
  []
 
 
-Underfull \hbox (badness 2689) in paragraph at lines 232--232
+Underfull \hbox (badness 2689) in paragraph at lines 230--230
 []|\TU/TimesNewRoman(0)/m/n/10.95 Users, roles, departments, docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 232--233
+Underfull \hbox (badness 10000) in paragraph at lines 230--231
 []|\TU/TimesNewRoman(0)/m/n/10.95 Transactional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 232--233
+Underfull \hbox (badness 10000) in paragraph at lines 230--231
 \TU/TimesNewRoman(0)/m/n/10.95 ACID-compliant
  []
 
 
-Underfull \hbox (badness 3323) in paragraph at lines 233--233
+Underfull \hbox (badness 3323) in paragraph at lines 231--231
 []|\TU/TimesNewRoman(0)/m/n/10.95 Session tokens, rate limit coun-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 231--232
 []|\TU/TimesNewRoman(0)/m/n/10.95 High-concurrency,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 231--232
 \TU/TimesNewRoman(0)/m/n/10.95 sub-millisecond
  []
 
 
-Underfull \hbox (badness 2503) in paragraph at lines 234--234
+Underfull \hbox (badness 2503) in paragraph at lines 232--232
 []|\TU/TimesNewRoman(0)/m/n/10.95 PDF, DOCX, PPT files; Milvus
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--235
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
 []|\TU/TimesNewRoman(0)/m/n/10.95 Document up-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--235
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
 \TU/TimesNewRoman(0)/m/n/10.95 load/download,
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 234--235
+Underfull \hbox (badness 4779) in paragraph at lines 232--233
 \TU/TimesNewRoman(0)/m/n/10.95 RAG source docu-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--235
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
 []|\TU/TimesNewRoman(0)/m/n/10.95 Document chunk embeddings
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--235
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
 \TU/TimesNewRoman(0)/m/n/10.95 (BGE-M3, 1024 dimensions),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--236
+Underfull \hbox (badness 10000) in paragraph at lines 233--234
 []|\TU/TimesNewRoman(0)/m/n/10.95 Semantic approx-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--236
+Underfull \hbox (badness 10000) in paragraph at lines 233--234
 \TU/TimesNewRoman(0)/m/n/10.95 imate nearest
  []
 

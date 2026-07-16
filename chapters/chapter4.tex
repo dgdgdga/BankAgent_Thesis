@@ -52,8 +52,6 @@ The front end is built on Vue 3 with Composition API and TypeScript. TypeScript 
 
 \textbf{(5) State Management and Communication.} Two Pinia stores manage frontend state: one for user authentication and permissions, the other for task lifecycle tracking. HTTP requests go through a shared Axios instance with JWT attachment, 401 auto-redirect, and unified error handling. All server responses follow a standard wrapper with code, message, and data fields. WebSocket connections use a singleton client with automatic reconnection, pushing real-time task progress to the UI without polling overhead.
 
-\textbf{(6) Map and Loading Feedback.} Map rendering uses the Amap JS API for route display. Loading states are handled by a full-screen overlay with a rotating status message. The progress bar stays below 100 percent until the task actually completes, so the user never feels the interface has stalled.
-
 Table \ref{tab:frontend-tech-stack} summarizes the frontend technology stack.
 
 \vspace{3mm}
