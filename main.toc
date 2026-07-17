@@ -38,38 +38,38 @@
 \contentsline {subsubsection}{\numberline {5.2.3}Five-Layer SQL Whitelist Validation}{45}{subsubsection.5.2.3}%
 \contentsline {subsubsection}{\numberline {5.2.4}Metadata Caching and Execution}{48}{subsubsection.5.2.4}%
 \contentsline {subsection}{\numberline {5.3}RAG Agent Implementation}{51}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}Design Rationale}{51}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Architecture Overview}{52}{subsubsection.5.3.2}%
-\contentsline {subsubsection}{\numberline {5.3.3}Data Structure and Storage Ownership}{54}{subsubsection.5.3.3}%
-\contentsline {subsubsection}{\numberline {5.3.4}Document Indexing and Chunking Pipeline}{55}{subsubsection.5.3.4}%
-\contentsline {subsubsection}{\numberline {5.3.5}Permission-Safe Retrieval and Answer Generation}{57}{subsubsection.5.3.5}%
-\contentsline {subsubsection}{\numberline {5.3.6}System Boundary and Orchestration Contract}{61}{subsubsection.5.3.6}%
-\contentsline {subsubsection}{\numberline {5.3.7}Evidence Inspection in the Frontend}{63}{subsubsection.5.3.7}%
-\contentsline {subsubsection}{\numberline {5.3.8}Synchronization, Deployment, and Evaluation}{63}{subsubsection.5.3.8}%
-\contentsline {subsection}{\numberline {5.4}Copilot --- A Unified Intelligent Dispatcher Above the Three Agents}{66}{subsection.5.4}%
-\contentsline {subsubsection}{\numberline {5.4.1}Design Rationale}{66}{subsubsection.5.4.1}%
-\contentsline {subsubsection}{\numberline {5.4.2}Architecture Overview}{66}{subsubsection.5.4.2}%
-\contentsline {subsubsection}{\numberline {5.4.3}Three-Tier Intent Classification}{67}{subsubsection.5.4.3}%
-\contentsline {subsubsection}{\numberline {5.4.4}Frontend Dispatch and User Experience}{69}{subsubsection.5.4.4}%
-\contentsline {subsubsection}{\numberline {5.4.5}Multi-Turn Clarification}{70}{subsubsection.5.4.5}%
-\contentsline {subsubsection}{\numberline {5.4.6}Cross-Page Communication}{70}{subsubsection.5.4.6}%
-\contentsline {subsubsection}{\numberline {5.4.7}Second-Level Intent Classification in the Tool Agent}{71}{subsubsection.5.4.7}%
-\contentsline {subsubsection}{\numberline {5.4.8}AI Provider Configuration Unification}{71}{subsubsection.5.4.8}%
-\contentsline {section}{\numberline {6}System Integration and Deployment}{73}{section.6}%
-\contentsline {subsection}{\numberline {6.1}User Center and RBAC}{73}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Task Center and Orchestration}{74}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}Task Lifecycle and State Machine}{74}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}Submission, Queuing, and Thread Pool}{75}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}Agent Routing and Execution}{76}{subsubsection.6.2.3}%
-\contentsline {subsubsection}{\numberline {6.2.4}Retry with Exponential Backoff}{76}{subsubsection.6.2.4}%
-\contentsline {subsubsection}{\numberline {6.2.5}Progress Streaming and WebSocket Integration}{77}{subsubsection.6.2.5}%
-\contentsline {subsubsection}{\numberline {6.2.6}Current Limitations}{77}{subsubsection.6.2.6}%
-\contentsline {subsection}{\numberline {6.3}WebSocket Real-Time Communication}{78}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Containerized Deployment}{79}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Discussion}{81}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Challenges and Resolutions}{81}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Comparison with Existing Solutions}{83}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Project Limitations}{84}{subsection.7.3}%
-\contentsline {section}{\numberline {8}Conclusion and Future Work}{85}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Summary of Achievements}{85}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Future Work}{86}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {5.3.1}Enterprise RAG as Evidence Construction}{51}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Architecture Overview}{53}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Data Structure and Storage Ownership}{55}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Document Indexing and Chunking Pipeline}{56}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}Retrieval, Grounding, and Answer Generation}{59}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}System Boundary and Orchestration Contract}{63}{subsubsection.5.3.6}%
+\contentsline {subsubsection}{\numberline {5.3.7}Evidence Inspection in the Frontend}{65}{subsubsection.5.3.7}%
+\contentsline {subsubsection}{\numberline {5.3.8}Synchronization, Deployment, and Evaluation}{65}{subsubsection.5.3.8}%
+\contentsline {subsection}{\numberline {5.4}Copilot --- A Unified Intelligent Dispatcher Above the Three Agents}{68}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Design Rationale}{68}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}Architecture Overview}{68}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}Three-Tier Intent Classification}{69}{subsubsection.5.4.3}%
+\contentsline {subsubsection}{\numberline {5.4.4}Frontend Dispatch and User Experience}{71}{subsubsection.5.4.4}%
+\contentsline {subsubsection}{\numberline {5.4.5}Multi-Turn Clarification}{72}{subsubsection.5.4.5}%
+\contentsline {subsubsection}{\numberline {5.4.6}Cross-Page Communication}{72}{subsubsection.5.4.6}%
+\contentsline {subsubsection}{\numberline {5.4.7}Second-Level Intent Classification in the Tool Agent}{73}{subsubsection.5.4.7}%
+\contentsline {subsubsection}{\numberline {5.4.8}AI Provider Configuration Unification}{73}{subsubsection.5.4.8}%
+\contentsline {section}{\numberline {6}System Integration and Deployment}{75}{section.6}%
+\contentsline {subsection}{\numberline {6.1}User Center and RBAC}{75}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Task Center and Orchestration}{76}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Task Lifecycle and State Machine}{76}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Submission, Queuing, and Thread Pool}{77}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Agent Routing and Execution}{78}{subsubsection.6.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.4}Retry with Exponential Backoff}{78}{subsubsection.6.2.4}%
+\contentsline {subsubsection}{\numberline {6.2.5}Progress Streaming and WebSocket Integration}{79}{subsubsection.6.2.5}%
+\contentsline {subsubsection}{\numberline {6.2.6}Current Limitations}{79}{subsubsection.6.2.6}%
+\contentsline {subsection}{\numberline {6.3}WebSocket Real-Time Communication}{80}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Containerized Deployment}{81}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Discussion}{83}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Challenges and Resolutions}{83}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Comparison with Existing Solutions}{85}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Project Limitations}{86}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Conclusion and Future Work}{87}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Summary of Achievements}{87}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Future Work}{88}{subsection.8.2}%

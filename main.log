@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.20)  17 JUL 2026 19:08
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.20)  17 JUL 2026 20:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -984,14 +984,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 783--784
 []|\TU/TimesNewRoman(0)/m/n/10.95 Block execution,
  []
 
-[47] [48] [49] [50] [51] [52]
+[47] [48] [49] [50] [51] [52] [53]
 Underfull \hbox (badness 4752) in paragraph at lines 1003--1003
 \TU/TimesNewRoman(0)/m/n/10.95 user identity, department,
- []
-
-
-Underfull \hbox (badness 3977) in paragraph at lines 1004--1004
-\TU/TimesNewRoman(0)/m/n/10.95 sion Snap-
  []
 
 
@@ -1025,8 +1020,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 1006--1006
  []
 
 
-Underfull \hbox (badness 6876) in paragraph at lines 1007--1007
-\TU/TimesNewRoman(0)/m/n/10.95 shot before prompt con-
+Underfull \hbox (badness 10000) in paragraph at lines 1007--1007
+[]|\TU/TimesNewRoman(0)/m/n/10.95 5 – Ev-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1007--1007
+\TU/TimesNewRoman(0)/m/n/10.95 idence
+ []
+
+
+Underfull \hbox (badness 3792) in paragraph at lines 1007--1007
+\TU/TimesNewRoman(0)/m/n/10.95 idence set before prompt
  []
 
 
@@ -1064,37 +1069,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 1009--1009
 \TU/TimesNewRoman(0)/m/n/10.95 sponse +
  []
 
-[53] [54] [55] [56] [57] [58] [59] [60]
-Underfull \hbox (badness 1460) in paragraph at lines 1322--1322
-[]|\TU/TimesNewRoman(0)/m/n/10.95 GET /rag/health, 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1322--1322
-[]|\TU/TimesNewRoman(0)/m/n/10.95 POST 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1322--1322
-[]|\TU/TimesNewRoman(0)/m/n/10.95 POST 
- []
-
-
-Underfull \hbox (badness 5431) in paragraph at lines 1322--1322
-[]|\TU/TimesNewRoman(0)/m/n/10.95 DELETE 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1322--1322
-[]|\TU/TimesNewRoman(0)/m/n/10.95 GET 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1322--1322
-[]|\TU/TimesNewRoman(0)/m/n/10.95 POST 
- []
-
-[61] [62] [63] [64] [65]) (chapters/chapter5bis_copilot.tex [66]
+[54] [55] [56] [57] [58] [59] [60] [61] [62] [63] [64] [65] [66] [67])
+(chapters/chapter5bis_copilot.tex [68]
 File: figures/fig05_tool_agent_sequence.png Graphic file (type bmp)
 <figures/fig05_tool_agent_sequence.png>
 
@@ -1102,7 +1078,7 @@ Overfull \hbox (47.99997pt too wide) in alignment at lines 64--64
 [][][][] 
  []
 
-[67] [68] [69]
+[69] [70] [71]
 Underfull \hbox (badness 7397) in paragraph at lines 126--127
 []\TU/TimesNewRoman(0)/b/n/12 Browser Custom Events\TU/TimesNewRoman(0)/m/n/12 
 : The widget dispatches \TU/lmtt/m/n/12 CustomEvent \TU/TimesNewRoman(0)/m/n/12
@@ -1116,24 +1092,24 @@ m/n/12 object — \TU/lmtt/m/n/12 copilot-tool-result \TU/TimesNewRoman(0)/m/n/1
  for Tool Agent results,
  []
 
-[70]
+[72]
 Underfull \hbox (badness 10000) in paragraph at lines 140--141
 []\TU/TimesNewRoman(0)/m/n/12 The Copilot unified all AI provider configuration
  under the user-service’s
  []
 
-[71] [72]) (chapters/chapter6.tex [73]
+[73] [74]) (chapters/chapter6.tex [75]
 Underfull \hbox (badness 5374) in paragraph at lines 97--97
 []|\TU/TimesNewRoman(0)/m/n/10.95 Agent error, timeout, or 
  []
 
-[74]
+[76]
 Underfull \hbox (badness 3989) in paragraph at lines 104--105
 []\TU/TimesNewRoman(0)/m/n/12 Tasks enter the system through two channels. The 
 primary channel is \TU/lmtt/m/n/12 POST
  []
 
-[75]
+[77]
 Overfull \hbox (11.94124pt too wide) in paragraph at lines 145--145
 \TU/lmtt/m/n/10.95 naturalLanguage: 
  []
@@ -1144,11 +1120,11 @@ Underfull \hbox (badness 1629) in paragraph at lines 148--149
  RestTemplate \TU/TimesNewRoman(0)/m/n/12 with a 5-second connect time-
  []
 
-[76] [77] [78]
+[78] [79] [80]
 File: figures/fig10_docker_topology.png Graphic file (type bmp)
 <figures/fig10_docker_topology.png>
- [79] [80]) (chapters/chapter7.tex [81] [82] [83] [84])
-(chapters/chapter8.tex [85] [86]) (chapters/references.tex [87] [88])
+ [81] [82]) (chapters/chapter7.tex [83] [84] [85] [86])
+(chapters/chapter8.tex [87] [88]) (chapters/references.tex [89] [90])
 (chapters/appendix_a.tex
 Underfull \hbox (badness 10000) in paragraph at lines 59--59
 []|\TU/TimesNewRoman(0)/m/n/10.95 DATETIME, NOT
@@ -1189,7 +1165,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 92--92
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[89]
+[91]
 Underfull \hbox (badness 10000) in paragraph at lines 113--113
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(50),
  []
@@ -1229,12 +1205,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 145--145
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[90]
+[92]
 Underfull \hbox (badness 10000) in paragraph at lines 201--201
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
 
-[91]
+[93]
 Underfull \hbox (badness 10000) in paragraph at lines 226--226
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1269,7 +1245,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[92]
+[94]
 Underfull \hbox (badness 10000) in paragraph at lines 282--282
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1289,7 +1265,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 304--304
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[93]
+[95]
 Underfull \hbox (badness 10000) in paragraph at lines 329--329
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(120),
  []
@@ -1344,7 +1320,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 372--372
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[94]
+[96]
 Underfull \hbox (badness 10000) in paragraph at lines 396--396
 []|\TU/TimesNewRoman(0)/m/n/10.95 MEDIUMTEXT,
  []
@@ -1379,7 +1355,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 408--408
 []|\TU/TimesNewRoman(0)/m/n/10.95 TINYINT, NOT
  []
 
-[95]
+[97]
 Underfull \hbox (badness 10000) in paragraph at lines 426--426
 []|\TU/TimesNewRoman(0)/m/n/10.95 VARCHAR(100),
  []
@@ -1389,7 +1365,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 436--436
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[96]
+[98]
 Underfull \hbox (badness 4013) in paragraph at lines 456--457
 []|\TU/TimesNewRoman(0)/m/n/10.95 REBUILD_- ALL / INDEX_- DOCUMENT /
  []
@@ -1399,12 +1375,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 457--457
 \TU/TimesNewRoman(0)/m/n/10.95 NULL, DEFAULT
  []
 
-[97]) (chapters/appendix_b.tex
+[99]) (chapters/appendix_b.tex
 Overfull \hbox (4.36255pt too wide) in paragraph at lines 83--83
 []|\TU/TimesNewRoman(0)/m/n/10.95 DELETE|  
  []
 
-[98]
+[100]
 Overfull \hbox (8.02502pt too wide) in paragraph at lines 118--118
 []|\TU/TimesNewRoman(0)/m/n/10.95 GET/PUT|  
  []
@@ -1414,7 +1390,7 @@ Overfull \hbox (8.17427pt too wide) in paragraph at lines 141--141
 []|\TU/TimesNewRoman(0)/m/n/10.95 PUT/DELETE|  
  []
 
-[99]
+[101]
 Overfull \hbox (2.78043pt too wide) in paragraph at lines 211--211
 []|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/index/document/{id}/reprocess|  
  []
@@ -1429,14 +1405,14 @@ Overfull \hbox (10.0733pt too wide) in paragraph at lines 211--211
 []|\TU/TimesNewRoman(0)/m/n/10.95 /api/rag/embedding/profiles/{id}/activate|  
  []
 
-[100] [101] [102]) (chapters/appendix_c.tex [103] [104]
+[102] [103] [104]) (chapters/appendix_c.tex [105] [106]
 Underfull \hbox (badness 4366) in paragraph at lines 83--84
 []\TU/TimesNewRoman(0)/b/n/12 Administration (/app/admin/users, /app/admin/reso
 urces, /app/admin/my-dept).
  []
 
-[105] [106]) (chapters/contributions.tex [107] [108] [109] [110] [111] [112]
-[113] [114] [115] [116] [117] [118] [119] [120] [121] [122] [123]
+[107] [108]) (chapters/contributions.tex [109] [110] [111] [112] [113] [114]
+[115] [116] [117] [118] [119] [120] [121] [122] [123] [124] [125]
 Underfull \hbox (badness 1931) in paragraph at lines 381--382
 \TU/TimesNewRoman(0)/m/n/12 (\TU/lmtt/m/n/12 \bDROP\b\TU/TimesNewRoman(0)/m/n/1
 2 , \TU/lmtt/m/n/12 \bDELETE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bI
@@ -1454,21 +1430,21 @@ LOAD_- FILE\b\TU/TimesNewRoman(0)/m/n/12 , \TU/lmtt/m/n/12 \bOUTFILE\b\TU/Times
 NewRoman(0)/m/n/12 ,
  []
 
-[124] [125] [126] (main.aux)
+[126] [127] [128] (main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 3FF7B749447AD8C1A52E8679704DA0F9;15449.
+(rerunfilecheck)             Checksum: 8D1B3528A2E68D137507B08D140860DB;15553.
  ) ) 
 Here is how much of TeX's memory you used:
  15850 strings out of 402983
- 303422 string characters out of 5448896
- 1091932 words of memory out of 5000000
+ 303424 string characters out of 5448896
+ 1092057 words of memory out of 5000000
  44319 multiletter control sequences out of 15000+600000
  632021 words of font info for 89 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  78i,14n,96p,1303b,1206s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (131 pages).
+Output written on main.pdf (133 pages).
