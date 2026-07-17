@@ -945,7 +945,9 @@ END FUNCTION
 
 \subsubsection{Design Rationale}
 
-The RAG Agent addresses a different problem from a conventional document chatbot. In a normal RAG demonstration, the main objective is to retrieve semantically similar passages and use them as context for generation. In an enterprise banking setting, semantic relevance is necessary but not sufficient. A retrieved passage is useful only if it is also authorized for the current user, traceable to a source document, reproducible under a specific embedding profile, and visible to administrators for later audit. Therefore, the design treats RAG as a \textbf{constrained evidence selection} problem rather than a simple vector-search problem.
+The RAG Agent is designed as the knowledge layer of the multi-agent banking platform rather than as a standalone document chatbot. Its responsibility is to transform heterogeneous enterprise documents into reusable, searchable, citable, and governable knowledge that can support both direct user questions and downstream agent workflows. In a simple RAG demonstration, the main objective is usually to retrieve semantically similar passages and place them in the prompt. In this system, retrieval is only one part of a broader \textbf{knowledge-to-answer lifecycle}: documents must be ingested, chunked, embedded, indexed, selected as evidence, synthesized into grounded answers, exposed through stable APIs, and recorded for later inspection.
+
+This broader lifecycle requires the RAG Agent to balance four requirements at the same time. First, answers must be semantically relevant to the user's question. Second, every answer should be grounded in identifiable document chunks so that the source can be inspected. Third, the vector index must remain reproducible across embedding profiles and document updates. Fourth, enterprise access rules must be preserved before knowledge is passed to the language model. Therefore, the design treats RAG as a \textbf{governed evidence selection and synthesis} problem rather than a simple vector-search problem.
 
 Formally, for a user $u$ and question $q$, the system first computes the accessible document set $A(u)$ from role, department, clearance level, and temporary approvals. Let $C(q)$ denote the candidate chunk set and $\mathrm{doc}(c)$ denote the source document of chunk $c$. The final evidence set is selected as:
 
@@ -954,7 +956,7 @@ E_k(q,u)=\mathrm{TopK}_{\mathrm{sim}(e(q),e(c))}
 \{c \in C(q) \mid \mathrm{doc}(c)\in A(u)\}
 \]
 
-This formulation drives the rest of the architecture: permission evaluation is performed before and after vector retrieval; citations are built from the final evidence set rather than from model text; and every query stores enough metadata to reconstruct which documents were retrieved, blocked, and used.
+This formulation is used together with document lifecycle management and grounded generation. Indexing records provenance before query time; retrieval selects semantically useful chunks under the active embedding profile and access context; generation synthesizes only the selected evidence; and query logs store enough metadata to reconstruct which documents were retrieved, excluded, cited, and used. The result is a RAG service whose output is not only an answer, but also an inspectable evidence package.
 
 Table \ref{tab:rag-design-rationale} summarizes the design difference between ordinary RAG and the enterprise RAG model implemented in this project.
 
@@ -971,20 +973,21 @@ Table \ref{tab:rag-design-rationale} summarizes the design difference between or
 \toprule
 \textbf{Dimension} & \textbf{Ordinary RAG} & \textbf{Enterprise RAG in This System} \\
 \midrule
-Retrieval objective & Return the most semantically similar chunks & Return the most relevant chunks subject to department, clearance, and approval constraints \\
-Security boundary & Often handled outside the retrieval loop & Built into permission snapshot, scoped vector search, and post-retrieval verification \\
-Grounding evidence & Context is mainly a prompt construction detail & Evidence is a first-class object with citations, chunk IDs, document IDs, scores, and audit logs \\
+Knowledge lifecycle & Documents are often preprocessed manually before the demo & Upload, parsing, chunking, vector upsert, rebuild, deletion, and readiness checks are managed as service operations \\
+Retrieval objective & Return the most semantically similar chunks & Select evidence by combining semantic relevance, source provenance, embedding profile, and access context \\
+Answer grounding & Context is mainly a prompt construction detail & Evidence is a first-class object with citations, chunk IDs, document IDs, scores, and snippets \\
+Platform integration & Usually implemented as a page-level chatbot & Exposed as reusable APIs for the RAG workbench, Task Center, Copilot dispatch, and asynchronous task history \\
 Model operation & One embedding space and one vector collection are usually assumed & Embedding profiles isolate BGE-M3 and Qwen vectors into separate collections with rebuild-required status tracking \\
-Operational readiness & Indexing is often a manual preprocessing step & Index tasks, startup readiness checks, and asynchronous rebuild status make indexing observable \\
+Governance and observability & Logs often contain only question and answer text & Query logs, traceId, blocked counts, latency, profile metadata, and citation records make behavior inspectable \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \subsubsection{Architecture Overview}
 
-The RAG Agent is implemented as an independent Spring Boot microservice on port 8085. Its role is not merely to wrap Milvus or expose a document-search endpoint. Instead, it coordinates the complete evidence lifecycle: document ingestion, structure-aware chunking, embedding, vector indexing, permission-constrained retrieval, grounded answer generation, citation construction, and query audit logging. The service is exposed through Spring Cloud Gateway under /api/rag/**. Gateway authentication remains the first security boundary: JwtAuthGlobalFilter validates the JWT token and forwards X-User-Id, X-User-Name, X-User-Dept-Id, X-User-Roles, and X-User-Security-Level headers to rag-agent.
+The RAG Agent is implemented as an independent Spring Boot microservice on port 8085. Its role is not merely to wrap Milvus or expose a document-search endpoint. Instead, it coordinates the complete knowledge-to-answer lifecycle: document ingestion, structure-aware chunking, embedding, vector indexing, evidence retrieval, grounded answer generation, citation construction, permission evaluation, and query audit logging. The service is exposed through Spring Cloud Gateway under /api/rag/**. Gateway authentication remains the entry point for user context: JwtAuthGlobalFilter validates the JWT token and forwards X-User-Id, X-User-Name, X-User-Dept-Id, X-User-Roles, and X-User-Security-Level headers to rag-agent.
 
-Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared with the Code Agent, whose main risk is unsafe SQL execution, the RAG Agent's main risk is unauthorized knowledge leakage through retrieved context. Therefore, permission calculation, evidence selection, and audit logging are designed as core stages of the pipeline rather than auxiliary checks.
+Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared with the Code Agent, which mainly converts natural-language requests into validated database operations, the RAG Agent converts unstructured enterprise documents into grounded answers that can be inspected, reused, and orchestrated by other platform modules. The main technical challenge is therefore not only finding similar text, but preserving document structure, embedding-profile consistency, evidence quality, access context, citation traceability, and runtime observability throughout the pipeline.
 
 \vspace{3mm}
 
@@ -998,14 +1001,14 @@ Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared wi
 {\small
 \begin{tabular}{@{}p{1.8cm}>{\raggedright\arraybackslash}p{3.3cm}p{4.3cm}>{\raggedright\arraybackslash}p{\dimexpr\textwidth-9.4cm-6\tabcolsep\relax}@{}}
 \toprule
-\textbf{Stage} & \textbf{Service / Component} & \textbf{Key Operation} & \textbf{Persisted State / Security Result} \\
+\textbf{Stage} & \textbf{Service / Component} & \textbf{Key Operation} & \textbf{Persisted State / Platform Result} \\
 \midrule
 1 -- Request Admission & Gateway + RagController & Authenticate JWT; forward user identity, department, role, and clearance headers & Reject unauthenticated requests before they reach retrieval logic \\
-2 -- Permission Snapshot & RagPermissionService & Compute accessible document IDs from department scope, clearance level, admin role, temporary RAG\_APPLY approvals, and approval expiry & Produces the allowed document set used for scoped vector search and post-retrieval verification \\
+2 -- Access Context & RagPermissionService & Compute accessible document IDs from department scope, clearance level, admin role, temporary RAG\_APPLY approvals, and approval expiry & Produces the access context used for scoped vector search and post-retrieval verification \\
 3 -- Query Embedding & EmbeddingClient & Encode the user question with the active embedding profile & Records embedding profile, model, dimension, and collection for audit \\
-4 -- Vector Retrieval & VectorStoreService / \newline REST Milvus adapter & ANN search with COSINE similarity, a 4x over-fetch candidate size, and an allowed-document filter in Milvus & Narrows retrieval to documents in the current permission snapshot \\
-5 -- Secure Filtering & RagQueryService & Re-check candidate chunks against the permission snapshot before prompt construction & Records retrieved document IDs and blocked document IDs \\
-6 -- Grounded Generation & Query prompt logic + \newline RagLlmClient & Build evidence-only prompt; call OpenAI-compatible chat-completions endpoint & Produces answer text and citation references from allowed chunks only \\
+4 -- Vector Retrieval & VectorStoreService / \newline REST Milvus adapter & ANN search with COSINE similarity, a 4x over-fetch candidate size, and an allowed-document filter in Milvus & Produces ranked candidate chunks under the active profile and access context \\
+5 -- Evidence Selection & RagQueryService & Re-rank and re-check candidate chunks; build the final evidence set before prompt construction & Records retrieved document IDs, excluded document IDs, and selected chunks \\
+6 -- Grounded Generation & Query prompt logic + \newline RagLlmClient & Build evidence-only prompt; call OpenAI-compatible chat-completions endpoint & Produces answer text and citation references from selected evidence chunks \\
 7 -- Response + Audit & Query service + \newline query log mapper & Return traceId, answer, citations, scores, and latency; persist query log & Enables later review of evidence, blocked docs, profile, and timing \\
 \bottomrule
 \end{tabular}
@@ -1027,7 +1030,7 @@ Document upload $\rightarrow$ parser $\rightarrow$ structure-aware chunker $\rig
 rag\_document\_chunk rows + Milvus vectors \\
 \addlinespace[1mm]
 Query &
-JWT headers $\rightarrow$ RagPermissionService $\rightarrow$ query embedding $\rightarrow$ scoped Milvus over-fetch $\rightarrow$ permission re-check $\rightarrow$ prompt builder $\rightarrow$ LLM &
+JWT headers $\rightarrow$ RagPermissionService $\rightarrow$ query embedding $\rightarrow$ scoped Milvus over-fetch $\rightarrow$ evidence selection $\rightarrow$ prompt builder $\rightarrow$ LLM &
 answer + citations + rag\_query\_log \\
 \addlinespace[1mm]
 Shared controls &
@@ -1036,7 +1039,7 @@ traceable profile and access decision for every query \\
 \end{tabularx}
 \end{minipage}
 }
-\caption{RAG Agent Architecture --- Indexing Flow and Permission-Safe Query Flow}
+\caption{RAG Agent Architecture --- Indexing Flow and Grounded Query Flow}
 \label{fig:rag-agent-architecture}
 \end{figure}
 
@@ -1057,11 +1060,11 @@ The existing sys\_document table remains the document master table and stores ti
 \toprule
 \textbf{Storage Object} & \textbf{Main Fields} & \textbf{Design Purpose} \\
 \midrule
-sys\_document & title, content, dept\_id, security\_level, status & Source of truth for business document access control \\
+sys\_document & title, content, dept\_id, security\_level, status & Source of truth for business document metadata, lifecycle state, and access attributes \\
 rag\_knowledge\_base & name, description, owner, status & Groups documents into manageable knowledge bases \\
 rag\_source\_document & source file path, parse status, index status, error message & Tracks uploaded files and parsing/index lifecycle \\
 rag\_document\_chunk & document ID, chunk index, text, content hash, vector ID, embedding profile, model, collection, index status & Connects MySQL metadata to Milvus vector records \\
-rag\_query\_log & user ID, question, answer, retrieved docs, blocked docs, latency, embedding profile & Audit trail for permission review and quality diagnosis \\
+rag\_query\_log & user ID, question, answer, retrieved docs, blocked docs, latency, embedding profile & Audit trail for answer diagnosis, citation review, quality monitoring, and permission review \\
 rag\_index\_task & task type, target document, status, progress, error & Operational tracking for rebuild, single-document index, and deletion jobs \\
 Milvus collection & vector\_id, document\_id, chunk\_id, chunk\_index, dept\_id, security\_level, content\_hash, chunk\_text, embedding & ANN search over document chunks using the active embedding profile \\
 \bottomrule
@@ -1072,7 +1075,7 @@ Milvus is deployed as a standalone vector database with etcd for metadata coordi
 
 \subsubsection{Document Indexing and Chunking Pipeline}
 
-The indexing pipeline converts business documents into searchable semantic units, but its purpose is broader than preprocessing text for a vector database. It establishes the provenance layer used later by retrieval, citation, permission checks, and index maintenance. The important design decision is that chunk metadata is persisted before it is trusted by query-time generation. Each vector can be traced back to a document, a chunk row, an embedding profile, and a content hash.
+The indexing pipeline converts business documents into searchable semantic units, but its purpose is broader than preprocessing text for a vector database. It establishes the provenance layer used later by retrieval, citation, permission checks, and index maintenance. This means RAG quality is shaped before query time, not only during LLM generation. The important design decision is that chunk metadata is persisted before it is trusted by query-time generation. Each vector can be traced back to a document, a chunk row, an embedding profile, and a content hash.
 
 Documents are processed with a structure-aware chunking strategy. The parser first extracts text from PDF, DOCX, PPT, or plain document content. The chunker then splits text by headings and paragraph boundaries to preserve hierarchy. When a segment exceeds the target size, it is divided into overlapping windows. The default configuration uses 700 tokens with a 100-token overlap. Each chunk inherits the source document's document ID, department ID, and security level.
 
@@ -1135,13 +1138,13 @@ END FUNCTION
 \end{lstlisting}
 \end{table}
 
-\subsubsection{Permission-Safe Retrieval and Answer Generation}
+\subsubsection{Retrieval, Grounding, and Answer Generation}
 
-The query pipeline deliberately separates semantic relevance from authorization. Before vector search, RagPermissionService builds the current user's accessible document ID set from department scope, clearance level, admin role, and approved RAG\_APPLY records. The Milvus REST adapter receives this set as an allowed-document filter, so the ANN query is scoped before candidate chunks are returned. RagQueryService still asks for a broader candidate set than the final top-K and repeats the permission check after retrieval. This two-layer design avoids relying on either vector metadata or application filtering as a single security boundary.
+The query pipeline has two goals: retrieve the most useful document chunks for the user's question, and preserve the enterprise context needed to make those chunks trustworthy. Before vector search, RagPermissionService builds the current user's accessible document ID set from department scope, clearance level, admin role, and approved RAG\_APPLY records. The Milvus REST adapter receives this set as an allowed-document filter, so the ANN query is scoped before candidate chunks are returned. RagQueryService still asks for a broader candidate set than the final top-K and repeats the access check after retrieval. This design improves recall through over-fetching while keeping the final evidence set consistent with the current user's access context.
 
-The retrieval step can therefore be understood as a three-stage decision process. First, the system computes a permission snapshot that defines what the user may know. Second, vector search ranks semantically relevant chunks within that accessible universe. Third, the service builds the final evidence set only from chunks that survive post-retrieval verification. This design makes access control part of the evidence-selection algorithm rather than a user-interface filter applied after the model has already seen the context.
+The retrieval step can therefore be understood as a three-stage decision process. First, the system computes the query context, including identity, department, clearance, embedding profile, requested top-K, and temporary approvals. Second, vector search ranks semantically relevant chunks inside that context. Third, the service builds the final evidence set from chunks that have both high similarity and valid provenance. Access control remains part of this evidence-selection algorithm, but the algorithm also serves a broader purpose: it chooses which pieces of enterprise knowledge are reliable enough to become the basis of the generated answer.
 
-Figure \ref{fig:rag-permission-gate} visualizes the security gate inside the query flow. The important point is that vector similarity only proposes candidates within the allowed document scope. The permission snapshot still decides which chunks can become evidence. Blocked chunks are counted and logged, but their text is never copied into the LLM prompt or frontend citation panel.
+Figure \ref{fig:rag-permission-gate} visualizes the evidence gate inside the query flow. Vector similarity proposes candidate chunks; the evidence-selection step decides which candidates can become numbered context blocks for the prompt. Chunks that are stale, inaccessible, or outside the final top-K are excluded from the prompt and recorded as diagnostics. This separates candidate discovery from answer grounding, which is important because the LLM should synthesize selected evidence rather than freely browse the document store.
 
 \begin{figure}[H]
 \centering
@@ -1149,7 +1152,7 @@ Figure \ref{fig:rag-permission-gate} visualizes the security gate inside the que
 \begin{minipage}{0.94\textwidth}
 \small\singlespacing
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}>{\RaggedRight\arraybackslash}X}
-\textbf{Vector candidates} & \textbf{Permission gate} & \textbf{Allowed output} \\
+\textbf{Vector candidates} & \textbf{Evidence gate} & \textbf{Grounded output} \\
 \midrule
 Milvus receives the allowed document IDs and returns over-fetched chunks with document IDs, chunk IDs, similarity scores, and security labels. &
 RagQueryService re-checks each candidate against department scope, clearance level, admin role, and approved access requests. &
@@ -1161,18 +1164,18 @@ Blocked document IDs and blocked counts are stored for diagnostics, but blocked 
 \end{tabularx}
 \end{minipage}
 }
-\caption{RAG Permission Gate --- Similarity Candidates Become Evidence Only After Authorization}
+\caption{RAG Evidence Gate --- Similarity Candidates Become Grounded Answer Evidence}
 \label{fig:rag-permission-gate}
 \end{figure}
 
-Tables \ref{tab:pseudocode-rag-retrieve} and \ref{tab:pseudocode-rag-generate} show the complete query workflow. No retrieved chunk is allowed to enter the LLM prompt unless it passes the permission filter. Approved RAG\_APPLY records are treated as temporary access grants rather than permanent ACL changes: the access-request payload carries \texttt{accessTtlHours}, defaulting to 24 hours, and expired approvals are ignored when the next permission snapshot is built. This is the key difference between a normal RAG demo and an enterprise RAG system.
+Tables \ref{tab:pseudocode-rag-retrieve} and \ref{tab:pseudocode-rag-generate} show the complete query workflow. Candidate over-fetching gives the system enough semantically relevant chunks to choose from, while the final evidence filter ensures that only valid chunks enter the LLM prompt. Approved RAG\_APPLY records are treated as temporary access grants rather than permanent ACL changes: the access-request payload carries \texttt{accessTtlHours}, defaulting to 24 hours, and expired approvals are ignored when the next permission snapshot is built. This is a key difference between a normal RAG demo and an enterprise RAG system: retrieval quality, answer grounding, and access control are handled inside the same evidence pipeline.
 
 \vspace{3mm}
 \needspace{0.62\textheight}
 
 \begin{table}[H]
 \centering
-\caption{Pseudocode --- retrieveAllowedChunks() Permission-Safe Vector Retrieval}
+\caption{Pseudocode --- retrieveAllowedChunks() Evidence-Aware Vector Retrieval}
 \label{tab:pseudocode-rag-retrieve}
 \vspace{2mm}
 
@@ -1210,7 +1213,7 @@ FUNCTION retrieveAllowedChunks(request, user): RetrievalResult
 
     IF allowedChunks IS EMPTY THEN
         queryLogRepository.saveNoEvidenceLog(user, request, blockedDocIds)
-        RETURN RetrievalResult.empty("No permission-safe evidence")
+        RETURN RetrievalResult.empty("No eligible evidence")
     END IF
 
     RETURN RetrievalResult(allowedChunks, blockedDocIds, profile)
@@ -1258,7 +1261,7 @@ END FUNCTION
 \end{lstlisting}
 \end{table}
 
-The answer generation step uses an OpenAI-compatible chat-completions endpoint configured by the active AI provider. The prompt has three parts: the user question, a numbered context block containing permission-safe chunks, and answer rules. The answer rules require the model to answer only from the provided context, cite chunk identifiers, state that no evidence was found when the context is insufficient, and never infer content from blocked documents. This turns the LLM into a controlled synthesis component: it can phrase and summarize evidence, but it does not decide which documents it is allowed to read. The response returned to the frontend contains traceId, answer text, citations, retrieved chunks, retrieved document IDs, blocked document IDs, topK, status, and latency.
+The answer generation step uses an OpenAI-compatible chat-completions endpoint configured by the active AI provider. The prompt has three parts: the user question, a numbered context block containing selected evidence chunks, and answer rules. The answer rules require the model to answer only from the provided context, cite chunk identifiers, state that no evidence was found when the context is insufficient, and never infer content from excluded documents. This turns the LLM into a controlled synthesis component: it can phrase, compare, and summarize evidence, but it does not decide which documents should be retrieved or trusted. The response returned to the frontend contains traceId, answer text, citations, retrieved chunks, retrieved document IDs, blocked document IDs, topK, status, and latency.
 
 Failure handling is part of the query contract rather than an unhandled exception path. If the user has no accessible documents, the service returns an empty evidence response with a controlled status and message. If Milvus, the embedding endpoint, or the LLM endpoint fails, RagQueryServiceImpl catches the exception, preserves the traceId, writes the status and message into rag\_query\_log, and returns a frontend-renderable failure response. This keeps the RAG workbench debuggable without exposing inaccessible document content.
 
@@ -1306,7 +1309,7 @@ The endpoints in Table \ref{tab:rag-agent-api} are grouped around four responsib
 \toprule
 \textbf{Endpoint} & \textbf{Role} & \textbf{Behavior} \\
 \midrule
-POST /rag/query & User & Runs permission-safe retrieval and returns traceId, answer, citations, chunks, blocked document IDs, topK, status, and latency \\
+POST /rag/query & User & Runs grounded retrieval and returns traceId, answer, citations, chunks, blocked document IDs, topK, status, and latency \\
 GET /rag/health, /rag/health/embedding & User / Admin & Reports service status, active Milvus collection, embedding readiness, LLM configuration, chunk size, and overlap \\
 GET /rag/kb, POST /rag/kb & Admin & Lists and creates knowledge bases for RAG-managed source documents \\
 POST /rag/kb/\{kbId\}/documents/ \newline upload & Admin / Document owner & Uploads source files with department and security-level metadata, then triggers indexing \\
@@ -1336,7 +1339,7 @@ Document-RAG synchronization follows the same clean lifecycle as the indexing ps
 
 Docker Compose includes rag-agent, Milvus Standalone, etcd, MinIO, and rag-worker. The RAG worker provides local BGE-M3 embeddings, while the centralized AI provider abstraction also allows remote or local LLM providers such as Xunfei MaaS, DeepSeek, or Ollama. The deployment design separates embedding runtime, vector storage, object storage, and generation runtime so that each can be tested and replaced independently. Service dependency ordering ensures that Milvus, MinIO, etcd, and the embedding worker are available before rag-agent starts accepting queries.
 
-Evaluation focuses on both answer behavior and leakage prevention: admin users can retrieve high-clearance documents; standard users are restricted to same-department and clearance-allowed documents; low-clearance users cannot see confidential chunks; approved RAG\_APPLY requests expand access only within the configured TTL; document updates refresh the index; document deletion removes vectors; Milvus or LLM failures return controlled error states; and the frontend citation panel renders evidence without exposing blocked document content. In addition, embedding-profile tests verify that BGE-M3 and Qwen vectors are written to separate collections, that dimension mismatches are caught by health checks, and that index rebuild status is visible before users rely on a newly activated profile.
+Evaluation covers the full knowledge-to-answer lifecycle rather than only the final answer text. The checks verify that admin users can retrieve high-clearance documents; standard users are restricted to same-department and clearance-allowed documents; low-clearance users cannot see confidential chunks; approved RAG\_APPLY requests expand access only within the configured TTL; document updates refresh the index; document deletion removes vectors; Milvus or LLM failures return controlled error states; citations reference returned chunks; and the frontend citation panel renders evidence without exposing blocked document content. In addition, embedding-profile tests verify that BGE-M3 and Qwen vectors are written to separate collections, that dimension mismatches are caught by health checks, and that index rebuild status is visible before users rely on a newly activated profile.
 
 The automated RAG evaluation script, \texttt{scripts/test-rag-evaluation.ps1}, turns these checks into a repeatable workflow and writes the latest evidence to \texttt{docs/RAG\_EVALUATION\_RESULTS.md}. It verifies service readiness, active embedding profile isolation, optional asynchronous rebuild completion, indexed-document status, citation consistency, permission leakage, and query latency.
 
