@@ -61,15 +61,15 @@
 \contentsline {subsubsection}{\numberline {6.2.1}Task Lifecycle and State Machine}{76}{subsubsection.6.2.1}%
 \contentsline {subsubsection}{\numberline {6.2.2}Submission, Queuing, and Thread Pool}{77}{subsubsection.6.2.2}%
 \contentsline {subsubsection}{\numberline {6.2.3}Agent Routing and Execution}{78}{subsubsection.6.2.3}%
-\contentsline {subsubsection}{\numberline {6.2.4}Retry with Exponential Backoff}{78}{subsubsection.6.2.4}%
-\contentsline {subsubsection}{\numberline {6.2.5}Progress Streaming and WebSocket Integration}{79}{subsubsection.6.2.5}%
-\contentsline {subsubsection}{\numberline {6.2.6}Current Limitations}{79}{subsubsection.6.2.6}%
-\contentsline {subsection}{\numberline {6.3}WebSocket Real-Time Communication}{80}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Containerized Deployment}{81}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Discussion}{83}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Challenges and Resolutions}{83}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Comparison with Existing Solutions}{85}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Project Limitations}{86}{subsection.7.3}%
-\contentsline {section}{\numberline {8}Conclusion and Future Work}{87}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Summary of Achievements}{87}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Future Work}{88}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {6.2.4}Retry with Exponential Backoff}{79}{subsubsection.6.2.4}%
+\contentsline {subsubsection}{\numberline {6.2.5}Progress Streaming and WebSocket Integration}{80}{subsubsection.6.2.5}%
+\contentsline {subsubsection}{\numberline {6.2.6}Current Limitations}{80}{subsubsection.6.2.6}%
+\contentsline {subsection}{\numberline {6.3}WebSocket Real-Time Communication}{81}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Containerized Deployment}{82}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Discussion}{84}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Challenges and Resolutions}{84}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Comparison with Existing Solutions}{86}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Project Limitations}{87}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Conclusion and Future Work}{88}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Summary of Achievements}{88}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Future Work}{89}{subsection.8.2}%

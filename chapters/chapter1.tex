@@ -17,9 +17,9 @@ The current work is driven by several linked problems. These are technical preci
 
 The present work is facing four major challenges.
 
-\textbf{Code generation accuracy.} Database queries are used in everyday bank work. For example, they are used to get customer data and to file reports. Natural-language interfaces can make data access much easier. But LLM-written SQL is not always safe. It must be run through careful checks. The model may add syntax faults, wrong column references, or even harmful operations. The system needs to check multiple levels before executing any SQL statement.
+\textbf{Code Generation Accuracy.} Database queries are used in everyday bank work. For example, they are used to get customer data and to file reports. Natural-language interfaces can make data access much easier. But LLM-written SQL is not always safe. It must be run through careful checks. The model may add syntax faults, wrong column references, or even harmful operations. The system needs to check multiple levels before executing any SQL statement.
 
-\textbf{Knowledge retrieval.} Answers to procedural and policy questions must be verifiable. This is important because finance is a field where rules must be followed and there is zero tolerance for errors. RAG methods are used to fix LLM issues with old or made-up information. But bank documents have security levels. The system must filter retrieval results to match the user's clearance level. Documents must not leak through the agent's answers.
+\textbf{Knowledge Retrieval.} Answers to procedural and policy questions must be verifiable. This is important because finance is a field where rules must be followed and there is zero tolerance for errors. RAG methods are used to fix LLM issues with old or made-up information. But bank documents have security levels. The system must filter retrieval results to match the user's clearance level. Documents must not leak through the agent's answers.
 
 \textbf{Enterprise Tool Integration.} Daily bank work uses many tools, including room booking, calendar syncing, and travel route planning. An AI system must correctly understand user requests. It must find the right intent, extract the right parameters, and run the matching tool. The system should also use LLM routing to pick the best handler for each request.
 
