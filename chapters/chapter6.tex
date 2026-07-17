@@ -108,8 +108,45 @@ Table \ref{tab:task-submit} shows the asynchronous task submission and queuing m
 \vspace{3mm}
 \begin{table}[H]
 \small\singlespacing
+\centering
 \caption{Pseudocode --- submitTask() Asynchronous Task Submission and Queuing}
 \label{tab:task-submit}
+\vspace{2mm}
+
+\begin{lstlisting}
+FUNCTION submitTask(username, rolesHeader, taskType, input)
+    userId = getUserIdByUsername(username)
+
+    // Step 1: Create and persist database record
+    record = new TaskRecord()
+    record.taskType = taskType
+    record.status = "INIT"
+    record.userId = userId
+    record.input = input
+    record.attemptCount = 0
+    record.elapsedTime = 0
+    record.createdAt = now()
+    record.updatedAt = now()
+    taskRecordMapper.insert(record)
+
+    // Step 2: Submit to thread pool for async execution
+    wsTaskId = String.valueOf(record.id)
+    TRY:
+        executor.execute(() ->
+            executeWithRetry(record, wsTaskId,
+                             username, rolesHeader))
+        RETURN record
+    CATCH RejectedExecutionException:
+        // Queue full: mark failed, notify user
+        record.status = "FAIL"
+        record.errorMsg = "System busy."
+        record.updatedAt = now()
+        taskRecordMapper.updateById(record)
+        sendProgress(wsTaskId, 100, "error",
+            "System busy, please try again later")
+        RETURN record
+END FUNCTION
+\end{lstlisting}
 \end{table}
 
 On submission, a \texttt{TaskRecord} is created in the \texttt{task\_record} table with status INIT and \texttt{attemptCount} set to zero. The record is immediately persisted, so even if the service crashes before execution begins, there is an audit trail of what was requested. The task is then handed to a \texttt{ThreadPoolExecutor} configured as follows:
@@ -154,8 +191,48 @@ Network calls to downstream agents can fail for transient reasons: a container r
 \vspace{3mm}
 \begin{table}[H]
 \small\singlespacing
+\centering
 \caption{Pseudocode --- executeWithRetry() Exponential Backoff Loop}
 \label{tab:retry-backoff}
+\vspace{2mm}
+
+\begin{lstlisting}
+FUNCTION executeWithRetry(record, wsTaskId, username,
+                          rolesHeader)
+    attempt = record.attemptCount
+    lastException = null
+
+    WHILE attempt < MAX_RETRY:
+        attempt = attempt + 1
+        record.attemptCount = attempt
+        record.updatedAt = now()
+        taskRecordMapper.updateById(record)
+
+        TRY:
+            executeTaskOnce(record, wsTaskId,
+                            username, rolesHeader)
+            RETURN  // success
+        CATCH Exception e:
+            lastException = e
+            IF attempt < MAX_RETRY:
+                sendProgress(wsTaskId, 5, "running",
+                    "Retrying... (" + attempt
+                    + "/" + MAX_RETRY + ")")
+                sleep(1000 * attempt)
+            END IF
+    END WHILE
+
+    // All retries exhausted
+    record.status = "FAIL"
+    record.errorMsg = lastException.message
+    record.elapsedTime = elapsedSince(record.createdAt)
+    record.updatedAt = now()
+    taskRecordMapper.updateById(record)
+    sendProgress(wsTaskId, 100, "error",
+        "Execution failed after " + MAX_RETRY
+        + " attempts")
+END FUNCTION
+\end{lstlisting}
 \end{table}
 
 Each task gets up to 3 execution attempts. Between attempts, the worker sleeps for \texttt{1000 $\times$ attempt} milliseconds --- the first retry waits 1 second, the second waits 2 seconds, the third waits 3 seconds. This spacing gives downstream services time to recover from transient failures without hammering them with immediate retries. If all 3 attempts fail, the task is marked FAIL and the error message is stored.
