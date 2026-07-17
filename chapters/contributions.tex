@@ -241,83 +241,83 @@ I served as the RAG Agent lead and independently designed and implemented the pl
 
 \textbf{1. Backend}
 
-1.1 RAG microservice and API design
+\textbf{1.1 RAG microservice and API design}
 
-I independently built the \texttt{rag-agent} microservice as a standalone Spring Boot service running on port 8085 and integrated it into the platform through the Gateway route \texttt{/api/rag/**}. I implemented the main controller, service, DTO, entity, mapper, and configuration layers, and exposed the core RAG APIs including \texttt{/rag/query}, \texttt{/rag/health}, \texttt{/rag/health/embedding}, \texttt{/rag/index/rebuild}, \texttt{/rag/index/documents/status}, \texttt{/rag/embedding/profiles}, and \texttt{/rag/embedding/active}. This made the RAG Agent a dedicated intelligent agent module in the platform, rather than a separate experimental component.
+I independently built the RAG Agent microservice as a standalone Spring Boot service running on port 8085 and integrated it into the platform through the Gateway's RAG route group. I implemented the main controller, service, DTO, entity, mapper, and configuration layers, and exposed the core APIs for querying, health checks, embedding readiness, index rebuild, document index status, and embedding profile management. This made the RAG Agent a dedicated intelligent agent module in the platform, rather than a separate experimental component.
 
-1.2 RAG retrieval pipeline
+\textbf{1.2 RAG retrieval pipeline}
 
 I implemented the complete RAG retrieval workflow. The service receives a user question, reads user identity from gateway-propagated headers, generates a query embedding, searches Milvus for candidate chunks, applies permission verification, assembles retrieval context, and returns a citation-based answer. The response includes trace ID, status, answer, citations, chunks, retrieved document IDs, blocked document IDs, topK, latency, and diagnostic message, so that both users and developers can inspect how an answer was produced.
 
-1.3 RAG database and metadata model
+\textbf{1.3 RAG database and metadata model}
 
-I designed and implemented the RAG metadata model around \texttt{rag\_document\_chunk}, \texttt{rag\_query\_log}, \texttt{sys\_document}, and \texttt{sys\_config}. I added and maintained fields such as \texttt{vector\_id}, \texttt{embedding\_profile}, \texttt{embedding\_model}, \texttt{vector\_collection}, \texttt{content\_hash}, \texttt{chunk\_index}, \texttt{index\_status}, and \texttt{last\_indexed\_at}. These fields allow each retrieved chunk to be traced back to its source document, embedding model, active profile, and Milvus collection, and they also support index rebuilds, profile switching, and document index status inspection.
+I designed and implemented the RAG metadata model around document chunks, query logs, source documents, and system configuration. I added and maintained the fields required to trace each retrieved chunk back to its source document, embedding model, active profile, Milvus collection, content hash, chunk index, index status, and last indexing time. This metadata supports index rebuilds, profile switching, document index status inspection, and answer-level auditability.
 
-1.4 Permission-aware retrieval
+\textbf{1.4 Permission-aware retrieval}
 
-I aligned the RAG Agent with the platform’s RBAC, department, and clearance-level security model. The service uses identity headers such as \texttt{X-User-Name} and \texttt{X-User-Roles} propagated by the Gateway, then checks the user’s department and clearance level before allowing document content into the retrieval context. I also implemented blocked-document tracking and controlled \texttt{NO\_CONTEXT} responses, preventing unauthorized or cross-department documents from appearing in generated answers and citations.
+I aligned the RAG Agent with the platform’s RBAC, department, and clearance-level security model. The service uses Gateway-propagated identity headers, then checks the user's department and clearance level before allowing document content into the retrieval context. I also implemented blocked-document tracking and controlled no-context responses, preventing unauthorized or cross-department documents from appearing in generated answers and citations.
 
 \textbf{2. Vector Store and Embedding}
 
-2.1 Milvus integration
+\textbf{2.1 Milvus integration}
 
 I integrated Milvus as the vector database for the RAG Agent and configured it with etcd and MinIO in Docker Compose. I implemented collection initialization, vector insertion, vector search, vector ID generation, and similarity retrieval using COSINE distance. I verified that Milvus search results could be matched back to MySQL chunk records and source documents.
 
-2.2 Local embedding worker
+\textbf{2.2 Local embedding worker}
 
-I built and tested a local Python \texttt{rag-worker} using the BGE-M3 embedding model. The worker exposes an HTTP \texttt{/embed} endpoint and returns 1024-dimensional embeddings. The Java RAG Agent calls this worker through HTTP, keeping the Spring Boot service independent from Python model runtime details. I also handled local worker setup, including virtual environment creation, dependency installation, model download, Hugging Face cache behavior, startup delay, health checks, and embedding dimension verification.
+I built and tested a local Python embedding worker using the BGE-M3 embedding model. The worker exposes an HTTP embedding interface and returns 1024-dimensional embeddings. The Java RAG Agent calls this worker through HTTP, keeping the Spring Boot service independent from Python model runtime details. I also handled local worker setup, including virtual environment creation, dependency installation, model download, Hugging Face cache behavior, startup delay, health checks, and embedding dimension verification.
 
-2.3 Qwen cloud embedding API support
+\textbf{2.3 Qwen cloud embedding API support}
 
-I extended the embedding layer to support Qwen \texttt{text-embedding-v4} through a cloud API. I added configuration for provider type, endpoint, API key, model name, vector dimension, timeout, and collection name. This allows the RAG Agent to support both local BGE-M3 embeddings and cloud-based Qwen embeddings.
+I extended the embedding layer to support Qwen text-embedding-v4 through a cloud API. I added configuration for provider type, endpoint, API key, model name, vector dimension, timeout, and collection name. This allows the RAG Agent to support both local BGE-M3 embeddings and cloud-based Qwen embeddings.
 
-2.4 Embedding profile isolation
+\textbf{2.4 Embedding profile isolation}
 
-I designed the embedding profile mechanism to keep different embedding models isolated. Each profile has its own provider, model, dimension, endpoint, active status, index status, and Milvus collection. For example, \texttt{local-bge-m3} stores vectors in \texttt{rag\_document\_chunks\_bge\_m3}, while \texttt{qwen-v4} stores vectors in \texttt{rag\_document\_chunks\_qwen\_v4\_1024}. I implemented APIs for listing profiles, checking the active profile, testing providers, activating profiles, and rebuilding the index after switching profiles. This avoids mixing incompatible vector spaces and keeps retrieval results technically valid.
+I designed the embedding profile mechanism to keep different embedding models isolated. Each profile has its own provider, model, dimension, endpoint, active status, index status, and Milvus collection. The local BGE-M3 profile and the Qwen profile write to separate collections, so incompatible vector spaces are never mixed. I implemented APIs for listing profiles, checking the active profile, testing providers, activating profiles, and rebuilding the index after switching profiles. This keeps retrieval results technically valid and makes profile changes auditable.
 
 \textbf{3. Knowledge Base and Document Management}
 
-3.1 Document storage collaboration
+\textbf{3.1 Document storage collaboration}
 
 I worked with Yao Jiacheng on aligning the document management backend with the RAG Agent. The shared design uses MinIO for uploaded files such as PDF, DOCX, PPT, Markdown, and text files, while MySQL stores metadata such as file type, storage object key, parse status, department ID, security level, content hash, and index status. My work focused on defining and using the metadata needed by RAG so documents can be parsed, indexed, retrieved, and permission-filtered through the same knowledge base source.
 
-3.2 Document chunking and indexing
+\textbf{3.2 Document chunking and indexing}
 
 I implemented and tested the document chunking and indexing workflow. The RAG Agent reads document content, splits it into chunks, assigns chunk indexes, records content hashes, generates embeddings, inserts vectors into Milvus, and saves chunk metadata into MySQL. This enables chunk-level retrieval instead of whole-document matching, improving answer relevance and supporting citation display.
 
-3.3 Index rebuild workflow
+\textbf{3.3 Index rebuild workflow}
 
-I implemented the active-profile index rebuild workflow. When documents are added or changed, or when the administrator switches embedding providers, the RAG Agent can rebuild the index so that MySQL chunk metadata and Milvus vectors match the current embedding profile. I verified the rebuild process through \texttt{/rag/health}, \texttt{/rag/index/documents/status}, direct MySQL checks, and actual RAG queries.
+I implemented the active-profile index rebuild workflow. When documents are added or changed, or when the administrator switches embedding providers, the RAG Agent can rebuild the index so that MySQL chunk metadata and Milvus vectors match the current embedding profile. I verified the rebuild process through service health checks, document index status inspection, direct MySQL checks, and actual RAG queries.
 
 \textbf{4. Frontend and Integration}
 
-4.1 RAG frontend interface alignment
+\textbf{4.1 RAG frontend interface alignment}
 
 I coordinated with Xia Xin and Yao Jiacheng on frontend-facing RAG functions. I defined the backend response fields and interaction requirements needed for RAG answer display, citation panels, retrieved chunks, document IDs, similarity scores, snippets, blocked documents, index status, and embedding profile status. This helped the frontend present RAG answers with supporting evidence instead of only generated text.
 
-4.2 Administrator embedding provider switch
+\textbf{4.2 Administrator embedding provider switch}
 
-I proposed and helped design the administrator-side embedding provider switch. The frontend can expose local BGE-M3 and Qwen \texttt{text-embedding-v4} as selectable options, while sensitive information such as API keys remains on the backend side. I also clarified the rule that switching providers requires rebuilding the index because each embedding profile uses a separate vector collection.
+I proposed and helped design the administrator-side embedding provider switch. The frontend can expose local BGE-M3 and Qwen text-embedding-v4 as selectable options, while sensitive information such as API keys remains on the backend side. I also clarified the rule that switching providers requires rebuilding the index because each embedding profile uses a separate vector collection.
 
-4.3 Cross-service integration
+\textbf{4.3 Cross-service integration}
 
 After completing the RAG backend and database design, I coordinated with Yao Jiacheng to integrate RAG with the shared backend architecture. This included Gateway routing, propagated user headers, document metadata compatibility, database patching, Docker Compose dependencies, and deployment configuration. These integration steps ensured that the RAG Agent could work with the existing authentication system, document library, frontend pages, and deployment pipeline.
 
 \textbf{5. Testing, Debugging, and Documentation}
 
-5.1 Local environment and service verification
+\textbf{5.1 Local environment and service verification}
 
 I configured and tested the local RAG development environment, including MySQL, Redis, Milvus, etcd, MinIO, the RAG Agent, and the Python embedding worker. I verified Docker container health, Milvus ports, RAG service health, embedding worker health, database schema patches, and environment variables for vector storage, embedding providers, LLM configuration, and document storage.
 
-5.2 Backend debugging
+\textbf{5.2 Backend debugging}
 
 I debugged integration issues across the RAG stack, including Docker daemon startup failures, port conflicts, Maven dependency download failures, MySQL schema mismatches, Milvus connection problems, embedding worker startup delay, Hugging Face model download problems, user identity mismatch, missing users, empty retrieval context, failed embedding calls, and index status inconsistency. These debugging tasks were necessary to make the RAG Agent run reliably inside the full platform.
 
-5.3 End-to-end RAG testing
+\textbf{5.3 End-to-end RAG testing}
 
-I tested the complete RAG workflow through \texttt{/rag/health}, \texttt{/rag/health/embedding}, \texttt{/rag/index/rebuild}, \texttt{/rag/index/documents/status}, \texttt{/rag/embedding/active}, and \texttt{/rag/query}. I also checked MySQL directly to confirm that chunk metadata, vector IDs, embedding profiles, embedding models, and collection names were stored correctly. After rebuilding the active profile, I confirmed that RAG queries returned successful results with citations and permission-safe retrieved chunks.
+I tested the complete RAG workflow through health checks, embedding readiness checks, index rebuild, document index status inspection, active-profile verification, and user-facing RAG queries. I also checked MySQL directly to confirm that chunk metadata, vector IDs, embedding profiles, embedding models, and collection names were stored correctly. After rebuilding the active profile, I confirmed that RAG queries returned successful results with citations and permission-safe retrieved chunks.
 
-5.4 Documentation and team communication
+\textbf{5.4 Documentation and team communication}
 
 I wrote and maintained RAG-related documentation, including progress reports, interface alignment notes, environment variable explanations, startup steps, embedding provider configuration, local worker setup, and index rebuild guidance. These documents helped other team members understand how to run, test, and integrate the RAG Agent.
 
