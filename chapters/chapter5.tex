@@ -1007,7 +1007,7 @@ Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared wi
 2 -- Access Context & RagPermissionService & Compute accessible document IDs from department scope, clearance level, admin role, temporary RAG\_APPLY approvals, and approval expiry & Produces the access context used for scoped vector search and post-retrieval verification \\
 3 -- Query Embedding & EmbeddingClient & Encode the user question with the active embedding profile & Records embedding profile, model, dimension, and collection for audit \\
 4 -- Vector Retrieval & VectorStoreService / \newline REST Milvus adapter & ANN search with COSINE similarity, a 4x over-fetch candidate size, and an allowed-document filter in Milvus & Produces ranked candidate chunks under the active profile and access context \\
-5 -- Evidence Selection & RagQueryService & Re-rank and re-check candidate chunks; build the final evidence set before prompt construction & Records retrieved document IDs, excluded document IDs, and selected chunks \\
+5 -- Evidence Selection & RagQueryService & Re-check candidate chunks and assemble the final evidence set before prompt construction & Records retrieved document IDs, excluded document IDs, and selected chunks \\
 6 -- Grounded Generation & Query prompt logic + \newline RagLlmClient & Build evidence-only prompt; call OpenAI-compatible chat-completions endpoint & Produces answer text and citation references from selected evidence chunks \\
 7 -- Response + Audit & Query service + \newline query log mapper & Return traceId, answer, citations, scores, and latency; persist query log & Enables later review of evidence, blocked docs, profile, and timing \\
 \bottomrule
@@ -1015,7 +1015,7 @@ Table \ref{tab:rag-agent-pipeline} summarizes the internal pipeline. Compared wi
 }
 \end{table}
 
-Figure \ref{fig:rag-agent-architecture} shows the two parallel flows inside the RAG Agent: the indexing flow that prepares document vectors, and the query flow that retrieves evidence and generates answers. MySQL remains the source of record for document metadata and RAG audit data, while Milvus stores only vector-search-oriented chunk records.
+Figure \ref{fig:rag-agent-architecture} shows the RAG Agent as a knowledge-to-answer pipeline rather than a single vector-search component. The upper path prepares reusable document knowledge before query time, while the lower path converts a user question into an evidence package and a grounded answer. MySQL remains the source of record for document metadata and RAG audit data, while Milvus stores only vector-search-oriented chunk records.
 
 \begin{figure}[H]
 \centering
@@ -1023,23 +1023,27 @@ Figure \ref{fig:rag-agent-architecture} shows the two parallel flows inside the 
 \begin{minipage}{0.94\textwidth}
 \small\singlespacing
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.20\textwidth}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{0.25\textwidth}}
-\textbf{Lane} & \textbf{Processing Path} & \textbf{Durable Output} \\
+\textbf{Lane} & \textbf{Processing Path} & \textbf{Platform Output} \\
 \midrule
-Indexing &
+Knowledge preparation &
 Document upload $\rightarrow$ parser $\rightarrow$ structure-aware chunker $\rightarrow$ EmbeddingClient $\rightarrow$ VectorStoreService &
-rag\_document\_chunk rows + Milvus vectors \\
+chunk metadata + Milvus vectors \\
 \addlinespace[1mm]
-Query &
-JWT headers $\rightarrow$ RagPermissionService $\rightarrow$ query embedding $\rightarrow$ scoped Milvus over-fetch $\rightarrow$ evidence selection $\rightarrow$ prompt builder $\rightarrow$ LLM &
-answer + citations + rag\_query\_log \\
+Evidence retrieval &
+JWT headers $\rightarrow$ RagPermissionService $\rightarrow$ query embedding $\rightarrow$ scoped Milvus over-fetch $\rightarrow$ evidence selection &
+selected chunks + similarity scores \\
+\addlinespace[1mm]
+Grounded synthesis &
+selected evidence $\rightarrow$ prompt builder $\rightarrow$ LLM $\rightarrow$ citation builder $\rightarrow$ response mapper &
+answer + citations + traceId \\
 \addlinespace[1mm]
 Shared controls &
-Embedding profile, vector collection, document security level, department scope, approved RAG\_APPLY records &
-traceable profile and access decision for every query \\
+embedding profile, vector collection, document lifecycle state, department scope, approved RAG\_APPLY records &
+query log + profile/access trace \\
 \end{tabularx}
 \end{minipage}
 }
-\caption{RAG Agent Architecture --- Indexing Flow and Grounded Query Flow}
+\caption{RAG Agent Architecture --- Knowledge Preparation, Evidence Retrieval, and Grounded Synthesis}
 \label{fig:rag-agent-architecture}
 \end{figure}
 
@@ -1152,19 +1156,19 @@ Figure \ref{fig:rag-permission-gate} visualizes the evidence gate inside the que
 \begin{minipage}{0.94\textwidth}
 \small\singlespacing
 \begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.24\textwidth}>{\RaggedRight\arraybackslash}X}
-\textbf{Vector candidates} & \textbf{Evidence gate} & \textbf{Grounded output} \\
+\textbf{Candidate discovery} & \textbf{Evidence selection} & \textbf{Grounded response} \\
 \midrule
-Milvus receives the allowed document IDs and returns over-fetched chunks with document IDs, chunk IDs, similarity scores, and security labels. &
-RagQueryService re-checks each candidate against department scope, clearance level, admin role, and approved access requests. &
-Allowed chunks become numbered context blocks for the LLM, citation cards for the frontend, and retrieved-document records in the audit log. \\
+Milvus receives the query vector and access context, then returns over-fetched chunks with document IDs, chunk IDs, similarity scores, and metadata. &
+RagQueryService keeps chunks that have sufficient semantic relevance, valid provenance, and current access eligibility. &
+Selected chunks become numbered context blocks for the LLM, citation cards for the frontend, and retrieved-document records in the audit log. \\
 \addlinespace[2mm]
-High-similarity chunks can still belong to restricted documents. &
-Unauthorized or stale candidates are removed after retrieval and before prompt construction. &
-Blocked document IDs and blocked counts are stored for diagnostics, but blocked text is not exposed to the model or user interface. \\
+Candidate discovery favors recall by requesting more chunks than the final top-K. &
+Evidence selection converts raw candidates into a compact and inspectable evidence set. &
+The response carries answer text, citations, traceId, profile metadata, latency, and excluded-document diagnostics. \\
 \end{tabularx}
 \end{minipage}
 }
-\caption{RAG Evidence Gate --- Similarity Candidates Become Grounded Answer Evidence}
+\caption{RAG Evidence Gate --- Candidate Chunks Become Citable Answer Evidence}
 \label{fig:rag-permission-gate}
 \end{figure}
 
@@ -1283,7 +1287,7 @@ The implementation also separates retrieval diagnostics from answer text. Simila
 traceId & API response, frontend result card, rag\_query\_log & Connects a user-visible answer to backend retrieval, generation, and audit records. \\
 citations[] & API response and RAG Workbench citation cards & Shows which document chunks support the answer, including snippet, source document, chunk index, and similarity score. \\
 retrieved docs & API response and query log & Records the accessible documents that contributed evidence to the prompt. \\
-blocked docs & API response metadata and query log & Proves that restricted candidates were detected and excluded without revealing blocked text. \\
+blocked / excluded docs & API response metadata and query log & Shows candidate pruning and access enforcement without revealing excluded text. \\
 embeddingProfile + collection & Health endpoints, chunk metadata, query log & Makes vector-space selection auditable when BGE-M3 and Qwen profiles use separate Milvus collections. \\
 latencyMs + status & API response, task output, query log & Supports frontend progress display, failure diagnosis, and service-level monitoring. \\
 \bottomrule
@@ -1360,7 +1364,7 @@ Readiness & RAG health and embedding profile readiness & Service status UP; acti
 Indexing & Indexed-document status and optional full rebuild polling & Indexed documents are detected; full rebuild returns a task ID and can be followed until SUCCESS or FAIL \\
 Retrieval behavior & Admin, credit-staff, and compliance-staff queries & Controlled statuses are returned; successful cases include retrieved document IDs, citations, chunks, and latency \\
 Citation correctness & Every citation must reference a returned chunk & Citation counts match returned evidence chunks, so the frontend can render source cards deterministically \\
-Permission leakage & Staff queries must stay inside department and clearance scope & Retrieved document IDs remain within the permitted snapshot for credit and compliance test users \\
+Access control & Staff queries must stay inside department and clearance scope & Retrieved document IDs remain within the permitted snapshot for credit and compliance test users \\
 Latency & Average and maximum query latency are recorded & Latest sample recorded 419 ms average latency and 460 ms maximum latency across three queries \\
 \bottomrule
 \end{tabularx}
